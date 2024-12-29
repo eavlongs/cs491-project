@@ -5,11 +5,11 @@ import (
 	"log"
 	"os"
 
-	"github.com/eavlongs/go_backend_template/config"
-	"github.com/eavlongs/go_backend_template/controllers"
-	"github.com/eavlongs/go_backend_template/middlewares"
-	"github.com/eavlongs/go_backend_template/repository"
-	"github.com/eavlongs/go_backend_template/routes"
+	"github.com/eavlongs/core/config"
+	"github.com/eavlongs/core/controllers"
+	"github.com/eavlongs/core/middlewares"
+	"github.com/eavlongs/core/repository"
+	"github.com/eavlongs/core/routes"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -26,9 +26,12 @@ func main() {
 	var (
 		db = config.ConnectDatabase()
 		// db             *gorm.DB
-		mainMiddleware = middlewares.NewMainMiddleware(db)
-		mainRepository = repository.NewMainRepository(db)
-		mainController = controllers.NewMainController(mainRepository)
+		mainMiddleware  = middlewares.NewMainMiddleware(db)
+		AuthRepository  = repository.NewAuthRepository(db)
+		MovieRepository = repository.NewMovieRepository(db)
+
+		AuthController  = controllers.NewAuthController(AuthRepository)
+		MovieController = controllers.NewMovieController(MovieRepository)
 	)
 
 	defer func() {
@@ -46,7 +49,8 @@ func main() {
 	routePrefix := os.Getenv("API_ROUTE_PREFIX")
 	routerGroup := router.Group(routePrefix)
 
-	routes.RegisterMainRoutes(routerGroup, mainController, mainMiddleware)
+	routes.RegisterAuthRoutes(routerGroup, AuthController, mainMiddleware)
+	routes.RegisterMovieRoutes(routerGroup, MovieController, mainMiddleware)
 
 	port := os.Getenv("API_PORT")
 	if err := router.Run("127.0.0.1:" + port); err != nil {
