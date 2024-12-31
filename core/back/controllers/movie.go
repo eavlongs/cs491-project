@@ -112,6 +112,23 @@ func (c *MovieController) GetAll(ctx *gin.Context) {
 	utils.RespondWithSuccess(ctx, movies)
 }
 
+func (c *MovieController) GetOne(ctx *gin.Context) {
+	id := ctx.Param("id")
+	uintID, _ := strconv.ParseUint(id, 10, 64)
+	if uintID == 0 {
+		utils.RespondWithBadRequestError(ctx, "Invalid ID")
+		return
+	}
+
+	movie, err := c.repo.GetOne(uint(uintID))
+	if err != nil {
+		utils.RespondWithBadRequestError(ctx, err.Error())
+		return
+	}
+
+	utils.RespondWithSuccess(ctx, movie)
+}
+
 func (c *MovieController) Delete(ctx *gin.Context) {
 	id := ctx.Param("id")
 	uintID, _ := strconv.ParseUint(id, 10, 64)

@@ -14,9 +14,21 @@ docker-compose down
 ### Frontend Ports
 ```
 3000 -> core
+3001 -> subscription
+3002 -> theater
+3003 -> store
 ```
 
 ### Backend Ports
 ```
 8080 -> core
+8081 -> subscription
+8082 -> theater
+8083 -> store
+```
+
+## JWT Secret
+To generate a JWT secret, run:
+```
+openssl rand -base64 32
 ```

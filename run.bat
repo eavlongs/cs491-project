@@ -44,15 +44,15 @@ if /i "%mode%"=="back" (
     ) else if /i "%directory%"=="subscription" (
         echo Running subscription backend...
         REM Replace this with the actual subscription backend command
-        echo Command not specified for subscription backend yet.
+        npm run dev
     ) else if /i "%directory%"=="store" (
         echo Running store backend...
         REM Replace this with the actual store backend command
-        echo Command not specified for store backend yet.
+        php artisan serve
     ) else if /i "%directory%"=="theater" (
         echo Running theater backend...
         REM Replace this with the actual theater backend command
-        echo Command not specified for theater backend yet.
+        ./mvnw spring-boot:run
     ) else (
         echo Error: Unknown backend directory "%directory%".
         exit /b 1

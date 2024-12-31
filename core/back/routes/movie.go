@@ -11,6 +11,7 @@ func RegisterMovieRoutes(router *gin.RouterGroup, c *controllers.MovieController
 	r.POST("/create", m.IsAdmin(), c.Create)
 	r.PATCH("/:id", m.IsAdmin(), c.Update)
 	r.GET("/", c.GetAll)
+	r.GET("/:id", c.GetOne)
 	r.DELETE("/:id", m.IsAdmin(), c.Delete)
 
 	r.POST("/:id/rate", m.IsUser(), c.Rate)

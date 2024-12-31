@@ -27,6 +27,17 @@ func (r *MovieRepository) GetAll() ([]models.Movie, error) {
 	return movies, err
 }
 
+func (r *MovieRepository) GetOne(id uint) (*models.Movie, error) {
+	var movie models.Movie
+	err := r.db.Model(&models.Movie{}).
+		Select("movies.*, COALESCE(AVG(ratings.rating_point), 0) as avg_rating, COALESCE(COUNT(ratings.rating_point), 0) as rating_count").
+		Joins("LEFT JOIN ratings ON ratings.movie_id = movies.id").
+		Group("movies.id").
+		Where("movies.id = ?", id).
+		First(&movie).Error
+	return &movie, err
+}
+
 func (r *MovieRepository) Update(movie *models.Movie) error {
 	return r.db.Model(movie).Updates(movie).Error
 }
