@@ -10,12 +10,10 @@ public class Payment {
 	
 	@Id
 	private String id;
-	private User user;
-	
+	private String userId;
 	private String cardNumber;
 	private Double amount;
 	private Date createdAt;
-	private Ticket[] tickets;
 	
 	public String getId() {
 		return id;
@@ -25,12 +23,12 @@ public class Payment {
 		this.id = id;
 	}
 	
-	public User getUser() {
-		return user;
+	public String getUserId() {
+		return userId;
 	}
 	
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	
 	public String getCardNumber() {
@@ -55,13 +53,5 @@ public class Payment {
 	
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
-	}
-	
-	public Ticket[] getTickets() {
-		return tickets;
-	}
-	
-	public void setTickets(Ticket[] tickets) {
-		this.tickets = tickets;
 	}
 }

@@ -1,11 +1,15 @@
 package com.movie.theater.models;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.Date;
 
+@Document(collection = "tickets")
 public class Ticket {
 	private String id;
 	private String scheduleId;
 	private String seatId;
+	private String paymentId;
 	private Date createdAt;
 	private Double price;
 	
@@ -31,6 +35,14 @@ public class Ticket {
 	
 	public void setSeatId(String seatId) {
 		this.seatId = seatId;
+	}
+	
+	public String getPaymentId() {
+		return paymentId;
+	}
+	
+	public void setPaymentId(String paymentId) {
+		this.paymentId = paymentId;
 	}
 	
 	public Date getCreatedAt() {

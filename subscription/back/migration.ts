@@ -35,7 +35,7 @@ async function migrate() {
             );
     `;
 
-    const createPaymentTable = `
+    const createPaymentTableQuery = `
         CREATE TABLE IF NOT EXISTS payment (
             id INT AUTO_INCREMENT PRIMARY KEY,
             user_id INT NOT NULL,
@@ -47,6 +47,23 @@ async function migrate() {
             ON UPDATE CASCADE
         );
     `;
+
+    const createMovieTableQuery = `
+        CREATE TABLE IF NOT EXISTS movie (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            mb_id INT,
+            genres VARCHAR(255),
+            age_restriction VARCHAR(50),
+            title VARCHAR(255) NOT NULL,
+            description TEXT,
+            poster_url TEXT,
+            video_url TEXT,
+            director VARCHAR(255),
+            writers VARCHAR(255),
+            cast VARCHAR(255),
+            release_date DATE,
+            movie_duration INT
+    );`;
 
     let conn;
     try {
@@ -62,8 +79,12 @@ async function migrate() {
         console.log();
 
         console.log('Migrating: Creating payment table...');
-        await conn.query(createPaymentTable);
+        await conn.query(createPaymentTableQuery);
         console.log('Payment table created successfully.');
+
+        console.log('Migrating: Creating movie table...');
+        await conn.query(createMovieTableQuery);
+        console.log('Movie table created successfully.');
         console.log();
     } catch (err) {
         console.error('Migration failed:', err);

@@ -6,16 +6,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ResponseHelper {
-	public static ResponseEntity<Map<String, Object>> buildSuccessResponse(Map<String, Object> data, String message) {
+	public static ResponseEntity<Map<String, Object>> buildSuccessResponse(Object data, String message) {
 		Map<String, Object> responseBody = new HashMap<>();
 		responseBody.put("message", message);
 		responseBody.put("data", data);
 		responseBody.put("success", true);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+	}
+	
+	public static ResponseEntity<Map<String, Object>> buildSuccessResponse(List<Map<String, Object>> data) {
+		return buildSuccessResponse(data, ResponseMessage.REQUEST_SUCCESSFUL);
 	}
 	
 	public static ResponseEntity<Map<String, Object>> buildSuccessResponse(Map<String, Object> data) {

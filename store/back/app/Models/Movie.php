@@ -10,7 +10,7 @@ class Movie extends Model
     use HasFactory;
     protected $fillable = [
         'mb_id',
-        'movie_type',
+        'genres',
         'age_restriction',
         'title',
         'description',
@@ -22,6 +22,11 @@ class Movie extends Model
         'release_date',
         'movie_duration',
         'trailer_url',
-        'price'
+        'rent_price',
+        'sale_price',
+    ];
+
+    protected $hidden = [
+        "video_url"
     ];
 }

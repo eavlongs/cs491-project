@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\ResponseHelper;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
@@ -25,7 +26,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return ResponseHelper::buildValidationErrorResponse($validator->errors());
         }
 
         $user = User::create([
@@ -48,7 +49,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 400);
+            return ResponseHelper::buildValidationErrorResponse($validator->errors());
         }
 
         $user = User::where('email', $request->email)->first();

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('movies', function (Blueprint $table) {
             $table->id();
             $table->string('mb_id');
-            $table->string('movie_type');
+            $table->string('genres');
             $table->integer('age_restriction')->nullable();
             $table->string('title');
             $table->text('description')->nullable();
@@ -26,7 +26,8 @@ return new class extends Migration
             $table->date('release_date')->nullable();
             $table->integer('movie_duration')->nullable();
             $table->string('trailer_url')->nullable();
-            $table->decimal('price', 10, 2);
+            $table->decimal('sale_price', 10, 2);
+            $table->decimal('rent_price', 10, 2);
             $table->timestamps();
         });
     }
