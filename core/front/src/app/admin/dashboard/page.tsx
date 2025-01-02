@@ -26,13 +26,10 @@ export default function Page() {
                 </header>
                 <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
                     <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                            <Movie></Movie>
-                        
-                        
-                        <div className="w-1/2 h-80 rounded-xl bg-muted/50" />
-                        <div className="w-1/2 h-80 rounded-xl bg-muted/50" />
+                        {Array.from({ length: 6 }).map((_, index) => (
+                            <Movie key={index} />
+                        ))}
                     </div>
-                   
                 </div>
             </SidebarInset>
         </SidebarProvider>
