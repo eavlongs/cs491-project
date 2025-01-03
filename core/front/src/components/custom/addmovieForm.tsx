@@ -51,7 +51,7 @@ export function AddMovieForm({
                         />
                     </div>
                     <form className="p-6 md:p-8">
-                        <div className="flex flex-col gap-6">
+                        <div className="flex flex-col gap-6 mb-4">
                             <div className="flex flex-col items-center text-center">
                                 <h1 className="text-2xl font-bold">
                                     Add Movie
@@ -71,6 +71,11 @@ export function AddMovieForm({
                                         />
                                     </div>
                                 ))}
+                        </div>
+                        <div className="w-full flex flex-row-reverse ">
+                                <Button type="submit" className="w-16">
+                                create
+                                </Button>
                         </div>
                     </form>
                 </CardContent>
