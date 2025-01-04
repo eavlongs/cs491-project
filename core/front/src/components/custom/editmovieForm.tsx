@@ -33,7 +33,7 @@ const data = {
     ],
 };
 
-export function AddMovieForm({
+export function EditMovie({
     className,
     ...props
 }: React.ComponentProps<"div">) {
@@ -53,7 +53,7 @@ export function AddMovieForm({
                         <div className="flex flex-col gap-6 mb-4">
                             <div className="flex flex-col items-center text-center">
                                 <h1 className="text-2xl font-bold">
-                                    Add Movie
+                                    Edit Movie
                                 </h1>
                             </div>
                                 {data.items.map((item, index) => (
@@ -77,15 +77,25 @@ export function AddMovieForm({
                         <div className="w-full flex p-4">
                             <Button
                                 type="submit"
+                                variant="destructive"
+                                className="w-16"
+                            >
+                                Delete
+                            </Button>
+                            <div className="w-full flex flex-row-reverse ">
+                                <Button type="submit" className="w-16 ">
+                                Create
+                            </Button>
+                            <div className="pr-10"> 
+                                 <Button
+                                type="submit"
                                 variant="outline"
                                 className="w-16"
                             >
                                 Cancel
                             </Button>
-                            <div className="w-full flex flex-row-reverse">
-                                <Button type="submit" className="w-16 ">
-                                Create
-                            </Button>
+                            </div>
+                           
                             </div>
                         
                         </div>

@@ -1,4 +1,4 @@
-import { AddMovieForm } from "@/components/custom/addmovieForm";
+import { EditMovie } from "@/components/custom/editmovieForm";
 
 export default function Page() {
     return (
@@ -6,7 +6,7 @@ export default function Page() {
             <div className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10">
                 <div className="w-full max-w-sm md:max-w-3xl">
                     <div className="flex flex-col items-center justify-center bg-muted p-6 md:p-5">
-                            <AddMovieForm></AddMovieForm>
+                            <EditMovie></EditMovie>
                     </div>
                 </div>
             </div>
