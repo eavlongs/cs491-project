@@ -24,7 +24,7 @@ const data = {
         },
         {
             title: "Edit Movies",
-            url: "#",
+            url: "editmovie",
         },
     ],
 };
