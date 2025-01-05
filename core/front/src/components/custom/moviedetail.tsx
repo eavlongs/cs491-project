@@ -1,15 +1,14 @@
+"use client"
+
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-
 import { Label } from "@/components/ui/label";
+import { Star } from 'lucide-react';
 
 const data = {
     items: [
-        {
-            label: " Title",
-            detail: "JoJo's bizarre adventure ",
-        },
         {
             label: " Duration",
             detail: "2 Hours",
@@ -45,6 +44,29 @@ export function MovieDetail({
     className,
     ...props
 }: React.ComponentProps<"div">) {
+    const [rating, setRating] = useState(4.6);
+    const [hoverRating, setHoverRating] = useState(0);
+    const [userRated, setUserRated] = useState(false);
+    const totalReviews = 1242;
+    const stars = 5;
+
+    const handleRating = (value: number) => {
+        setRating(value);
+        setUserRated(true);
+    };
+
+    const handleMouseEnter = (value: number) => {
+        if (!userRated) {
+            setHoverRating(value);
+        }
+    };
+
+    const handleMouseLeave = () => {
+        if (!userRated) {
+            setHoverRating(0);
+        }
+    };
+
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <Card className="">
@@ -55,16 +77,42 @@ export function MovieDetail({
                                 Image Placeholder
                             </span>
                         </div>
-                        <Button variant="ghost" className="w-12">
-                            Image
-                        </Button>
                     </div>
                     <form className="p-6 md:p-8 ">
                         <div className="flex flex-col gap-6 mb-4">
                             <div className="flex flex-col items-center text-center">
-                                <h1 className="text-2xl font-bold">
-                                    Movie Detail
+                                <h1 className="text-2xl font-bold mb-2">
+                                    JoJo&apos;s bizarre adventure
                                 </h1>
+                                <div className="flex items-center gap-2">
+                                    <div className="flex">
+                                        {[...Array(stars)].map((_, index) => {
+                                            const starValue = index + 1;
+                                            return (
+                                                <button
+                                                    key={index}
+                                                    type="button"
+                                                    className="p-0 hover:scale-110 transition-transform"
+                                                    onClick={() => handleRating(starValue)}
+                                                    onMouseEnter={() => handleMouseEnter(starValue)}
+                                                    onMouseLeave={handleMouseLeave}
+                                                >
+                                                    <Star
+                                                        className={cn(
+                                                            "w-5 h-5 transition-colors",
+                                                            (hoverRating || rating) >= starValue
+                                                                ? "fill-yellow-400 stroke-yellow-400"
+                                                                : "stroke-gray-200 fill-gray-200"
+                                                        )}
+                                                    />
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                    <span className="text-sm text-gray-600">
+                                        {rating}/5 ({totalReviews.toLocaleString()} reviews)
+                                    </span>
+                                </div>
                             </div>
                             {data.items.map((item, index) => (
                                 <div
@@ -95,25 +143,24 @@ export function MovieDetail({
                 <div className="w-full flex p-4">
                     <Button
                         type="submit"
-                        variant="destructive"
-                        className="w-16"
+                        className="w-32"
                     >
-                        Delete
+                        Watch in Cinema
                     </Button>
                     <div className="w-full flex flex-row-reverse ">
-                        <Button type="submit" className="w-16 ">
-                            Create
+                        <Button type="submit" className="w-32">
+                            Buy / Rent Movie
                         </Button>
-                            <Button
-                                type="submit"
-                                variant="outline"
-                                className="w-16"
-                            >
-                                Cancel
-                            </Button>
+                        <Button
+                            type="submit"
+                            className="w-32 mr-5"
+                        >
+                            Watch Online
+                        </Button>
                     </div>
                 </div>
             </Card>
         </div>
     );
 }
+
