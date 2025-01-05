@@ -15,16 +15,12 @@ import {
 const data = {
     navMain: [
         {
-            title: "Display Movies",
-            url: "dashboard",
+            title: "Manage Hall",
+            url: "manageHall",
         },
         {
-            title: "Add Movies",
-            url: "addmovie",
-        },
-        {
-            title: "Edit Movies",
-            url: "editmovie",
+            title: "Movie Schedule",
+            url: "movieSchdule",
         },
     ],
 };
@@ -36,13 +32,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <a href="dashboard">
+                            <a href="manageHall">
                                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                                     <GalleryVerticalEnd className="size-4" />
                                 </div>
                                 <div className="flex flex-col gap-0.5 leading-none">
                                     <span className="font-semibold">
-                                        Movie Core
+                                        Theater Management
                                     </span>
                                 </div>
                             </a>
