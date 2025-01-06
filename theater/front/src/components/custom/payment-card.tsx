@@ -1,31 +1,31 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { CreditCard } from "lucide-react";
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { CreditCard } from 'lucide-react'
 
 interface PaymentCardProps {
-    totalAmount: number;
+    totalAmount: number
     bookingDetails: {
-        seats: string[];
-        movieTitle: string;
-        showTime: string;
-        showDate: string;
-        hallName: string;
-    };
+        seats: string[]
+        movieTitle: string
+        showTime: string
+        showDate: string
+        hallName: string
+    }
 }
 
 export function PaymentCard({ totalAmount, bookingDetails }: PaymentCardProps) {
-    const router = useRouter();
-    const [cardNumber, setCardNumber] = useState("");
-    const [cvv, setCvv] = useState("");
-    const [expiryMonth, setExpiryMonth] = useState("");
-    const [expiryYear, setExpiryYear] = useState("");
+    const router = useRouter()
+    const [cardNumber, setCardNumber] = useState('')
+    const [cvv, setCvv] = useState('')
+    const [expiryMonth, setExpiryMonth] = useState('')
+    const [expiryYear, setExpiryYear] = useState('')
 
     return (
         <div className="flex gap-6">
@@ -101,7 +101,7 @@ export function PaymentCard({ totalAmount, bookingDetails }: PaymentCardProps) {
                 <CardContent className="p-6 space-y-6">
                     <h3 className="font-semibold">RECEIPT</h3>
                     <div className="flex justify-between items-center">
-                        <span>{bookingDetails.seats.join(", ")}</span>
+                        <span>{bookingDetails.seats.join(', ')}</span>
                         <span>{bookingDetails.seats.length}x</span>
                     </div>
                     <div className="space-y-2">
@@ -138,7 +138,7 @@ export function PaymentCard({ totalAmount, bookingDetails }: PaymentCardProps) {
                         </Button>
                         <Button
                             className="flex-1"
-                            onClick={() => router.push("/confirmation")}
+                            onClick={() => router.push('/confirmation')}
                         >
                             CHECK OUT
                         </Button>
@@ -146,5 +146,5 @@ export function PaymentCard({ totalAmount, bookingDetails }: PaymentCardProps) {
                 </CardContent>
             </Card>
         </div>
-    );
+    )
 }

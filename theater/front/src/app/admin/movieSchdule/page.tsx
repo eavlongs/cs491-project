@@ -1,71 +1,71 @@
-"use client";
+'use client'
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 interface TimeSlot {
-    time: string;
-    status: "available" | "unavailable" | "scheduled";
+    time: string
+    status: 'available' | 'unavailable' | 'scheduled'
 }
 
 interface Hall {
-    id: string;
-    name: string;
-    status: "inactive" | "active";
-    timeSlots: TimeSlot[];
+    id: string
+    name: string
+    status: 'inactive' | 'active'
+    timeSlots: TimeSlot[]
 }
 
 const halls: Hall[] = [
     {
-        id: "b1",
-        name: "HALL B1",
-        status: "active",
+        id: 'b1',
+        name: 'HALL B1',
+        status: 'active',
         timeSlots: [
-            { time: "2:00-3:00", status: "scheduled" },
-            { time: "Unavailable", status: "unavailable" },
+            { time: '2:00-3:00', status: 'scheduled' },
+            { time: 'Unavailable', status: 'unavailable' },
         ],
     },
     {
-        id: "b2",
-        name: "Hall B2",
-        status: "inactive",
-        timeSlots: [{ time: "Click to Assign", status: "available" }],
+        id: 'b2',
+        name: 'Hall B2',
+        status: 'inactive',
+        timeSlots: [{ time: 'Click to Assign', status: 'available' }],
     },
     {
-        id: "b3",
-        name: "Hall B3",
-        status: "inactive",
-        timeSlots: [{ time: "Click to Assign", status: "available" }],
+        id: 'b3',
+        name: 'Hall B3',
+        status: 'inactive',
+        timeSlots: [{ time: 'Click to Assign', status: 'available' }],
     },
     {
-        id: "b4",
-        name: "Hall B4",
-        status: "active",
+        id: 'b4',
+        name: 'Hall B4',
+        status: 'active',
         timeSlots: [
-            { time: "2:00-3:00", status: "scheduled" },
-            { time: "Unavailable", status: "unavailable" },
+            { time: '2:00-3:00', status: 'scheduled' },
+            { time: 'Unavailable', status: 'unavailable' },
         ],
     },
     {
-        id: "b5",
-        name: "Hall B5",
-        status: "active",
+        id: 'b5',
+        name: 'Hall B5',
+        status: 'active',
         timeSlots: [
-            { time: "2:00-3:00", status: "scheduled" },
-            { time: "Unavailable", status: "unavailable" },
+            { time: '2:00-3:00', status: 'scheduled' },
+            { time: 'Unavailable', status: 'unavailable' },
         ],
     },
     {
-        id: "b6",
-        name: "Hall B6",
-        status: "active",
+        id: 'b6',
+        name: 'Hall B6',
+        status: 'active',
         timeSlots: [
-            { time: "2:00-3:00", status: "scheduled" },
-            { time: "Unavailable", status: "unavailable" },
+            { time: '2:00-3:00', status: 'scheduled' },
+            { time: 'Unavailable', status: 'unavailable' },
         ],
     },
-];
+]
 
 export default function Page() {
     return (
@@ -83,7 +83,7 @@ export default function Page() {
                                 <CardContent className="flex-grow">
                                     <div className="space-y-2">
                                         {hall.timeSlots.map((slot, index) =>
-                                            slot.status === "scheduled" ? (
+                                            slot.status === 'scheduled' ? (
                                                 <div
                                                     key={index}
                                                     className="w-full px-4 py-2 text-center rounded text-black"
@@ -91,7 +91,7 @@ export default function Page() {
                                                     {slot.time}
                                                 </div>
                                             ) : slot.status ===
-                                            "unavailable" ? (
+                                              'unavailable' ? (
                                                 <div
                                                     key={index}
                                                     className="w-full px-4 py-2 text-center rounded text-black"
@@ -103,7 +103,7 @@ export default function Page() {
                                                     key={index}
                                                     variant="outline"
                                                     className={cn(
-                                                        "w-full justify-center hover:bg-primary hover:text-primary-foreground"
+                                                        'w-full justify-center hover:bg-primary hover:text-primary-foreground'
                                                     )}
                                                 >
                                                     {slot.time}
@@ -118,5 +118,5 @@ export default function Page() {
                 </div>
             </div>
         </div>
-    );
+    )
 }

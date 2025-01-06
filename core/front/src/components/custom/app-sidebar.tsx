@@ -1,5 +1,5 @@
-import * as React from "react";
-import { GalleryVerticalEnd } from "lucide-react";
+import * as React from 'react'
+import { GalleryVerticalEnd } from 'lucide-react'
 
 import {
     Sidebar,
@@ -9,25 +9,25 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from "@/components/ui/sidebar";
+} from '@/components/ui/sidebar'
 
 // This is sample data.
 const data = {
     navMain: [
         {
-            title: "Display Movies",
-            url: "dashboard",
+            title: 'Display Movies',
+            url: 'dashboard',
         },
         {
-            title: "Add Movies",
-            url: "addmovie",
+            title: 'Add Movies',
+            url: 'addmovie',
         },
         {
-            title: "Edit Movies",
-            url: "editmovie",
+            title: 'Edit Movies',
+            url: 'editmovie',
         },
     ],
-};
+}
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return (
@@ -66,5 +66,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </SidebarGroup>
             </SidebarContent>
         </Sidebar>
-    );
+    )
 }

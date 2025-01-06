@@ -1,6 +1,6 @@
-import * as React from "react";
+import * as React from 'react'
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
 import {
     Card,
     CardContent,
@@ -8,12 +8,12 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card";
-import Image from "next/image";
+} from '@/components/ui/card'
+import Image from 'next/image'
 
-import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Label } from "@radix-ui/react-label";
-import { Input } from "../ui/input";
+import { AspectRatio } from '@/components/ui/aspect-ratio'
+import { Label } from '@radix-ui/react-label'
+import { Input } from '../ui/input'
 
 export function Movie() {
     return (
@@ -45,5 +45,5 @@ export function Movie() {
                 </div>
             </CardFooter>
         </Card>
-    );
+    )
 }

@@ -1,16 +1,16 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { cn } from '@/lib/utils'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 interface SeatProps {
-    id: string;
-    isAvailable: boolean;
-    isSelected: boolean;
-    onSelect: (id: string) => void;
+    id: string
+    isAvailable: boolean
+    isSelected: boolean
+    onSelect: (id: string) => void
 }
 
 const Seat = ({ id, isAvailable, isSelected, onSelect }: SeatProps) => {
@@ -18,26 +18,26 @@ const Seat = ({ id, isAvailable, isSelected, onSelect }: SeatProps) => {
         <button
             onClick={() => isAvailable && onSelect(id)}
             className={cn(
-                "w-12 h-12 border-2 rounded-lg flex items-center justify-center transition-colors",
+                'w-12 h-12 border-2 rounded-lg flex items-center justify-center transition-colors',
                 isAvailable
                     ? isSelected
-                        ? "border-primary bg-primary text-primary-foreground"
-                        : "border-green-500 hover:bg-green-100"
-                    : "border-red-500 bg-red-100 cursor-not-allowed"
+                        ? 'border-primary bg-primary text-primary-foreground'
+                        : 'border-green-500 hover:bg-green-100'
+                    : 'border-red-500 bg-red-100 cursor-not-allowed'
             )}
             disabled={!isAvailable}
         >
             {id}
         </button>
-    );
-};
+    )
+}
 
 interface SeatSelectionCardProps {
-    movieTitle: string;
-    showTime: string;
-    showDate: string;
-    hallName: string;
-    seatPrice: number;
+    movieTitle: string
+    showTime: string
+    showDate: string
+    hallName: string
+    seatPrice: number
 }
 
 export function SeatSelectionCard({
@@ -47,30 +47,30 @@ export function SeatSelectionCard({
     hallName,
     seatPrice,
 }: SeatSelectionCardProps) {
-    const router = useRouter();
-    const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
+    const router = useRouter()
+    const [selectedSeats, setSelectedSeats] = useState<string[]>([])
 
     const seats = [
-        { id: "H6", available: true },
-        { id: "H7", available: true },
-        { id: "H8", available: true },
-        { id: "H9", available: false },
-        { id: "I1", available: true },
-        { id: "I2", available: false },
-        { id: "I3", available: true },
-        { id: "I4", available: true },
-        { id: "I5", available: true },
-    ];
+        { id: 'H6', available: true },
+        { id: 'H7', available: true },
+        { id: 'H8', available: true },
+        { id: 'H9', available: false },
+        { id: 'I1', available: true },
+        { id: 'I2', available: false },
+        { id: 'I3', available: true },
+        { id: 'I4', available: true },
+        { id: 'I5', available: true },
+    ]
 
     const handleSeatSelect = (seatId: string) => {
         setSelectedSeats((prev) =>
             prev.includes(seatId)
                 ? prev.filter((id) => id !== seatId)
                 : [...prev, seatId]
-        );
-    };
+        )
+    }
 
-    const totalPrice = selectedSeats.length * seatPrice;
+    const totalPrice = selectedSeats.length * seatPrice
 
     return (
         <div className="flex gap-6">
@@ -100,7 +100,7 @@ export function SeatSelectionCard({
                 <CardContent className="p-6 space-y-6">
                     <h3 className="font-semibold">Selected Seats</h3>
                     <div className="flex justify-between items-center">
-                        <span>{selectedSeats.join(", ")}</span>
+                        <span>{selectedSeats.join(', ')}</span>
                         <span>{selectedSeats.length}x</span>
                     </div>
                     <div className="space-y-2">
@@ -137,7 +137,7 @@ export function SeatSelectionCard({
                         </Button>
                         <Button
                             className="flex-1"
-                            onClick={() => router.push("/checkout")}
+                            onClick={() => router.push('/checkout')}
                             disabled={selectedSeats.length === 0}
                         >
                             PAY
@@ -146,5 +146,5 @@ export function SeatSelectionCard({
                 </CardContent>
             </Card>
         </div>
-    );
+    )
 }

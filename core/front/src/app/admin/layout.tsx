@@ -1,14 +1,14 @@
-import { AppSidebar } from "@/components/custom/app-sidebar";
-import { Separator } from "@/components/ui/separator";
+import { AppSidebar } from '@/components/custom/app-sidebar'
+import { Separator } from '@/components/ui/separator'
 import {
     SidebarInset,
     SidebarProvider,
     SidebarTrigger,
-} from "@/components/ui/sidebar";
-import { ReactNode } from "react";
+} from '@/components/ui/sidebar'
+import { ReactNode } from 'react'
 
 interface LayoutProps {
-    children: ReactNode;
+    children: ReactNode
 }
 
 export default function Layout({ children }: LayoutProps) {
@@ -16,7 +16,7 @@ export default function Layout({ children }: LayoutProps) {
         <SidebarProvider
             style={
                 {
-                    "--sidebar-width": "19rem",
+                    '--sidebar-width': '19rem',
                 } as React.CSSProperties
             }
         >
@@ -32,5 +32,5 @@ export default function Layout({ children }: LayoutProps) {
                 </div>
             </SidebarInset>
         </SidebarProvider>
-    );
+    )
 }

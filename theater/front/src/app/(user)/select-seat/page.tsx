@@ -1,4 +1,4 @@
-import { SeatSelectionCard } from "@/components/custom/seat-selection";
+import { SeatSelectionCard } from '@/components/custom/seat-selection'
 
 export default function SelectSeatsPage() {
     return (
@@ -13,5 +13,5 @@ export default function SelectSeatsPage() {
                 />
             </div>
         </div>
-    );
+    )
 }

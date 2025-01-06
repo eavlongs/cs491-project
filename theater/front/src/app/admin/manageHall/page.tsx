@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import { useState } from "react";
+import { useState } from 'react'
 import {
     Table,
     TableBody,
@@ -8,21 +8,21 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Pencil, Trash2 } from "lucide-react";
+} from '@/components/ui/table'
+import { Button } from '@/components/ui/button'
+import { Pencil, Trash2 } from 'lucide-react'
 import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
 import {
     AlertDialog,
     AlertDialogAction,
@@ -32,59 +32,59 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog'
 
 interface Hall {
-    id: number;
-    name: string;
-    seatPrice: number;
+    id: number
+    name: string
+    seatPrice: number
 }
 
 const formSchema = z.object({
-    name: z.string().min(1, "Hall name is required"),
+    name: z.string().min(1, 'Hall name is required'),
     seatPrice: z
         .string()
         .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-            message: "Seat price must be a positive number",
+            message: 'Seat price must be a positive number',
         }),
-});
+})
 
 export default function HallsTable() {
     const [halls, setHalls] = useState<Hall[]>([
-        { id: 1, name: "Hall A", seatPrice: 3.5 },
-        { id: 2, name: "IMAX", seatPrice: 5.5 },
-        { id: 3, name: "VIP", seatPrice: 8.5 },
-        { id: 4, name: "Hall B", seatPrice: 4.0 },
-        { id: 5, name: "Hall C", seatPrice: 3.5 },
-        { id: 6, name: "Premium", seatPrice: 7.0 },
-        { id: 7, name: "Hall D", seatPrice: 3.5 },
-        { id: 8, name: "Hall E", seatPrice: 4.0 },
-        { id: 9, name: "Hall F", seatPrice: 4.5 },
-        { id: 10, name: "Hall G", seatPrice: 3.5 },
-        { id: 11, name: "Hall H", seatPrice: 4.0 },
-        { id: 12, name: "Hall I", seatPrice: 4.5 },
-    ]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [isAddOpen, setIsAddOpen] = useState(false);
-    const [isEditOpen, setIsEditOpen] = useState(false);
-    const [editingHall, setEditingHall] = useState<Hall | null>(null);
-    const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-    const [deletingHallId, setDeletingHallId] = useState<number | null>(null);
-    const itemsPerPage = 10;
+        { id: 1, name: 'Hall A', seatPrice: 3.5 },
+        { id: 2, name: 'IMAX', seatPrice: 5.5 },
+        { id: 3, name: 'VIP', seatPrice: 8.5 },
+        { id: 4, name: 'Hall B', seatPrice: 4.0 },
+        { id: 5, name: 'Hall C', seatPrice: 3.5 },
+        { id: 6, name: 'Premium', seatPrice: 7.0 },
+        { id: 7, name: 'Hall D', seatPrice: 3.5 },
+        { id: 8, name: 'Hall E', seatPrice: 4.0 },
+        { id: 9, name: 'Hall F', seatPrice: 4.5 },
+        { id: 10, name: 'Hall G', seatPrice: 3.5 },
+        { id: 11, name: 'Hall H', seatPrice: 4.0 },
+        { id: 12, name: 'Hall I', seatPrice: 4.5 },
+    ])
+    const [currentPage, setCurrentPage] = useState(1)
+    const [isAddOpen, setIsAddOpen] = useState(false)
+    const [isEditOpen, setIsEditOpen] = useState(false)
+    const [editingHall, setEditingHall] = useState<Hall | null>(null)
+    const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
+    const [deletingHallId, setDeletingHallId] = useState<number | null>(null)
+    const itemsPerPage = 10
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "",
-            seatPrice: "",
+            name: '',
+            seatPrice: '',
         },
-    });
+    })
 
     const handleDelete = (id: number) => {
-        setHalls(halls.filter((hall) => hall.id !== id));
-        setDeleteConfirmOpen(false);
-        setDeletingHallId(null);
-    };
+        setHalls(halls.filter((hall) => hall.id !== id))
+        setDeleteConfirmOpen(false)
+        setDeletingHallId(null)
+    }
 
     const onSubmit = (values: z.infer<typeof formSchema>) => {
         if (editingHall) {
@@ -92,46 +92,46 @@ export default function HallsTable() {
                 halls.map((hall) =>
                     hall.id === editingHall.id
                         ? {
-                            ...hall,
-                            name: values.name,
-                            seatPrice: Number(values.seatPrice),
-                        }
+                              ...hall,
+                              name: values.name,
+                              seatPrice: Number(values.seatPrice),
+                          }
                         : hall
                 )
-            );
-            setIsEditOpen(false);
-            setEditingHall(null);
+            )
+            setIsEditOpen(false)
+            setEditingHall(null)
         } else {
             const newHall = {
                 id: halls.length + 1,
                 name: values.name,
                 seatPrice: Number(values.seatPrice),
-            };
-            setHalls([...halls, newHall]);
-            setIsAddOpen(false);
+            }
+            setHalls([...halls, newHall])
+            setIsAddOpen(false)
         }
-        form.reset();
-    };
+        form.reset()
+    }
 
     const openEditDialog = (hall: Hall) => {
-        setEditingHall(hall);
+        setEditingHall(hall)
         form.reset({
             name: hall.name,
             seatPrice: hall.seatPrice.toString(),
-        });
-        setIsEditOpen(true);
-    };
+        })
+        setIsEditOpen(true)
+    }
 
     const openDeleteConfirm = (id: number) => {
-        setDeletingHallId(id);
-        setDeleteConfirmOpen(true);
-    };
+        setDeletingHallId(id)
+        setDeleteConfirmOpen(true)
+    }
 
     // Pagination calculations
-    const totalPages = Math.ceil(halls.length / itemsPerPage);
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const currentHalls = halls.slice(startIndex, endIndex);
+    const totalPages = Math.ceil(halls.length / itemsPerPage)
+    const startIndex = (currentPage - 1) * itemsPerPage
+    const endIndex = startIndex + itemsPerPage
+    const currentHalls = halls.slice(startIndex, endIndex)
 
     return (
         <div className="p-4">
@@ -158,7 +158,7 @@ export default function HallsTable() {
                                 <Label htmlFor="name">Name</Label>
                                 <Input
                                     id="name"
-                                    {...form.register("name")}
+                                    {...form.register('name')}
                                     placeholder="Enter hall name"
                                 />
                                 {form.formState.errors.name && (
@@ -171,7 +171,7 @@ export default function HallsTable() {
                                 <Label htmlFor="seatPrice">Seat Price</Label>
                                 <Input
                                     id="seatPrice"
-                                    {...form.register("seatPrice")}
+                                    {...form.register('seatPrice')}
                                     placeholder="Enter seat price"
                                     type="number"
                                     step="0.1"
@@ -259,8 +259,8 @@ export default function HallsTable() {
                                 key={i + 1}
                                 variant={
                                     currentPage === i + 1
-                                        ? "default"
-                                        : "outline"
+                                        ? 'default'
+                                        : 'outline'
                                 }
                                 onClick={() => setCurrentPage(i + 1)}
                                 className="w-8 h-8 p-0"
@@ -296,7 +296,7 @@ export default function HallsTable() {
                             <Label htmlFor="edit-name">Name</Label>
                             <Input
                                 id="edit-name"
-                                {...form.register("name")}
+                                {...form.register('name')}
                                 placeholder="Enter hall name"
                             />
                             {form.formState.errors.name && (
@@ -309,7 +309,7 @@ export default function HallsTable() {
                             <Label htmlFor="edit-seatPrice">Seat Price</Label>
                             <Input
                                 id="edit-seatPrice"
-                                {...form.register("seatPrice")}
+                                {...form.register('seatPrice')}
                                 placeholder="Enter seat price"
                                 type="number"
                                 step="0.1"
@@ -366,5 +366,5 @@ export default function HallsTable() {
                 </AlertDialogContent>
             </AlertDialog>
         </div>
-    );
+    )
 }
