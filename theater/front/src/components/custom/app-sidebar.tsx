@@ -22,6 +22,10 @@ const data = {
             title: "Movie Schedule",
             url: "movieSchdule",
         },
+         {
+            title: "Assign Hall",
+            url: "assignHall",
+        },
     ],
 };
 
@@ -34,7 +38,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         <SidebarMenuButton size="lg" asChild>
                             <a href="manageHall">
                                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                                    <GalleryVerticalEnd className="size-4" />
+                                    <GalleryVerticalEnd className="size-4" />x1
                                 </div>
                                 <div className="flex flex-col gap-0.5 leading-none">
                                     <span className="font-semibold">
