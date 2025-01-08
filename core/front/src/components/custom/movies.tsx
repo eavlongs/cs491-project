@@ -12,8 +12,7 @@ import {
 import Image from 'next/image'
 
 import { AspectRatio } from '@/components/ui/aspect-ratio'
-import { Label } from '@radix-ui/react-label'
-import { Input } from '../ui/input'
+
 
 export function Movie() {
     return (
