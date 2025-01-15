@@ -15,6 +15,18 @@ import {
 const data = {
     navMain: [
         {
+            title: 'Display Movie',
+            url: 'display-movie',
+        },
+        {
+            title: 'Add Movie',
+            url: 'add-movie',
+        },
+        {
+            title: 'Edit Movie',
+            url: 'edit-movie',
+        },
+        {
             title: 'Manage Hall',
             url: 'manageHall',
         },
@@ -39,7 +51,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                             <a href="manageHall">
                                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                                     <GalleryVerticalEnd className="size-4" />
-                                    x1
                                 </div>
                                 <div className="flex flex-col gap-0.5 leading-none">
                                     <span className="font-semibold">
