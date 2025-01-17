@@ -5,6 +5,21 @@ if "%~1"=="" (
     exit /b 1
 )
 
+if "%~1" == "pretty" (
+    cd core/front
+    npm run pretty
+
+    cd ../../subscription/front
+    npm run pretty
+
+    cd ../../store/front
+    npm run pretty
+
+    cd ../../theater/front
+    npm run pretty
+    exit /b 0
+)
+
 if "%~2"=="" (
     echo Error: Specify whether to run "front" or "back".
     exit /b 1

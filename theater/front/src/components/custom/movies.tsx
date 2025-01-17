@@ -13,7 +13,6 @@ import Image from 'next/image'
 
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 
-
 export function Movie() {
     return (
         <Card className="w-[350px]">

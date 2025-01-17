@@ -134,5 +134,5 @@ export function MovieDetail({ ...props }) {
                 </div>
             </Card>
         </div>
-    );
+    )
 }

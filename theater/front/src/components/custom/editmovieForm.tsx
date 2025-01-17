@@ -30,7 +30,7 @@ const data = {
         {
             label: 'Description',
         },
-         {
+        {
             label: 'Link Movie',
         },
     ],
