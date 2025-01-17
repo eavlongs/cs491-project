@@ -24,7 +24,7 @@ export function Movie() {
 
             <CardContent>
                 <div className="w-[450px]">
-                    <AspectRatio ratio={16 / 9}>
+                    <AspectRatio ratio={2 / 3}>
                         <Image
                             src="/core/front/public/image/image1.jpg"
                             alt="Image"

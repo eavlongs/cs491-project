@@ -46,14 +46,12 @@ export function LoginForm({
                                 </div>
                                 <Input id="password" type="password" required />
                             </div>
-                            <Button type="submit" className="w-full">
-                                Login
-                            </Button>
+                            <Button className="w-full">Login</Button>
                         </div>
                         <div className="mt-4 text-center text-sm">
                             Don&apos;t have an account?{' '}
                             <a
-                                href="/signUp"
+                                href="/signup"
                                 className="underline underline-offset-4"
                             >
                                 Sign up

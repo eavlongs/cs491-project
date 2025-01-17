@@ -193,7 +193,7 @@ export default function HallsTable() {
                                 >
                                     Cancel
                                 </Button>
-                                <Button type="submit">Add Hall</Button>
+                                <Button>Add Hall</Button>
                             </div>
                         </form>
                     </DialogContent>
@@ -328,7 +328,7 @@ export default function HallsTable() {
                             >
                                 Cancel
                             </Button>
-                            <Button type="submit">Save Changes</Button>
+                            <Button>Save Changes</Button>
                         </div>
                     </form>
                 </DialogContent>

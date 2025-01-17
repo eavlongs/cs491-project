@@ -1,4 +1,4 @@
-import { Movie } from '@/components/custom/movies'
+import { Movie } from '@/components/custom/Movie'
 
 export default function Page() {
     return (
