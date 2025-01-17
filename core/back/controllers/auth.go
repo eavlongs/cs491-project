@@ -23,6 +23,13 @@ func (c *AuthController) Register(ctx *gin.Context) {
 		return
 	}
 
+	err := c.repo.FindUser(user.Email, &models.User{})
+
+	if err == nil {
+		utils.RespondWithBadRequestError(ctx, "Email already exists")
+		return
+	}
+
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
 		utils.RespondWithInternalServerError(ctx, "Error hashing password")
@@ -41,7 +48,13 @@ func (c *AuthController) Register(ctx *gin.Context) {
 		return
 	}
 
-	utils.RespondWithSuccess(ctx, map[string]string{"token": token})
+	utils.RespondWithSuccess(ctx, gin.H{"token": token, "user": gin.H{
+		"id":         user.ID,
+		"email":      user.Email,
+		"first_name": user.FirstName,
+		"last_name":  user.LastName,
+		"is_admin":   user.IsAdmin,
+	}})
 }
 
 func (c *AuthController) Login(ctx *gin.Context) {
@@ -71,5 +84,11 @@ func (c *AuthController) Login(ctx *gin.Context) {
 		return
 	}
 
-	utils.RespondWithSuccess(ctx, map[string]string{"token": token})
+	utils.RespondWithSuccess(ctx, gin.H{"token": token, "user": gin.H{
+		"id":         user.ID,
+		"email":      user.Email,
+		"first_name": user.FirstName,
+		"last_name":  user.LastName,
+		"is_admin":   user.IsAdmin,
+	}})
 }
