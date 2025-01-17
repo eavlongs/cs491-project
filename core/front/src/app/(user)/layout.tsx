@@ -1,9 +1,4 @@
 import { Separator } from '@/components/ui/separator'
-import {
-    SidebarInset,
-    SidebarProvider,
-    SidebarTrigger,
-} from '@/components/ui/sidebar'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 
