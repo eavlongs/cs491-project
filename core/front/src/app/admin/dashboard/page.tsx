@@ -1,10 +1,12 @@
 import { Movie } from '@/components/custom/Movie'
+import { getMovies } from './actions'
 
-export default function Page() {
+export default async function Page() {
+    const movies = await getMovies()
     return (
-        <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, index) => (
-                <Movie key={index} />
+        <div className="grid auto-rows-min gap-4 md:grid-cols-3 mx-auto">
+            {movies.map((movie) => (
+                <Movie key={movie.id} movie={movie} />
             ))}
         </div>
     )

@@ -1,8 +1,7 @@
-'use client'
-import { useSession } from 'next-auth/react'
+import { getServerSession } from 'next-auth'
 import { ReactNode } from 'react'
 
-export default function LoggedInOnly({
+export default async function LoggedInOnly({
     children,
     otherwise,
 }: {
@@ -13,7 +12,7 @@ export default function LoggedInOnly({
         otherwise = null
     }
 
-    const session = useSession()
+    const session = await getServerSession()
 
-    return session.data && session.data.user ? children : otherwise
+    return session && session.user ? children : otherwise
 }

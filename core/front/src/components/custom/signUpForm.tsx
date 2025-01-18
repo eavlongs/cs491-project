@@ -68,7 +68,6 @@ export function SignUpForm({
                 return
             }
 
-            console.log('here')
             throw new Error('Sign up failed')
         } catch (err: any) {
             alert(err.message)

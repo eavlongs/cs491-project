@@ -5,8 +5,6 @@ export default withAuth(
     function middleware(request) {
         const pathname = request.nextUrl.pathname
 
-        console.log(request.nextauth.token)
-        console.log(request.nextauth.token?.user.is_admin)
         if (
             pathname.startsWith('/admin') &&
             !request.nextauth.token?.user.is_admin

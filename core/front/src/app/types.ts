@@ -25,3 +25,19 @@ export type ApiResponse<T = any> = {
     error?: any
     data?: T
 }
+
+export type Movie = {
+    id: number
+    genres: string
+    age_restriction: string
+    title: string
+    description: string
+    poster_url: string
+    directors: string
+    cast: string
+    release_date: string
+    movie_duration: number
+    trailer_url: string
+    avg_rating?: number
+    number_of_ratings?: number
+}

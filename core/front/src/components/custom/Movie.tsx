@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button'
 import {
     Card,
     CardContent,
@@ -9,36 +8,39 @@ import {
 } from '@/components/ui/card'
 import Image from 'next/image'
 
-import { AspectRatio } from '@/components/ui/aspect-ratio'
+import { Movie as MovieType } from '@/app/types'
 import Link from 'next/link'
 
-export function Movie() {
+export function Movie({ movie }: { movie: MovieType }) {
     return (
-        <Link href="/admin/movie/1">
+        <Link href={`/admin/movie/${movie.id}`}>
             <Card className="w-[350px] hover:cursor-pointer">
                 <CardHeader>
                     <CardTitle className="flex justify-between items-center">
-                        The Imitation Game{' '}
+                        {movie.title}
                     </CardTitle>
                 </CardHeader>
 
                 <CardContent>
-                    <div className="h-[450px]">
-                        <AspectRatio ratio={2 / 3}>
-                            <Image
-                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPgESi2rO2Mj8F3_EFLgxxd7rtsBF_55Hh5A&s"
-                                alt="Image"
-                                className="rounded-md object-cover"
-                                fill
-                            />
-                        </AspectRatio>
+                    <div className="relative h-[350px] aspect-[2/3] mx-auto">
+                        <Image
+                            src={movie.poster_url}
+                            alt="Image"
+                            className="rounded-md object-cover"
+                            fill
+                            unoptimized
+                        />
                     </div>
                 </CardContent>
 
                 <CardFooter className="flex justify-between">
                     <div className="grid gap-2">
-                        <CardDescription>09/11/2001</CardDescription>
-                        <CardDescription>2 hours</CardDescription>
+                        <CardDescription>
+                            {new Date(movie.release_date).toLocaleDateString()}
+                        </CardDescription>
+                        <CardDescription>
+                            {movie.movie_duration} Minutes
+                        </CardDescription>
                     </div>
                 </CardFooter>
             </Card>
