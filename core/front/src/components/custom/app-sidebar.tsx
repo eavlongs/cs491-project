@@ -1,5 +1,5 @@
-import * as React from 'react'
 import { GalleryVerticalEnd } from 'lucide-react'
+import * as React from 'react'
 
 import {
     Sidebar,
@@ -10,21 +10,26 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar'
+import { url } from 'inspector'
 
 // This is sample data.
 const data = {
     navMain: [
         {
             title: 'Display Movies',
-            url: 'dashboard',
+            url: '/admin/dashboard',
         },
         {
             title: 'Add Movies',
-            url: 'addmovie',
+            url: '/admin/movie/new',
         },
         {
             title: 'Edit Movies',
-            url: 'editmovie',
+            url: '/admin/movie/1',
+        },
+        {
+            title: 'Manage Halls',
+            url: '/admin/hall',
         },
     ],
 }

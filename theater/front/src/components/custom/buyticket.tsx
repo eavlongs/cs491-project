@@ -105,13 +105,9 @@ export function MovieDetail({ ...props }) {
                     </form>
                 </CardContent>
                 <div className="w-full flex p-4">
-                    <Button type="submit" className="w-32">
-                        Cancel
-                    </Button>
+                    <Button className="w-32">Cancel</Button>
                     <div className="w-full flex flex-row-reverse ">
-                        <Button type="submit" className="w-32">
-                            Buy
-                        </Button>
+                        <Button className="w-32">Buy</Button>
                         <Select>
                             <SelectTrigger className="w-[180px] mr-5">
                                 <SelectValue placeholder="Select Hall & Time" />

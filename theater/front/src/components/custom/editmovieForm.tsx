@@ -88,23 +88,13 @@ export function EditMovie({
                     </form>
                 </CardContent>
                 <div className="w-full flex p-4">
-                    <Button
-                        type="submit"
-                        variant="destructive"
-                        className="w-16"
-                    >
+                    <Button variant="destructive" className="w-16">
                         Delete
                     </Button>
                     <div className="w-full flex flex-row-reverse ">
-                        <Button type="submit" className="w-16 ">
-                            Create
-                        </Button>
+                        <Button className="w-16 ">Create</Button>
                         <div className="pr-10">
-                            <Button
-                                type="submit"
-                                variant="outline"
-                                className="w-16"
-                            >
+                            <Button variant="outline" className="w-16">
                                 Cancel
                             </Button>
                         </div>

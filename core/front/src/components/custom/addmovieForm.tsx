@@ -38,8 +38,8 @@ export function AddMovieForm({
     ...props
 }: React.ComponentProps<'div'>) {
     return (
-        <div className={cn('flex flex-col gap-6', className)} {...props}>
-            <Card className="">
+        <div className={cn('flex gap-6', className)} {...props}>
+            <Card className="p-4">
                 <CardContent className="grid p-0 md:grid-cols-2">
                     <div className="p-4 flex flex-col items-center justify-center gap-4">
                         <div className="w-full h-full bg-gray-300 rounded-md flex items-center justify-center">
@@ -61,9 +61,9 @@ export function AddMovieForm({
                             {data.items.map((item, index) => (
                                 <div
                                     key={index}
-                                    className="grid grid-cols-2 gap-4"
+                                    className="grid grid-cols-7 gap-4"
                                 >
-                                    <div className="flex items-center">
+                                    <div className="flex items-center col-span-2">
                                         <Label
                                             htmlFor={item.label
                                                 .replace(/\s+/g, '')
@@ -78,21 +78,19 @@ export function AddMovieForm({
                                             .toLowerCase()}
                                         type="text"
                                         required
+                                        className="col-span-5"
                                     />
                                 </div>
                             ))}
                         </div>
                     </form>
                 </CardContent>
-                <div className="w-full flex p-4">
-                    <Button type="submit" variant="outline" className="w-16">
+                <div className="flex justify-end gap-x-4">
+                    <Button variant="outline" className="w-16">
                         Cancel
                     </Button>
-                    <div className="w-full flex flex-row-reverse">
-                        <Button type="submit" className="w-16 ">
-                            Create
-                        </Button>
-                    </div>
+
+                    <Button className="w-16">Create</Button>
                 </div>
             </Card>
         </div>

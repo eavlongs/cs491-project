@@ -1,4 +1,7 @@
-import { cn } from '@/lib/utils'
+'use client'
+
+import { ApiResponse } from '@/app/types'
+import { apiUrl } from '@/app/utils'
 import { Button } from '@/components/ui/button'
 import {
     Card,
@@ -9,10 +12,68 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { cn } from '@/lib/utils'
+import { signIn } from 'next-auth/react'
+import { useRef } from 'react'
+
 export function SignUpForm({
     className,
     ...props
 }: React.ComponentPropsWithoutRef<'div'>) {
+    const firstNameRef = useRef<HTMLInputElement>(null)
+    const lastNameRef = useRef<HTMLInputElement>(null)
+    const emailRef = useRef<HTMLInputElement>(null)
+    const passwordRef = useRef<HTMLInputElement>(null)
+    const confirmPasswordRef = useRef<HTMLInputElement>(null)
+
+    async function signUp() {
+        const firstName = firstNameRef.current?.value
+        const lastName = lastNameRef.current?.value
+        const email = emailRef.current?.value
+        const password = passwordRef.current?.value
+        const confirmPassword = confirmPasswordRef.current?.value
+
+        try {
+            const response = await fetch(`${apiUrl}/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    first_name: firstName,
+                    last_name: lastName,
+                    email,
+                    password,
+                    confirm_password: confirmPassword,
+                }),
+            })
+
+            const json: ApiResponse = await response.json()
+            if (!response.ok) {
+                throw new Error(json.message)
+            }
+
+            const login = await signIn('credentials', {
+                email,
+                password,
+                redirect: false,
+            })
+
+            if (!login) {
+                throw new Error('Sign up failed')
+            }
+
+            if (login.ok) {
+                window.location.href = '/'
+                return
+            }
+
+            console.log('here')
+            throw new Error('Sign up failed')
+        } catch (err: any) {
+            alert(err.message)
+        }
+    }
     return (
         <div className={cn('flex flex-col gap-6', className)} {...props}>
             <Card>
@@ -35,6 +96,12 @@ export function SignUpForm({
                                     <Input
                                         id="firstName"
                                         type="firstName"
+                                        ref={firstNameRef}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                signUp()
+                                            }
+                                        }}
                                         required
                                     />
                                 </div>
@@ -47,6 +114,12 @@ export function SignUpForm({
                                     <Input
                                         id="lastName"
                                         type="lastName"
+                                        ref={lastNameRef}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                signUp()
+                                            }
+                                        }}
                                         required
                                     />
                                 </div>
@@ -56,7 +129,13 @@ export function SignUpForm({
                                 <Input
                                     id="email"
                                     type="email"
-                                    placeholder="email@paragoniu.edu.kh"
+                                    placeholder="test@example.com"
+                                    ref={emailRef}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            signUp()
+                                        }
+                                    }}
                                     required
                                 />
                             </div>
@@ -64,28 +143,48 @@ export function SignUpForm({
                                 <div className="flex items-center">
                                     <Label htmlFor="password">Password</Label>
                                 </div>
-                                <Input id="password" type="password" required />
+                                <Input
+                                    id="password"
+                                    type="password"
+                                    ref={passwordRef}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            signUp()
+                                        }
+                                    }}
+                                    required
+                                />
                             </div>
                             <div className="grid gap-2">
                                 <div className="flex items-center">
-                                    <Label htmlFor="comfirmPassword">
+                                    <Label htmlFor="confirmPassword">
                                         Comfirm Password
                                     </Label>
                                 </div>
                                 <Input
-                                    id="comfirmPassword"
-                                    type="comfirmPassword"
+                                    id="confirmPassword"
+                                    type="confirmPassword"
+                                    ref={confirmPasswordRef}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            signUp()
+                                        }
+                                    }}
                                     required
                                 />
                             </div>
-                            <Button type="submit" className="w-full">
+                            <Button
+                                type="button"
+                                className="w-full"
+                                onClick={signUp}
+                            >
                                 Sign Up
                             </Button>
                         </div>
                         <div className="mt-4 text-center text-sm">
-                            have an account?{' '}
+                            Already have an account?{' '}
                             <a
-                                href="/signUp"
+                                href="/login"
                                 className="underline underline-offset-4"
                             >
                                 Log In

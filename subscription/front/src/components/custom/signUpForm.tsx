@@ -78,9 +78,7 @@ export function SignUpForm({
                                     required
                                 />
                             </div>
-                            <Button type="submit" className="w-full">
-                                Sign Up
-                            </Button>
+                            <Button className="w-full">Sign Up</Button>
                         </div>
                         <div className="mt-4 text-center text-sm">
                             have an account?{' '}

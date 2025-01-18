@@ -1,11 +1,12 @@
 'use client'
 
-import { useState } from 'react'
-import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
+import { cn } from '@/lib/utils'
 import { Star } from 'lucide-react'
+import Image from 'next/image'
+import { useState } from 'react'
 
 const data = {
     items: [
@@ -68,17 +69,20 @@ export function MovieDetail({
     }
 
     return (
-        <div className={cn('flex flex-col gap-6', className)} {...props}>
-            <Card className="">
-                <CardContent className="grid p-0 md:grid-cols-2">
-                    <div className="p-4 flex flex-col items-center justify-center gap-4">
-                        <div className="w-full h-full bg-gray-300 rounded-md flex items-center justify-center">
-                            <span className=" text-gray-500">
-                                Image Placeholder
-                            </span>
+        <div className={cn('', className)} {...props}>
+            <Card>
+                <CardContent className="grid p-0 lg:grid-cols-2 mx-4 my-8">
+                    <div className="flex items-center justify-center">
+                        <div className="relative w-full h-full max-w-[25rem]">
+                            <Image
+                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPgESi2rO2Mj8F3_EFLgxxd7rtsBF_55Hh5A&s"
+                                alt="Image"
+                                className="rounded-md object-cover w-full"
+                                fill
+                            />
                         </div>
                     </div>
-                    <form className="p-6 md:p-8 ">
+                    <form className="p-6 md:p-8">
                         <div className="flex flex-col gap-6 mb-4">
                             <div className="flex flex-col items-center text-center">
                                 <h1 className="text-2xl font-bold mb-2">
@@ -151,18 +155,11 @@ export function MovieDetail({
                         </div>
                     </form>
                 </CardContent>
-                <div className="w-full flex p-4">
-                    <Button type="submit" className="w-32">
-                        Watch in Cinema
-                    </Button>
-                    <div className="w-full flex flex-row-reverse ">
-                        <Button type="submit" className="w-32">
-                            Buy / Rent Movie
-                        </Button>
-                        <Button type="submit" className="w-32 mr-5">
-                            Watch Online
-                        </Button>
-                    </div>
+                <div className="w-full flex flex-row-reverse p-4 gap-x-6">
+                    <Button className="w-32">Watch in Cinema</Button>
+
+                    <Button className="w-32">Buy / Rent Movie</Button>
+                    <Button className="w-32">Watch Online</Button>
                 </div>
             </Card>
         </div>
