@@ -1,8 +1,9 @@
 'use client'
-
+import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { DateSelector } from '@/components/custom/date-box'
 
 interface TimeSlot {
     time: string
@@ -15,6 +16,8 @@ interface Hall {
     status: 'inactive' | 'active'
     timeSlots: TimeSlot[]
 }
+
+
 
 const halls: Hall[] = [
     {
@@ -68,9 +71,11 @@ const halls: Hall[] = [
 ]
 
 export default function Page() {
+    const [, setSelectedDate] = useState<string>('25 Dec')
     return (
         <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
             <div className="container mx-auto p-6">
+                <DateSelector onDateSelect={setSelectedDate} />
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
                     {halls.map((hall) => (
                         <div key={hall.id} className="relative h-full">
@@ -91,7 +96,7 @@ export default function Page() {
                                                     {slot.time}
                                                 </div>
                                             ) : slot.status ===
-                                              'unavailable' ? (
+                                            'unavailable' ? (
                                                 <div
                                                     key={index}
                                                     className="w-full px-4 py-2 text-center rounded text-black"
