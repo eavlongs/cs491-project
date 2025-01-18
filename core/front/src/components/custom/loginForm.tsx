@@ -62,8 +62,12 @@ export function LoginForm({
                                     id="email"
                                     type="email"
                                     placeholder="test@example.com"
-                                    defaultValue="esok@paragoniu.edu.kh"
                                     ref={emailRef}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            loginHandler()
+                                        }
+                                    }}
                                     required
                                 />
                             </div>
@@ -75,7 +79,11 @@ export function LoginForm({
                                     id="password"
                                     type="password"
                                     required
-                                    defaultValue="helloworld"
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            loginHandler()
+                                        }
+                                    }}
                                     ref={passwordRef}
                                 />
                                 <a
