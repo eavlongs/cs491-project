@@ -50,6 +50,9 @@ func (r *MovieRepository) Rate(userID uint, movieID uint, rating uint) error {
 	var existingRating models.Rating
 
 	if err := r.db.Where("user_id = ? AND movie_id = ?", userID, movieID).First(&existingRating).Error; err == nil {
+		if existingRating.RatingPoint == rating {
+			r.DeleteRating(userID, movieID)
+		}
 		return r.db.Model(&existingRating).Update("rating_point", rating).Error
 	}
 

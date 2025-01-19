@@ -39,8 +39,7 @@ func (c *MovieController) Create(ctx *gin.Context) {
 		Title:          req.Title,
 		Description:    req.Description,
 		PosterURL:      req.PosterURL,
-		Director:       req.Director,
-		Writers:        req.Writers,
+		Directors:      req.Directors,
 		Cast:           req.Cast,
 		ReleaseDate:    releaseDate,
 		MovieDuration:  req.MovieDuration,
@@ -78,8 +77,7 @@ func (c *MovieController) Update(ctx *gin.Context) {
 		Title:          req.Title,
 		Description:    req.Description,
 		PosterURL:      req.PosterURL,
-		Director:       req.Director,
-		Writers:        req.Writers,
+		Directors:      req.Directors,
 		Cast:           req.Cast,
 		ReleaseDate:    releaseDate,
 		MovieDuration:  req.MovieDuration,
@@ -109,7 +107,9 @@ func (c *MovieController) GetAll(ctx *gin.Context) {
 		return
 	}
 
-	utils.RespondWithSuccess(ctx, movies)
+	utils.RespondWithSuccess(ctx, gin.H{
+		"movies": movies,
+	})
 }
 
 func (c *MovieController) GetOne(ctx *gin.Context) {
@@ -126,7 +126,7 @@ func (c *MovieController) GetOne(ctx *gin.Context) {
 		return
 	}
 
-	utils.RespondWithSuccess(ctx, movie)
+	utils.RespondWithSuccess(ctx, gin.H{"movie": movie})
 }
 
 func (c *MovieController) Delete(ctx *gin.Context) {
@@ -201,8 +201,7 @@ type CreateMovieRequest struct {
 	Title          string `json:"title" binding:"required"`
 	Description    string `json:"description" binding:"required"`
 	PosterURL      string `json:"poster_url" binding:"required"`
-	Director       string `json:"director" binding:"required"`
-	Writers        string `json:"writers" binding:"required"`
+	Directors      string `json:"directors" binding:"required"`
 	Cast           string `json:"cast" binding:"required"`
 	ReleaseDate    string `json:"release_date" binding:"required"`
 	MovieDuration  int    `json:"movie_duration" binding:"required"`

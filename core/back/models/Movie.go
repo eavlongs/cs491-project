@@ -9,8 +9,7 @@ type Movie struct {
 	Title          string    `gorm:"type:varchar(200);not null" json:"title"`
 	Description    string    `gorm:"type:text" json:"description"`
 	PosterURL      string    `gorm:"type:varchar(255)" json:"poster_url"`
-	Director       string    `gorm:"type:varchar(100)" json:"director"`
-	Writers        string    `gorm:"type:text" json:"writers"`
+	Directors      string    `gorm:"type:varchar(100)" json:"directors"`
 	Cast           string    `gorm:"type:text" json:"cast"`
 	ReleaseDate    time.Time `gorm:"type:date" json:"release_date"`
 	MovieDuration  int       `gorm:"not null" json:"movie_duration"` // duration in minutes
