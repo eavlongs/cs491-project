@@ -11,9 +11,15 @@ import Image from 'next/image'
 import { Movie as MovieType } from '@/app/types'
 import Link from 'next/link'
 
-export function Movie({ movie }: { movie: MovieType }) {
+export function Movie({
+    movie,
+    admin = false,
+}: {
+    movie: MovieType
+    admin?: boolean
+}) {
     return (
-        <Link href={`/admin/movie/${movie.id}`}>
+        <Link href={admin ? `/admin/movie/${movie.id}` : `/movie/${movie.id}`}>
             <Card className="w-[350px] hover:cursor-pointer">
                 <CardHeader>
                     <CardTitle className="flex justify-between items-center">
