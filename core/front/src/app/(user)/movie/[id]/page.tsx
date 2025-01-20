@@ -1,5 +1,5 @@
 import { getMovie } from '@/app/admin/movie/[id]/actions'
-import { MovieDetail } from '@/components/custom/MovieDetail'
+import { MovieDetail } from '@/components/custom/moviedetail'
 export default async function Page({
     params,
 }: {
