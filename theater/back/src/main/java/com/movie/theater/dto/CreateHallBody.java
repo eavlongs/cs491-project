@@ -8,8 +8,8 @@ public class CreateHallBody {
 	@NotNull(message = "hall_name cannot be empty")
 	@Size(min = 1, message = "hall_name cannot be empty")
 	@Size(max = 100, message = "hall_name cannot be longer than 100 characters")
-	@JsonProperty("hall_name")
-	private String hallName;
+	@JsonProperty("name")
+	private String name;
 	
 	@NotNull(message = "seat_price cannot be empty")
 	@Min(value = 0, message = "seat_price cannot be less than 0")
@@ -17,12 +17,12 @@ public class CreateHallBody {
 	@JsonProperty("seat_price")
 	private double seatPrice;
 	
-	public @NotNull(message = "hall_name cannot be empty") @Size(min = 1, message = "hall_name cannot be empty") @Size(max = 100, message = "hall_name cannot be longer than 100 characters") String getHallName() {
-		return hallName;
+	public @NotNull(message = "hall_name cannot be empty") @Size(min = 1, message = "hall_name cannot be empty") @Size(max = 100, message = "hall_name cannot be longer than 100 characters") String getName() {
+		return name;
 	}
 	
-	public void setHallName(@NotNull(message = "hall_name cannot be empty") @Size(min = 1, message = "hall_name cannot be empty") @Size(max = 100, message = "hall_name cannot be longer than 100 characters") String hallName) {
-		this.hallName = hallName;
+	public void setName(@NotNull(message = "hall_name cannot be empty") @Size(min = 1, message = "hall_name cannot be empty") @Size(max = 100, message = "hall_name cannot be longer than 100 characters") String name) {
+		this.name = name;
 	}
 	
 	@NotNull(message = "seat_price cannot be empty")

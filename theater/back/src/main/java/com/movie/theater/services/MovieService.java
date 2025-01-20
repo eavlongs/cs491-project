@@ -31,6 +31,7 @@ public class MovieService {
 	}
 	
 	public void createHall(Hall hall) {
+		System.out.println("creating hall" + hall.getName() + hall.getSeatPrice());
 		hallRepository.save(hall);
 	}
 	
@@ -48,9 +49,9 @@ public class MovieService {
 	}
 	
 	public void createSeatsInHall(String hallId) throws Exception {
-		hallRepository.findById(hallId).orElseThrow(Exception::new);
-		int rows = 10, cols = 10;
-		List<Seat> seats = new ArrayList<>(List.of(new Seat[rows * cols]));
+		hallRepository.findById(hallId).orElseThrow();
+		int rows = 3, cols = 3;
+		List<Seat> seats = new ArrayList<>(rows * cols);
 		
 		// using the alphabet and number convention for seat codes implicitly limits the number of rows to 26
 		String aToZ = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -62,7 +63,7 @@ public class MovieService {
 				seat.setRowNumber(i + 1);
 				seat.setColNumber(j + 1);
 				seat.setCode(aToZ.charAt(i) + String.valueOf(j + 1));
-				seats.set(i * cols + j, seat);
+				seats.add(seat);
 			}
 		}
 		
@@ -75,6 +76,11 @@ public class MovieService {
 	
 	public Movie findMovieById(String id) {
 		return movieRepository.findById(id).orElse(null);
+	}
+	
+	public Movie findMovieByMbId(String mbId) {
+		System.out.println(mbId);
+		return movieRepository.findByMbId(mbId);
 	}
 	
 	public void updateMovie(Movie movie) {
@@ -126,6 +132,42 @@ public class MovieService {
 		scheduleRepository.deleteById(scheduleId);
 	}
 	
+	public List<Map<String, Object>> getSchedulesOfAllHalls(Date startDate, Date endDate) {
+		List<Schedule> schedules = scheduleRepository.getSchedulesOfAllMovieWithinTimeframe(startDate, endDate);
+		
+		// add movie info to each schedule object
+		Map<String, Object> movieMap = new HashMap<>();
+		
+		List<Movie> movies = movieRepository.findAll();
+		
+		for (Movie movie : movies) {
+			movieMap.put(movie.getId(), movie);
+		}
+		
+		// add hall info to each schedule object
+		Map<String, Object> hallMap = new HashMap<>();
+		
+		List<Hall> halls = hallRepository.findAll();
+		
+		for (Hall hall : halls) {
+			hallMap.put(hall.getId(), hall);
+		}
+		
+		ArrayList<Map<String, Object>> result = new ArrayList<>(schedules.size());
+		
+		for (Schedule schedule : schedules) {
+			Map<String, Object> scheduleMap = new HashMap<>();
+			scheduleMap.put("schedule", schedule);
+			scheduleMap.put("hall", hallMap.get(schedule.getHallId()));
+			scheduleMap.put("movie", movieMap.get(schedule.getMovieId()));
+			result.add(scheduleMap);
+		}
+		
+		// structure of result = {schedule: Schedule, hall: Hall, movie: Movie}[]
+		
+		return result;
+	}
+	
 	public List<Map<String, Object>> getSchedules(String movieId, Date startDate, Date endDate) {
 		List<Schedule> schedules = scheduleRepository.getSchedulesByMovieIdAndWithinTimeframe(movieId, startDate, endDate);
 		
@@ -146,6 +188,8 @@ public class MovieService {
 			scheduleMap.put("hall", hallMap.get(schedule.getHallId()));
 			result.add(scheduleMap);
 		}
+		
+		// structure of result = {schedule: Schedule, hall: Hall}[]
 		
 		return result;
 	}

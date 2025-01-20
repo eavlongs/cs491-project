@@ -26,20 +26,18 @@ public class JWTHelper {
 	}
 	
 	private Key getSigningKey() {
-		System.out.println(jwtSecret);
-		byte[] keyBytes = Base64.getDecoder().decode(jwtSecret);
+		byte[] keyBytes = jwtSecret.getBytes();
 		return new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
 	}
 	
 	public String generateToken(User user) {
 		Key key = getSigningKey();
 		return Jwts.builder()
-				.setSubject(user.getEmail())
 				.claim("id", user.getId())
 				.claim("first_name", user.getFirstName())
 				.claim("last_name", user.getLastName())
+				.claim("email", user.getEmail())
 				.claim("is_admin", user.getAdmin())
-				.setIssuedAt(new Date())
 				.setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 24 hours
 				.signWith(key)
 				.compact();
@@ -55,6 +53,7 @@ public class JWTHelper {
 	}
 	
 	public User isUser(String token) throws Exception {
+		System.out.println(token);
 		Claims claims = parseToken(token);
 		User user = new User();
 		user.setId(claims.get("id", String.class));
@@ -63,11 +62,13 @@ public class JWTHelper {
 		user.setLastName(claims.get("last_name", String.class));
 		user.setAdmin(claims.get("is_admin", Boolean.class));
 		
+		System.out.println(user.getEmail());
 		return user;
 	}
 	
 	public User isAdmin(String token) throws Exception {
 		User user = isUser(token);
+		System.out.println(user.getAdmin());
 		if (!user.getAdmin()) {
 			throw new Exception("User is not an admin");
 		}

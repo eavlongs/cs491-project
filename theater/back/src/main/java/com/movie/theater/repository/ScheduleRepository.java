@@ -13,4 +13,7 @@ public interface ScheduleRepository extends MongoRepository<Schedule, String> {
 	
 	@Query(value = "{ 'movieId' : ?0, 'startTime' : { $gte : ?1, $lte : ?2 } }")
 	List<Schedule> getSchedulesByMovieIdAndWithinTimeframe(String id, Date startDate, Date endDate);
+	
+	@Query(value = "{ 'startTime' : { $gte : ?0, $lte : ?1 } }")
+	List<Schedule> getSchedulesOfAllMovieWithinTimeframe(Date startDate, Date endDate);
 }

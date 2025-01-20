@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class CreateMovieBody {
 	@JsonProperty("mb_id")
-	private Integer mbId;
+	private String mbId;
 	
 	@Size(max = 255, message = "Genres cannot exceed 255 characters")
 	private String genres;
@@ -30,7 +30,7 @@ public class CreateMovieBody {
 	
 	@NotBlank(message = "Director cannot be blank")
 	@Size(max = 512, message = "Director cannot exceed 512 characters")
-	private String director;
+	private String directors;
 	
 	@NotBlank(message = "Writers cannot be blank")
 	@Size(max = 512, message = "Writers cannot exceed 512 characters")
@@ -52,11 +52,11 @@ public class CreateMovieBody {
 	@Size(max = 512, message = "Trailer URL cannot exceed 512 characters")
 	private String trailerUrl;
 	
-	public Integer getMbId() {
+	public String getMbId() {
 		return mbId;
 	}
 	
-	public void setMbId(Integer mbId) {
+	public void setMbId(String mbId) {
 		this.mbId = mbId;
 	}
 	
@@ -101,11 +101,11 @@ public class CreateMovieBody {
 	}
 	
 	public @NotBlank(message = "Director cannot be blank") @Size(max = 512, message = "Director cannot exceed 512 characters") String getDirector() {
-		return director;
+		return directors;
 	}
 	
 	public void setDirector(@NotBlank(message = "Director cannot be blank") @Size(max = 512, message = "Director cannot exceed 512 characters") String director) {
-		this.director = director;
+		this.directors = director;
 	}
 	
 	public @NotBlank(message = "Writers cannot be blank") @Size(max = 512, message = "Writers cannot exceed 512 characters") String getWriters() {

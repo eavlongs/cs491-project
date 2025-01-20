@@ -14,14 +14,15 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 	@Autowired
 	private JWTHelper jwtHelper;
-	
+
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(AbstractHttpConfigurer::disable) // Disable CSRF protection
 			.authorizeHttpRequests((requests) -> requests
-				.requestMatchers("/api/auth/**").permitAll()
-				.anyRequest().authenticated()
+				.anyRequest().permitAll()
 			);
 		return http.build();
 	}
+
+
 }

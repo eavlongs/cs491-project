@@ -1,5 +1,6 @@
 package com.movie.theater.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,12 +10,16 @@ import java.util.Date;
 public class Schedule {
 	private String id;
 	
+	@JsonProperty("movie_id")
 	private String movieId;
 	
-
+	@JsonProperty("hall_id")
 	private String hallId;
 	
+	@JsonProperty("start_time")
 	private Date startTime;
+	
+	@JsonProperty("end_time")
 	private Date endTime;
 	
 	public String getId() {

@@ -1,5 +1,6 @@
 package com.movie.theater.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,6 +10,7 @@ public class Hall {
 	private String id;
 	
 	private String name;
+	@JsonProperty("seat_price")
 	private Double seatPrice;
 	
 	public String getId() {

@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 @RestController
 @RequestMapping("/api")
@@ -46,7 +47,7 @@ public class MovieController {
 			return ResponseHelper.buildUnauthorizedResponse();
 		}
 		Hall hall = new Hall();
-		hall.setName(body.getHallName());
+		hall.setName(body.getName());
 		hall.setSeatPrice(body.getSeatPrice());
 		movieService.createHall(hall);
 		
@@ -71,7 +72,7 @@ public class MovieController {
 		}
 		
 		Hall hall = new Hall();
-		hall.setName(body.getHallName());
+		hall.setName(body.getName());
 		hall.setSeatPrice(body.getSeatPrice());
 		try {
 			Hall updatedHall = movieService.updateHall(hallId, hall);
@@ -98,7 +99,7 @@ public class MovieController {
 		}
 	}
 	
-	@PostMapping("/movies")
+	@PostMapping("/movies/create")
 	public ResponseEntity<Map<String, Object>> createMovie(@Valid @RequestBody CreateMovieBody body,
 	                                                       @RequestHeader String Authorization) {
 		try {
@@ -114,8 +115,7 @@ public class MovieController {
 		movie.setTitle(body.getTitle());
 		movie.setDescription(body.getDescription());
 		movie.setPosterUrl(body.getPosterUrl());
-		movie.setDirector(body.getDirector());
-		movie.setWriters(body.getWriters());
+		movie.setDirectors(body.getDirector());
 		movie.setCast(body.getCast());
 		movie.setReleaseDate(body.getReleaseDate());
 		movie.setMovieDuration(body.getMovieDuration());
@@ -147,8 +147,7 @@ public class MovieController {
 		movie.setTitle(body.getTitle());
 		movie.setDescription(body.getDescription());
 		movie.setPosterUrl(body.getPosterUrl());
-		movie.setDirector(body.getDirector());
-		movie.setWriters(body.getWriters());
+		movie.setDirectors(body.getDirector());
 		movie.setCast(body.getCast());
 		movie.setReleaseDate(body.getReleaseDate());
 		movie.setMovieDuration(body.getMovieDuration());
@@ -188,6 +187,17 @@ public class MovieController {
 	@GetMapping("/movies/{movieId}")
 	public ResponseEntity<Map<String, Object>> getMovie(@PathVariable String movieId) {
 		Movie movie = movieService.findMovieById(movieId);
+		
+		if (movie == null) {
+			return ResponseHelper.buildNotFoundResponse();
+		}
+		
+		return ResponseHelper.buildSuccessResponse(Map.of("movie", movie));
+	}
+	
+	@GetMapping("/movies/mbid/{mbId}")
+	public ResponseEntity<Map<String, Object>> getMovieByMbId(@PathVariable String mbId) {
+		Movie movie = movieService.findMovieByMbId(mbId);
 		
 		if (movie == null) {
 			return ResponseHelper.buildNotFoundResponse();
@@ -240,7 +250,26 @@ public class MovieController {
 		return ResponseHelper.buildSuccessResponse();
 	}
 	
-	@GetMapping("/movies/schedule")
+	@GetMapping("/movies/schedules/all-halls")
+	public ResponseEntity<Map<String, Object>> getAllMoviesSchedules(
+			@RequestParam(name="start_date") String startDateStr,
+			@RequestParam(name="end_date") String endDateStr) {
+		Date startDate, endDate;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+7"));
+		
+		try {
+			startDate = dateFormat.parse(startDateStr);
+			endDate = dateFormat.parse(endDateStr);
+		} catch (ParseException e) {
+			return ResponseHelper.buildBadRequestResponse(null, "Invalid date format");
+		}
+		
+		List<Map<String, Object>> data = movieService.getSchedulesOfAllHalls(startDate, endDate);
+		return ResponseHelper.buildSuccessResponse(Map.of("schedules", data));
+	}
+	
+	@GetMapping("/movies/schedules")
 	public ResponseEntity<Map<String, Object>> getMovieSchedules(
 			@RequestParam(name="movie_id") String movieId,
 			@RequestParam(name="start_date") String startDateStr,
@@ -253,6 +282,7 @@ public class MovieController {
 		
 		Date startDate, endDate;
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+7"));
 		
 		try {
 			startDate = dateFormat.parse(startDateStr);
@@ -262,7 +292,7 @@ public class MovieController {
 		}
 		
 		List<Map<String, Object>> data = movieService.getSchedules(movieId, startDate, endDate);
-		return ResponseHelper.buildSuccessResponse(data);
+		return ResponseHelper.buildSuccessResponse(Map.of("schedules", data));
 	}
 	
 	@GetMapping("/movies/schedules/{scheduleId}")

@@ -1,5 +1,6 @@
 package com.movie.theater.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,17 +10,22 @@ import java.util.Date;
 public class Movie {
 	@Id
 	private String id;
-	private Integer mbId;
+	@JsonProperty("mb_id")
+	private String mbId;
 	private String genres;
+	@JsonProperty("age_restriction")
 	private String ageRestriction;
 	private String title;
 	private String description;
+	@JsonProperty("poster_url")
 	private String posterUrl;
-	private String director;
-	private String writers;
+	private String directors;
 	private String cast;
+	@JsonProperty("release_date")
 	private Date releaseDate;
+	@JsonProperty("movie_duration")
 	private int movieDuration;
+	@JsonProperty("trailer_url")
 	private String trailerUrl;
 	
 	public String getId() {
@@ -30,11 +36,11 @@ public class Movie {
 		this.id = id;
 	}
 	
-	public Integer getmbId() {
+	public String getmbId() {
 		return mbId;
 	}
 	
-	public void setmbId(Integer mbId) {
+	public void setmbId(String mbId) {
 		this.mbId = mbId;
 	}
 	
@@ -78,20 +84,12 @@ public class Movie {
 		this.posterUrl = posterUrl;
 	}
 	
-	public String getDirector() {
-		return director;
+	public String getDirectors() {
+		return directors;
 	}
 	
-	public void setDirector(String director) {
-		this.director = director;
-	}
-	
-	public String getWriters() {
-		return writers;
-	}
-	
-	public void setWriters(String writers) {
-		this.writers = writers;
+	public void setDirectors(String directors) {
+		this.directors = directors;
 	}
 	
 	public String getCast() {
