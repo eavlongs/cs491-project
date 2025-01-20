@@ -1,113 +1,117 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { Hall, Movie, Schedule } from '@/app/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
 import {
     Select,
-    SelectTrigger,
-    SelectValue,
     SelectContent,
     SelectGroup,
-    SelectLabel,
     SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui/select'
+import { cn } from '@/lib/utils'
+import Image from 'next/image'
+import React, { useState } from 'react'
 
-const data = {
-    items: [
-        {
-            label: 'Title',
-            detail: 'JoJos bizarre adventure',
-        },
-        {
-            label: ' Duration',
-            detail: '2 Hours',
-        },
-        {
-            label: 'Release Date',
-            detail: '12/01/1998',
-        },
-        {
-            label: 'Directors',
-            detail: 'Hirohiko Arak',
-        },
-        {
-            label: 'Cast',
-            detail: 'Jojo',
-        },
-        {
-            label: 'Genre',
-            detail: 'Adventure',
-        },
-        {
-            label: 'Age Restriction',
-            detail: '13+',
-        },
-        {
-            label: 'Description',
-            detail: "JoJo's Bizarre Adventure is a Japanese manga series written and illustrated by Hirohiko Araki.",
-        },
-    ],
-    options: [
-        { label: 'Hall A, Time: 21:00 - 22:00', value: 'hall_a_21_22' },
-        { label: 'Hall B, Time: 19:00 - 20:00', value: 'hall_b_19_20' },
-        { label: 'Hall C, Time: 16:00 - 17:00', value: 'hall_c_16_17' },
-    ],
-}
+export function BuyTicket({
+    movie,
+    schedules,
+    ...props
+}: React.ComponentProps<'div'> & {
+    movie: Movie
+    schedules: { schedule: Schedule; hall: Hall }[]
+}) {
+    const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(
+        null
+    )
 
-export function MovieDetail({ ...props }) {
+    const data = {
+        items: [
+            {
+                label: 'Title',
+                value: movie.title,
+            },
+            {
+                label: 'Duration',
+                value: `${movie.movie_duration} Minutes`,
+            },
+            {
+                label: 'Release Date',
+                value: new Date(movie.release_date).toISOString().split('T')[0],
+            },
+            {
+                label: 'Directors',
+                value: movie.directors,
+            },
+            {
+                label: 'Cast',
+                value: movie.cast,
+            },
+            {
+                label: 'Genre',
+                value: movie.genres,
+            },
+            {
+                label: 'Age Restriction',
+                value: movie.age_restriction,
+            },
+            {
+                label: 'Description',
+                value: movie.description,
+            },
+        ],
+        options: schedules.map(({ schedule, hall }) => ({
+            // hall_name - YYYY-MM-DD at HH:MM
+            label: `${hall.name} - ${new Date(schedule.start_time).toISOString().split('T')[0]} at ${new Date(
+                schedule.start_time
+            ).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`,
+            value: schedule.id,
+        })),
+    }
     return (
-        <div className={cn('flex flex-col gap-6', props.className)} {...props}>
+        <div
+            className={cn('flex flex-col gap-6 min-w-[50rem]', props.className)}
+            {...props}
+        >
             <Card className="">
-                <CardContent className="grid p-0 md:grid-cols-2">
-                    <div className="p-4 flex flex-col items-center justify-center gap-4">
-                        <div className="w-full h-full bg-gray-300 rounded-md flex items-center justify-center">
-                            <span className=" text-gray-500">
-                                Image Placeholder
-                            </span>
+                <CardContent className="flex flex-col lg:flex-row mx-4 mt-8 gap-x-20 justify-around">
+                    <div className="flex items-center justify-center">
+                        <div className="relative h-[400px] aspect-[2/3]">
+                            <Image
+                                src={movie.poster_url}
+                                alt="Image"
+                                className="rounded-md object-cover w-full"
+                                fill
+                                unoptimized
+                            />
                         </div>
                     </div>
-                    <form className="p-6 md:p-8 ">
-                        <div className="flex flex-col gap-6 mb-4">
-                            <div className="flex flex-col items-center text-center">
-                                <h1 className="text-2xl font-bold mb-2">
-                                    Buy Ticket
-                                </h1>
-                                <div className="flex items-center gap-2">
-                                    <div className="flex"></div>
-                                </div>
+
+                    <div className="flex flex-col gap-6 mb-4">
+                        <div className="flex flex-col items-center text-center">
+                            <h1 className="text-2xl font-bold mb-2">
+                                Buy Ticket
+                            </h1>
+                            <div className="flex items-center gap-2">
+                                <div className="flex"></div>
                             </div>
-                            {data.items.map((item, index) => (
-                                <div
-                                    key={index}
-                                    className="grid grid-cols-2 gap-4"
-                                >
-                                    <div className="flex items-center">
-                                        <Label
-                                            htmlFor={item.label
-                                                .replace(/\s+/g, '')
-                                                .toLowerCase()}
-                                        >
-                                            {item.label}:
-                                        </Label>
-                                    </div>
-                                    <Label
-                                        htmlFor={item.detail
-                                            .replace(/\s+/g, '')
-                                            .toLowerCase()}
-                                    >
-                                        {item.detail}
-                                    </Label>
-                                </div>
-                            ))}
                         </div>
-                    </form>
+                        {data.items.map((item, index) => (
+                            <div key={index} className="grid grid-cols-2 gap-4">
+                                <div className="flex items-center">
+                                    <p>{item.label}:</p>
+                                </div>
+                                <p>{item.value}</p>
+                            </div>
+                        ))}
+                    </div>
                 </CardContent>
                 <div className="w-full flex p-4">
                     <Button className="w-32">Cancel</Button>
-                    <div className="w-full flex flex-row-reverse ">
-                        <Button className="w-32">Buy</Button>
+                    <div className="flex ml-auto">
                         <Select>
                             <SelectTrigger className="w-[180px] mr-5">
                                 <SelectValue placeholder="Select Hall & Time" />
@@ -126,6 +130,7 @@ export function MovieDetail({ ...props }) {
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
+                        <Button className="w-32">Buy</Button>
                     </div>
                 </div>
             </Card>

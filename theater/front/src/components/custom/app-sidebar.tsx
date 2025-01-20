@@ -20,23 +20,19 @@ const data = {
         },
         {
             title: 'Add Movie',
-            url: 'add-movie',
+            url: '/admin/movie/new',
         },
         {
             title: 'Edit Movie',
-            url: 'edit-movie',
+            url: '/admin/movie/edit',
         },
         {
             title: 'Manage Hall',
-            url: 'manageHall',
+            url: '/admin/hall',
         },
         {
-            title: 'Movie Schedule',
-            url: 'movieSchdule',
-        },
-        {
-            title: 'Assign Hall',
-            url: 'assignHall',
+            title: 'Manage Schedule',
+            url: '/admin/schedule',
         },
     ],
 }

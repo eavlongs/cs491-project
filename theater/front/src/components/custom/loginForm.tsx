@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+'use client'
 import { Button } from '@/components/ui/button'
 import {
     Card,
@@ -9,10 +9,44 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { cn } from '@/lib/utils'
+import { signIn } from 'next-auth/react'
+import { useRef } from 'react'
 export function LoginForm({
     className,
     ...props
 }: React.ComponentPropsWithoutRef<'div'>) {
+    const emailRef = useRef<HTMLInputElement>(null)
+    const passwordRef = useRef<HTMLInputElement>(null)
+
+    async function loginHandler() {
+        const email = emailRef.current?.value
+        const password = passwordRef.current?.value
+
+        try {
+            const login = await signIn('credentials', {
+                email,
+                password,
+                redirect: false,
+            })
+
+            console.log('here')
+            console.log(login?.error)
+
+            if (!login) {
+                throw new Error('Log in failed')
+            }
+
+            if (login.ok) {
+                window.location.href = '/'
+                return
+            }
+
+            throw new Error('Log in failed')
+        } catch (err: any) {
+            alert(err.message)
+        }
+    }
     return (
         <div className={cn('flex flex-col gap-6', className)} {...props}>
             <Card>
@@ -30,28 +64,50 @@ export function LoginForm({
                                 <Input
                                     id="email"
                                     type="email"
-                                    placeholder="email@paragoniu.edu.kh"
+                                    placeholder="test@example.com"
+                                    ref={emailRef}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            loginHandler()
+                                        }
+                                    }}
                                     required
                                 />
                             </div>
                             <div className="grid gap-2">
                                 <div className="flex items-center">
                                     <Label htmlFor="password">Password</Label>
-                                    <a
-                                        href="#"
-                                        className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                                    >
-                                        Forgot your password?
-                                    </a>
                                 </div>
-                                <Input id="password" type="password" required />
+                                <Input
+                                    id="password"
+                                    type="password"
+                                    required
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            loginHandler()
+                                        }
+                                    }}
+                                    ref={passwordRef}
+                                />
+                                <a
+                                    href="#"
+                                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+                                >
+                                    Forgot your password?
+                                </a>
                             </div>
-                            <Button className="w-full">Login</Button>
+                            <Button
+                                className="w-full"
+                                type="button"
+                                onClick={loginHandler}
+                            >
+                                Login
+                            </Button>
                         </div>
                         <div className="mt-4 text-center text-sm">
                             Don&apos;t have an account?{' '}
                             <a
-                                href="/signUp"
+                                href="/signup"
                                 className="underline underline-offset-4"
                             >
                                 Sign up
