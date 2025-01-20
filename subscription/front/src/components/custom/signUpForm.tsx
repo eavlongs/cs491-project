@@ -1,4 +1,3 @@
-import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
     Card,
@@ -9,6 +8,7 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { cn } from '@/lib/utils'
 export function SignUpForm({
     className,
     ...props
@@ -56,7 +56,7 @@ export function SignUpForm({
                                 <Input
                                     id="email"
                                     type="email"
-                                    placeholder="email@paragoniu.edu.kh"
+                                    placeholder="test@example.com"
                                     required
                                 />
                             </div>

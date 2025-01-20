@@ -29,6 +29,21 @@ REM Set variables for arguments
 set directory=%~1
 set mode=%~2
 
+REM Remove starting "./" from directory
+if "%directory:~0,2%"=="./" (
+    set directory=%directory:~2%
+
+) else if "%directory:~0,2%"==".\" (
+    set directory=%directory:~2%
+)
+
+REM Remove trailing "/" from directory
+if "%directory:~-1%"=="/" (
+    set directory=%directory:~0,-1%
+) else if "%directory:~-1%"=="\" (
+    set directory=%directory:~0,-1%
+)
+
 REM Navigate to the specified directory
 if exist "%directory%" (
     cd "%directory%"
