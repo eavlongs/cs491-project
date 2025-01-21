@@ -1,7 +1,7 @@
 'use client'
 
-import { use, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { Hall, Movie, Schedule } from '@/app/types'
+import { Button } from '@/components/ui/button'
 import {
     Card,
     CardContent,
@@ -9,8 +9,6 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card'
-import { Switch } from '@/components/ui/switch'
-import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import {
     Select,
@@ -19,9 +17,22 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
 import { Toast } from '@/components/ui/toast'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
-export default function AssignHall({ params }: { params: { id: string } }) {
+export default function AssignHall({
+    hall,
+    movies,
+    schedule,
+    date,
+}: {
+    hall: Hall
+    movies: Movie[]
+    schedule: Schedule
+    date: Date
+}) {
     const router = useRouter()
     const [isAvailable, setIsAvailable] = useState(true)
     const [startHour, setStartHour] = useState('')
@@ -68,7 +79,7 @@ export default function AssignHall({ params }: { params: { id: string } }) {
                 <Card className="max-w-md mx-auto">
                     <CardHeader>
                         <CardTitle className="text-2xl text-center">
-                            Hall {params.id}
+                            {hall.name}
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-6">

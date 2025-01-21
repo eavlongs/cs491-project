@@ -28,7 +28,7 @@ export default async function Page({
         )
     }
 
-    const { start_date, end_date } = searchParams
+    const { start_date, end_date } = await searchParams
 
     // validate date
     let startDate = new Date(start_date)
