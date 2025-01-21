@@ -1,4 +1,5 @@
-import { AddMovieForm } from '@/components/custom/AddMovieForm'
+import { AddMovieForm } from "@/components/custom/addmovieForm";
+
 
 export default function Page() {
     return (

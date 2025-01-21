@@ -21,7 +21,7 @@ export function MovieDetail({
 }) {
     const rating = movie.avg_rating || 0
     const [hoverRating, setHoverRating] = useState(0)
-    const [userRated] = useState(false)
+    const [userRated, setUserRated] = useState(false)
     const totalReviews = movie.number_of_ratings || 0
     const session = useSession()
     const stars = 5
