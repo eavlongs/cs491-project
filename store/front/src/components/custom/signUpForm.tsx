@@ -13,7 +13,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
-import { Link } from 'lucide-react'
 import { signIn } from 'next-auth/react'
 import { useRef } from 'react'
 
@@ -183,12 +182,12 @@ export function SignUpForm({
                         </div>
                         <div className="mt-4 text-center text-sm">
                             Already have an account?{' '}
-                            <Link
+                            <a
                                 href="/login"
                                 className="underline underline-offset-4"
                             >
                                 Log In
-                            </Link>
+                            </a>
                         </div>
                     </form>
                 </CardContent>

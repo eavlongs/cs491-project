@@ -20,7 +20,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '../ui/alert-dialog'
-
+import { set } from 'react-hook-form'
 
 export function EditMovieForm({
     movie,
