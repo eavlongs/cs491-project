@@ -53,8 +53,9 @@ public class JWTHelper {
 	}
 	
 	public User isUser(String token) throws Exception {
-		System.out.println(token);
+		System.out.println("token: " + token);
 		Claims claims = parseToken(token);
+		System.out.println("claims: " + claims);
 		User user = new User();
 		user.setId(claims.get("id", String.class));
 		user.setEmail(claims.get("email", String.class));
@@ -62,13 +63,11 @@ public class JWTHelper {
 		user.setLastName(claims.get("last_name", String.class));
 		user.setAdmin(claims.get("is_admin", Boolean.class));
 		
-		System.out.println(user.getEmail());
 		return user;
 	}
 	
 	public User isAdmin(String token) throws Exception {
 		User user = isUser(token);
-		System.out.println(user.getAdmin());
 		if (!user.getAdmin()) {
 			throw new Exception("User is not an admin");
 		}

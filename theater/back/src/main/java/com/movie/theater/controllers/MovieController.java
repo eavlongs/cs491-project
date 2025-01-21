@@ -6,6 +6,7 @@ import com.movie.theater.dto.CreateScheduleBody;
 import com.movie.theater.helper.JWTHelper;
 import com.movie.theater.helper.ResponseHelper;
 import com.movie.theater.models.*;
+import com.movie.theater.repository.MovieRepository;
 import com.movie.theater.services.MovieService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ public class MovieController {
 	private MovieService movieService;
 	@Autowired
 	private JWTHelper jwtHelper;
+	private MovieRepository movieRepository;
 	
 	@GetMapping("/halls")
 	public ResponseEntity<Map<String, Object>> getHalls(@RequestHeader String Authorization) {
@@ -269,6 +271,39 @@ public class MovieController {
 		return ResponseHelper.buildSuccessResponse(Map.of("schedules", data));
 	}
 	
+	@GetMapping("/movies/schedules/{hallId}")
+	public ResponseEntity<Map<String, Object>> checkHallAvailability(@PathVariable String hallId,
+	                                                                 @RequestParam(name="start_date") String startDateStr,
+	                                                                 @RequestHeader String Authorization) {
+		try {
+			jwtHelper.isAdminMiddleware(Authorization);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return ResponseHelper.buildUnauthorizedResponse();
+		}
+		
+		Hall hall = movieService.findHallById(hallId);
+		
+		if (hall == null) {
+			return ResponseHelper.buildNotFoundResponse();
+		}
+		
+		Date startDate;
+		// '2025-01-21T11:01:22.485Z'
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+7"));
+		
+		try {
+			startDate = dateFormat.parse(startDateStr);
+		} catch (ParseException e) {
+			return ResponseHelper.buildBadRequestResponse(null, "Invalid date format");
+		}
+		
+		boolean isAvailable = movieService.isStartingTimeAvailable(hall, startDate);
+		
+		return ResponseHelper.buildSuccessResponse(Map.of("is_available", isAvailable, "hall", hall));
+	}
+	
 	@GetMapping("/movies/schedules")
 	public ResponseEntity<Map<String, Object>> getMovieSchedules(
 			@RequestParam(name="movie_id") String movieId,
@@ -295,11 +330,11 @@ public class MovieController {
 		return ResponseHelper.buildSuccessResponse(Map.of("schedules", data));
 	}
 	
-	@GetMapping("/movies/schedules/{scheduleId}")
-	public ResponseEntity<Map<String, Object>> getMovieSchedule(@PathVariable String scheduleId,
+	@GetMapping("/movies/seats/{scheduleId}")
+	public ResponseEntity<Map<String, Object>> getMovieSeats(@PathVariable String scheduleId,
 	                                                            @RequestHeader String Authorization) {
 		try {
-			jwtHelper.isUser(Authorization);
+			jwtHelper.isUserMiddleware(Authorization);
 		} catch (Exception e) {
 			return ResponseHelper.buildUnauthorizedResponse();
 		}

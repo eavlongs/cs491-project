@@ -107,6 +107,15 @@ public class MovieService {
 		scheduleRepository.save(schedule);
 	}
 	
+	public boolean isStartingTimeAvailable(Hall hall, Date startTime) {
+		Date endTime = new Date(startTime.getTime() + 1000 * 60 * 60);
+		
+		// query if there is any movie after startTime but before endTime in the same hall
+		Schedule schedule = scheduleRepository.getSceduleByHallIdAndStartTimeBetween(hall.getId(), startTime, endTime);
+		
+		return schedule == null;
+	}
+	
 	public boolean isScheduleAvailable(Movie movie, Hall hall, Date startTime) {
 		Date endTime = getEndTime(startTime, movie.getMovieDuration());
 		
