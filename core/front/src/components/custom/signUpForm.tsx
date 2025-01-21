@@ -72,7 +72,7 @@ export function SignUpForm({
             throw new Error('Sign up failed')
         } catch (err: any) {
             alert(err.message)
-        }
+    }
     }
     return (
         <div className={cn('flex flex-col gap-6', className)} {...props}>
