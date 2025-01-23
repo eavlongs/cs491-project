@@ -10,6 +10,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
+import Link from 'next/link'
 import { signIn } from 'next-auth/react'
 import { useRef } from 'react'
 export function LoginForm({
@@ -106,12 +107,12 @@ export function LoginForm({
                         </div>
                         <div className="mt-4 text-center text-sm">
                             Don&apos;t have an account?{' '}
-                            <a
+                            <Link
                                 href="/signup"
                                 className="underline underline-offset-4"
                             >
                                 Sign up
-                            </a>
+                            </Link>
                         </div>
                     </form>
                 </CardContent>
