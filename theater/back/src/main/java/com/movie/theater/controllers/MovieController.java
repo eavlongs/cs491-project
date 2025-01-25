@@ -27,7 +27,6 @@ public class MovieController {
 	private MovieService movieService;
 	@Autowired
 	private JWTHelper jwtHelper;
-	private MovieRepository movieRepository;
 	
 	@GetMapping("/halls")
 	public ResponseEntity<Map<String, Object>> getHalls(@RequestHeader String Authorization) {
@@ -254,15 +253,14 @@ public class MovieController {
 	
 	@GetMapping("/movies/schedules/all-halls")
 	public ResponseEntity<Map<String, Object>> getAllMoviesSchedules(
-			@RequestParam(name="start_date") String startDateStr,
-			@RequestParam(name="end_date") String endDateStr) {
+			@RequestParam(name="start_date") String startDateStr) {
 		Date startDate, endDate;
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+7"));
 		
 		try {
 			startDate = dateFormat.parse(startDateStr);
-			endDate = dateFormat.parse(endDateStr);
+			endDate = new Date(startDate.getTime() + 86400000); // 24 hours
 		} catch (ParseException e) {
 			return ResponseHelper.buildBadRequestResponse(null, "Invalid date format");
 		}
