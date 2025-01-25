@@ -5,6 +5,7 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 import { redirect } from 'next/navigation'
 import { start } from 'repl'
+import { AssignSchedule } from '@/components/custom/AssignSchdule'
 
 export default async function Page({
     params,
@@ -53,11 +54,17 @@ export default async function Page({
     const movies = await getMovies()
 
     return (
-        <AssignHall
-            schedule={data.schedule}
+        // <AssignHall
+        //     schedule={data.schedule}
+        //     hall={data.hall}
+        //     movies={movies}
+        //     date={startDate}
+        // />
+
+        <AssignSchedule
             hall={data.hall}
             movies={movies}
-            date={startDate}
+            startTime={startDate}
         />
     )
 }

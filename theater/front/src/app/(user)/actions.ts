@@ -8,7 +8,6 @@ export async function getMovies() {
         },
     })
 
-    console.log(response)
     const json: ApiResponse<{ movies: Movie[] }> = await response.json()
 
     if (!json.success) {

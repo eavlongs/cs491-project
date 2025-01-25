@@ -2,57 +2,15 @@
 import { Hall, Movie, Schedule } from '@/app/types'
 import { DateSelector } from '@/components/custom/DateSelector'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import Link from 'next/link'
+import { useState } from 'react'
 import { Button } from '../ui/button'
-
-// const halls = [
-//     {
-//         id: 'b1',
-//         name: 'HALL B1',
-//         timeSlots: [
-//             { time: '2:00-3:00', status: 'scheduled' },
-//             { time: 'Unavailable', status: 'unavailable' },
-//         ],
-//     },
-//     {
-//         id: 'b2',
-//         name: 'Hall B2',
-//         timeSlots: [{ time: 'Click to Assign', status: 'available' }],
-//     },
-//     {
-//         id: 'b3',
-//         name: 'Hall B3',
-//         timeSlots: [{ time: 'Click to Assign', status: 'available' }],
-//     },
-//     {
-//         id: 'b4',
-//         name: 'Hall B4',
-//         timeSlots: [
-//             { time: '2:00-3:00', status: 'scheduled' },
-//             { time: 'Unavailable', status: 'unavailable' },
-//         ],
-//     },
-//     {
-//         id: 'b5',
-//         name: 'Hall B5',
-//         timeSlots: [
-//             { time: '2:00-3:00', status: 'scheduled' },
-//             { time: 'Unavailable', status: 'unavailable' },
-//         ],
-//     },
-//     {
-//         id: 'b6',
-//         name: 'Hall B6',
-//         timeSlots: [
-//             { time: '2:00-3:00', status: 'scheduled' },
-//             { time: 'Unavailable', status: 'unavailable' },
-//         ],
-//     },
-// ]
+import { AssignSchedule } from './AssignSchdule'
 
 export default function ManageSchedule({
     hallSchedules,
     date,
+    allMovies,
+    token,
 }: {
     hallSchedules: {
         hall: Hall
@@ -62,7 +20,14 @@ export default function ManageSchedule({
         }[]
     }[]
     date: Date
+    allMovies: Movie[]
+    token: string
 }) {
+    const [selectedSchedule, setSelectedSchedule] = useState<{
+        hall: Hall
+        startTime: Date
+    } | null>(null)
+
     return (
         <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
             <div className="container mx-auto p-6">
@@ -103,17 +68,23 @@ export default function ManageSchedule({
                                                         const scheduleStartTime =
                                                             new Date(
                                                                 schedule.schedule.start_time
-                                                            ).getTime()
+                                                            ).getHours()
 
                                                         const scheduleEndTime =
                                                             new Date(
                                                                 schedule.schedule.end_time
-                                                            ).getTime()
+                                                            ).getHours()
+
+                                                        console.log({
+                                                            startTime,
+                                                            scheduleStartTime,
+                                                            scheduleEndTime,
+                                                        })
 
                                                         return (
                                                             scheduleStartTime <=
                                                                 startTime &&
-                                                            scheduleEndTime >=
+                                                            scheduleEndTime >
                                                                 startTime
                                                         )
                                                     }
@@ -128,7 +99,7 @@ export default function ManageSchedule({
                                                             hallSchedule.hall
                                                                 .id + startTime
                                                         }
-                                                        className="w-full px-4 py-2 text-center roundedbg-red-700 hover:bg-red-600"
+                                                        className="w-full px-4 py-2 text-center rounded disabled:opacity-90"
                                                     >
                                                         {
                                                             occupiedSlot.movie
@@ -146,12 +117,15 @@ export default function ManageSchedule({
                                                         startTime
                                                     }
                                                     className="w-full px-4 py-2 text-center rounded"
+                                                    onClick={() =>
+                                                        setSelectedSchedule({
+                                                            hall: hallSchedule.hall,
+                                                            startTime:
+                                                                startDateTime,
+                                                        })
+                                                    }
                                                 >
-                                                    <Link
-                                                        href={`/admin/schedule/${hallSchedule.hall.id}`}
-                                                    >
-                                                        {startToEndTimeString}{' '}
-                                                    </Link>
+                                                    {startToEndTimeString}{' '}
                                                 </Button>
                                             )
                                         })}
@@ -162,6 +136,21 @@ export default function ManageSchedule({
                     ))}
                 </div>
             </div>
+
+            {selectedSchedule && (
+                <AssignSchedule
+                    hall={selectedSchedule.hall}
+                    startTime={selectedSchedule.startTime}
+                    movies={allMovies}
+                    isOpen={selectedSchedule !== null}
+                    setOpen={(value) => {
+                        if (!value) {
+                            setSelectedSchedule(null)
+                        }
+                    }}
+                    token={token}
+                />
+            )}
         </div>
     )
 }

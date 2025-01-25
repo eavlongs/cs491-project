@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { getAllHalls, getSchedulesFromAllHalls } from './actions'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/options'
+import { getMovies } from '@/app/(user)/actions'
 
 export default async function Page({
     searchParams,
@@ -21,7 +22,7 @@ export default async function Page({
     if (startDate.toString() === 'Invalid Date' || startDate < today) {
         startDate = new Date()
         redirect(
-            `/admin/schedule?start_date=${startDate.toISOString().split('T')[0]}`
+            `/admin/schedule?start_date=${startDate.toLocaleDateString('en-CA')}`
         )
     }
 
@@ -55,7 +56,14 @@ export default async function Page({
         }
     })
 
+    const allMovies = await getMovies()
+
     return (
-        <ManageSchedule hallSchedules={hallSchedulesSorted} date={startDate} />
+        <ManageSchedule
+            hallSchedules={hallSchedulesSorted}
+            date={startDate}
+            allMovies={allMovies}
+            token={session!.token}
+        />
     )
 }

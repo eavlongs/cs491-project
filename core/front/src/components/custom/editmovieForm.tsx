@@ -21,7 +21,6 @@ import {
     AlertDialogTitle,
 } from '../ui/alert-dialog'
 
-
 export function EditMovieForm({
     movie,
     className,
