@@ -45,8 +45,8 @@ export type Schedule = {
     id: string
     movie_id: string
     hall_id: string
-    start_time: string
-    end_time: string
+    start_time: Date
+    end_time: Date
 }
 
 export type Hall = {
@@ -58,4 +58,12 @@ export type Hall = {
 export type ActionResponse = {
     success: boolean
     message: string
+}
+
+export type Seat = {
+    id: string
+    row: number
+    column: number
+    hall_id: string
+    code: string
 }

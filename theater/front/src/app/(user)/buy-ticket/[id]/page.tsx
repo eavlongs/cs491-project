@@ -1,13 +1,13 @@
 import { BuyTicket } from '@/components/custom/BuyTicket'
-import { getMovie, getMovieSchedules } from './actions'
 import { redirect } from 'next/navigation'
+import { getMovie, getMovieSchedules } from './actions'
 
 export default async function Page({
     params,
     searchParams,
 }: {
     params: { id: string }
-    searchParams: { start_date: string; end_date: string }
+    searchParams: { start_date: string }
 }) {
     const { id } = await params
     const movie = await getMovie(id)
@@ -28,11 +28,10 @@ export default async function Page({
         )
     }
 
-    const { start_date, end_date } = await searchParams
+    const { start_date } = await searchParams
 
     // validate date
     let startDate = new Date(start_date)
-    let endDate = new Date(end_date)
     let rewriteRoute = false
 
     if (startDate.toString() == 'Invalid Date') {
@@ -40,19 +39,13 @@ export default async function Page({
         startDate = new Date()
     }
 
-    if (endDate.toString() == 'Invalid Date') {
-        rewriteRoute = true
-        // change to startDate + 7 days
-        endDate = new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000)
-    }
-
     if (rewriteRoute) {
         // redirect to new route
-        const newRoute = `/buy-ticket/${id}?start_date=${startDate.toISOString().split('T')[0]}&end_date=${endDate.toISOString().split('T')[0]}`
+        const newRoute = `/buy-ticket/${id}?start_date=${startDate.toLocaleDateString('en-CA')}`
         redirect(newRoute)
     }
 
-    const schedules = await getMovieSchedules(id, startDate, endDate)
+    const schedules = await getMovieSchedules(id, startDate)
 
     return (
         <div className="min-h-min w-2/3 rounded-xl flex justify-center">

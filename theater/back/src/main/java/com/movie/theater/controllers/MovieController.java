@@ -305,8 +305,7 @@ public class MovieController {
 	@GetMapping("/movies/schedules")
 	public ResponseEntity<Map<String, Object>> getMovieSchedules(
 			@RequestParam(name="movie_id") String movieId,
-			@RequestParam(name="start_date") String startDateStr,
-			@RequestParam(name="end_date") String endDateStr) {
+			@RequestParam(name="start_date") String startDateStr) {
 		Movie movie = movieService.findMovieById(movieId);
 		
 		if (movie == null) {
@@ -319,7 +318,7 @@ public class MovieController {
 		
 		try {
 			startDate = dateFormat.parse(startDateStr);
-			endDate = dateFormat.parse(endDateStr);
+			endDate = new Date(startDate.getTime() + 86400000); // 24 hours
 		} catch (ParseException e) {
 			return ResponseHelper.buildBadRequestResponse(null, "Invalid date format");
 		}
@@ -343,9 +342,14 @@ public class MovieController {
 			return ResponseHelper.buildNotFoundResponse();
 		}
 		
-		List<Seat> availableSeats = movieService.getAvailableSeats(schedule);
+		List<Map<String, Object>> seats = movieService.getAvailableSeats(schedule);
 		
-		return ResponseHelper.buildSuccessResponse(Map.of("schedule", schedule, "available_seats", availableSeats));
+		Movie movie = movieService.findMovieById(schedule.getMovieId());
+		
+		Hall hall = movieService.findHallById(schedule.getHallId());
+		
+		return ResponseHelper.buildSuccessResponse(Map.of("schedule", schedule, "seats", seats,
+				"movie", movie, "hall", hall));
 	}
 	
 	@PostMapping("/movies/schedules/{scheduleId}/buy")

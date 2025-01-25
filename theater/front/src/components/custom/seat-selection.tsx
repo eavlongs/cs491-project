@@ -1,5 +1,6 @@
 'use client'
 
+import { Movie } from '@/app/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
@@ -11,9 +12,10 @@ interface SeatProps {
     isAvailable: boolean
     isSelected: boolean
     onSelect: (id: string) => void
+    code: string
 }
 
-const Seat = ({ id, isAvailable, isSelected, onSelect }: SeatProps) => {
+const Seat = ({ id, code, isAvailable, isSelected, onSelect }: SeatProps) => {
     return (
         <button
             onClick={() => isAvailable && onSelect(id)}
@@ -27,47 +29,61 @@ const Seat = ({ id, isAvailable, isSelected, onSelect }: SeatProps) => {
             )}
             disabled={!isAvailable}
         >
-            {id}
+            {code}
         </button>
     )
 }
 
 interface SeatSelectionCardProps {
-    movieTitle: string
+    movie: Movie
     showTime: string
     showDate: string
     hallName: string
     seatPrice: number
+    seats: {
+        id: string
+        available: boolean
+        code: string
+    }[]
 }
 
 export function SeatSelectionCard({
-    movieTitle,
+    movie,
     showTime,
     showDate,
     hallName,
     seatPrice,
+    seats,
 }: SeatSelectionCardProps) {
     const router = useRouter()
-    const [selectedSeats, setSelectedSeats] = useState<string[]>([])
-
-    const seats = [
-        { id: 'H6', available: true },
-        { id: 'H7', available: true },
-        { id: 'H8', available: true },
-        { id: 'H9', available: false },
-        { id: 'I1', available: true },
-        { id: 'I2', available: false },
-        { id: 'I3', available: true },
-        { id: 'I4', available: true },
-        { id: 'I5', available: true },
-    ]
+    const [selectedSeats, setSelectedSeats] = useState<
+        {
+            id: string
+            available: boolean
+            code: string
+        }[]
+    >([])
 
     const handleSeatSelect = (seatId: string) => {
-        setSelectedSeats((prev) =>
-            prev.includes(seatId)
-                ? prev.filter((id) => id !== seatId)
-                : [...prev, seatId]
-        )
+        let isRemovingSeat = false
+        selectedSeats.map((_selectedSeat) => {
+            if (_selectedSeat.id === seatId) {
+                isRemovingSeat = true
+                return setSelectedSeats((prev) =>
+                    prev.filter((item) => item.id !== seatId)
+                )
+            }
+        })
+
+        if (isRemovingSeat) {
+            return
+        }
+
+        const seat = seats.find((seat) => seat.id === seatId)
+
+        if (seat) {
+            setSelectedSeats((prev) => [...prev, seat])
+        }
     }
 
     const totalPrice = selectedSeats.length * seatPrice
@@ -84,8 +100,12 @@ export function SeatSelectionCard({
                             <Seat
                                 key={seat.id}
                                 id={seat.id}
+                                code={seat.code}
                                 isAvailable={seat.available}
-                                isSelected={selectedSeats.includes(seat.id)}
+                                isSelected={selectedSeats.some(
+                                    (selectedSeat) =>
+                                        selectedSeat.id === seat.id
+                                )}
                                 onSelect={handleSeatSelect}
                             />
                         ))}
@@ -98,15 +118,14 @@ export function SeatSelectionCard({
 
             <Card className="w-80">
                 <CardContent className="p-6 space-y-6">
-                    <h3 className="font-semibold">Selected Seats</h3>
-                    <div className="flex justify-between items-center">
-                        <span>{selectedSeats.join(', ')}</span>
-                        <span>{selectedSeats.length}x</span>
-                    </div>
                     <div className="space-y-2">
                         <div className="flex justify-between">
                             <span>Movie:</span>
-                            <span>{movieTitle}</span>
+                            <span>{movie.title}</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span>Hall:</span>
+                            <span>{hallName}</span>
                         </div>
                         <div className="flex justify-between">
                             <span>Time:</span>
@@ -116,9 +135,19 @@ export function SeatSelectionCard({
                             <span>Date:</span>
                             <span>{showDate}</span>
                         </div>
-                        <div className="flex justify-between">
-                            <span>Hall:</span>
-                            <span>{hallName}</span>
+                        <h3 className="font-semibold pt-6">
+                            Selected Seats:{' '}
+                            {selectedSeats.length > 0
+                                ? selectedSeats.length + 'x'
+                                : 'None'}
+                        </h3>
+                        <div className="flex justify-between items-center">
+                            <span>
+                                {selectedSeats
+                                    .map((seat) => seat.code)
+                                    .join(', ')}
+                            </span>
+                            <span></span>
                         </div>
                     </div>
                     <div className="border-t pt-4">
@@ -131,7 +160,9 @@ export function SeatSelectionCard({
                         <Button
                             variant="outline"
                             className="flex-1"
-                            onClick={() => setSelectedSeats([])}
+                            onClick={() =>
+                                router.push('/buy-ticket/' + movie.id)
+                            }
                         >
                             Cancel
                         </Button>

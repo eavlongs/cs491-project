@@ -19,5 +19,7 @@ public interface SeatRepository extends MongoRepository<Seat, String> {
 			"{ $lookup: { from: 'tickets', localField: '_id', foreignField: 'seatId', as: 'tickets' } }",
 			"{ $match: { 'tickets.scheduleId': { $ne: ?1 } } }"
 	})
-	List<Seat> getAvailableSeats(Schedule schedule);
+	List<Seat> getAvailableSeats(String hallId, String scheduleId);
+	
+	List<Seat> findByHallId(String hallId);
 }

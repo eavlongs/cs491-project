@@ -16,15 +16,10 @@ export async function getMovie(id: string) {
     return json.data.movie
 }
 
-export async function getMovieSchedules(
-    id: string,
-    startDate: Date,
-    endDate: Date
-) {
+export async function getMovieSchedules(id: string, startDate: Date) {
     const urlSearchParams = new URLSearchParams({
         movie_id: id,
-        start_date: startDate.toISOString(),
-        end_date: endDate.toISOString(),
+        start_date: startDate.toLocaleDateString('en-CA'),
     })
 
     const response = await fetch(
@@ -43,7 +38,6 @@ export async function getMovieSchedules(
         }[]
     }> = await response.json()
 
-    console.log(json)
     if (!response.ok || !json.success || !json.data) {
         return []
     }

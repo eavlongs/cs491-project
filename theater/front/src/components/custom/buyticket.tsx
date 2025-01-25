@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
+import { usePathname, useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
 export function BuyTicket({
@@ -24,9 +25,12 @@ export function BuyTicket({
     movie: Movie
     schedules: { schedule: Schedule; hall: Hall }[]
 }) {
-    const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(
+    const [selectedSchedule, setSelectedSchedule] = useState<string | null>(
         null
     )
+
+    const router = useRouter()
+    const path = usePathname()
 
     const data = {
         items: [
@@ -76,7 +80,7 @@ export function BuyTicket({
             className={cn('flex flex-col gap-6 min-w-[50rem]', props.className)}
             {...props}
         >
-            <Card className="">
+            <Card>
                 <CardContent className="flex flex-col lg:flex-row mx-4 mt-8 gap-x-20 justify-around">
                     <div className="flex items-center justify-center">
                         <div className="relative h-[400px] aspect-[2/3]">
@@ -111,9 +115,13 @@ export function BuyTicket({
                 </CardContent>
                 <div className="w-full flex p-4">
                     <Button className="w-32">Cancel</Button>
-                    <div className="flex ml-auto">
-                        <Select>
-                            <SelectTrigger className="w-[180px] mr-5">
+                    <div className="flex ml-auto gap-x-5">
+                        <Select
+                            onValueChange={(value) =>
+                                setSelectedSchedule(value)
+                            }
+                        >
+                            <SelectTrigger className="w-[250px]">
                                 <SelectValue placeholder="Select Hall & Time" />
                             </SelectTrigger>
                             <SelectContent>
@@ -130,7 +138,15 @@ export function BuyTicket({
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
-                        <Button className="w-32">Buy</Button>
+                        <Button
+                            className="w-32"
+                            disabled={!selectedSchedule}
+                            onClick={() =>
+                                router.push(path + '/' + selectedSchedule!)
+                            }
+                        >
+                            Select Seats
+                        </Button>
                     </div>
                 </div>
             </Card>

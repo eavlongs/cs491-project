@@ -133,8 +133,36 @@ public class MovieService {
 		return scheduleRepository.findById(id).orElse(null);
 	}
 	
-	public List<Seat> getAvailableSeats(Schedule schedule) {
-		return seatRepository.getAvailableSeats(schedule);
+	public List<Map<String, Object>> getAvailableSeats(Schedule schedule) {
+		List<Seat> availableSeats = seatRepository.getAvailableSeats(schedule.getHallId(), schedule.getId());
+		List<Seat> allSeats = seatRepository.findByHallId(schedule.getHallId());
+		
+		List<Map<String, Object>> result = new ArrayList<>(allSeats.size());
+		
+		for (Seat seat : allSeats) {
+			boolean isAvailable = false;
+			for (Seat availableSeat : availableSeats) {
+				if (seat.getId().equals(availableSeat.getId())) {
+					isAvailable = true;
+					break;
+				}
+			}
+			
+			Map<String, Object> seatMap = new HashMap<>();
+			seatMap.put("id", seat.getId());
+			seatMap.put("row_number", seat.getRowNumber());
+			seatMap.put("col_number", seat.getColNumber());
+			seatMap.put("code", seat.getCode());
+			seatMap.put("is_available", isAvailable);
+			
+			result.add(seatMap);
+		}
+		
+		return result;
+	}
+	
+	public List<Seat> getSeatsOfAHall(String hallId) {
+		return seatRepository.findByHallId(hallId);
 	}
 	
 	public void deleteSchedule(String scheduleId) {
