@@ -1,155 +1,215 @@
 'use client'
 
+import { buyTickets } from '@/app/(user)/buy-ticket/[id]/[schedule_id]/actionts'
 import { Hall, Movie, Schedule } from '@/app/types'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import Image from 'next/image'
-import { usePathname, useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { PaymentCard } from './payment-card'
+
+interface SeatProps {
+    id: string
+    isAvailable: boolean
+    isSelected: boolean
+    onSelect: (id: string) => void
+    code: string
+}
+
+const Seat = ({ id, code, isAvailable, isSelected, onSelect }: SeatProps) => {
+    return (
+        <button
+            onClick={() => isAvailable && onSelect(id)}
+            className={cn(
+                'w-12 h-12 border-2 rounded-lg flex items-center justify-center transition-colors',
+                isAvailable
+                    ? isSelected
+                        ? 'border-primary bg-primary text-primary-foreground'
+                        : 'border-green-500 hover:bg-green-100'
+                    : 'border-red-500 bg-red-100 cursor-not-allowed'
+            )}
+            disabled={!isAvailable}
+        >
+            {code}
+        </button>
+    )
+}
+
+interface BuyTicketProps {
+    movie: Movie
+    showTime: string
+    showDate: string
+    hall: Hall
+    seats: {
+        id: string
+        available: boolean
+        code: string
+    }[]
+    schedule: Schedule
+    token: string
+}
 
 export function BuyTicket({
     movie,
-    schedules,
-    ...props
-}: React.ComponentProps<'div'> & {
-    movie: Movie
-    schedules: { schedule: Schedule; hall: Hall }[]
-}) {
-    const [selectedSchedule, setSelectedSchedule] = useState<string | null>(
-        null
-    )
+    showTime,
+    showDate,
+    hall,
+    seats,
+    schedule,
+    token,
+}: BuyTicketProps) {
+    const [isSelectingSeats, setIsSelectingSeats] = useState(true)
 
     const router = useRouter()
-    const path = usePathname()
+    const [selectedSeats, setSelectedSeats] = useState<
+        {
+            id: string
+            available: boolean
+            code: string
+        }[]
+    >([])
 
-    const data = {
-        items: [
-            {
-                label: 'Title',
-                value: movie.title,
-            },
-            {
-                label: 'Duration',
-                value: `${movie.movie_duration} Minutes`,
-            },
-            {
-                label: 'Release Date',
-                value: new Date(movie.release_date).toISOString().split('T')[0],
-            },
-            {
-                label: 'Directors',
-                value: movie.directors,
-            },
-            {
-                label: 'Cast',
-                value: movie.cast,
-            },
-            {
-                label: 'Genre',
-                value: movie.genres,
-            },
-            {
-                label: 'Age Restriction',
-                value: movie.age_restriction,
-            },
-            {
-                label: 'Description',
-                value: movie.description,
-            },
-        ],
-        options: schedules.map(({ schedule, hall }) => ({
-            // hall_name - YYYY-MM-DD at HH:MM
-            label: `${hall.name} - ${new Date(schedule.start_time).toISOString().split('T')[0]} at ${new Date(
-                schedule.start_time
-            ).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`,
-            value: schedule.id,
-        })),
+    const handleSeatSelect = (seatId: string) => {
+        let isRemovingSeat = false
+        selectedSeats.map((_selectedSeat) => {
+            if (_selectedSeat.id === seatId) {
+                isRemovingSeat = true
+                return setSelectedSeats((prev) =>
+                    prev.filter((item) => item.id !== seatId)
+                )
+            }
+        })
+
+        if (isRemovingSeat) {
+            return
+        }
+
+        const seat = seats.find((seat) => seat.id === seatId)
+
+        if (seat) {
+            setSelectedSeats((prev) => [...prev, seat])
+        }
     }
-    return (
-        <div
-            className={cn('flex flex-col gap-6 min-w-[50rem]', props.className)}
-            {...props}
-        >
-            <Card>
-                <CardContent className="flex flex-col lg:flex-row mx-4 mt-8 gap-x-20 justify-around">
-                    <div className="flex items-center justify-center">
-                        <div className="relative h-[400px] aspect-[2/3]">
-                            <Image
-                                src={movie.poster_url}
-                                alt="Image"
-                                className="rounded-md object-cover w-full"
-                                fill
-                                unoptimized
-                            />
-                        </div>
-                    </div>
 
-                    <div className="flex flex-col gap-6 mb-4">
-                        <div className="flex flex-col items-center text-center">
-                            <h1 className="text-2xl font-bold mb-2">
-                                Buy Ticket
-                            </h1>
-                            <div className="flex items-center gap-2">
-                                <div className="flex"></div>
-                            </div>
-                        </div>
-                        {data.items.map((item, index) => (
-                            <div key={index} className="grid grid-cols-2 gap-4">
-                                <div className="flex items-center">
-                                    <p>{item.label}:</p>
-                                </div>
-                                <p>{item.value}</p>
-                            </div>
+    const totalPrice = selectedSeats.length * hall.seat_price
+
+    async function onSubmit(cardNumber: string) {
+        const actionResponse = await buyTickets(
+            schedule.id,
+            selectedSeats.map((seat) => seat.id),
+            cardNumber,
+            token
+        )
+
+        if (actionResponse.success) {
+            router.push('/order-history')
+        } else {
+            alert(actionResponse.message)
+        }
+    }
+
+    return isSelectingSeats ? (
+        <div className="flex gap-6">
+            <Card className="flex-1">
+                <CardHeader className="text-center font-bold bg-black text-white">
+                    Screen
+                </CardHeader>
+                <CardContent className="p-6">
+                    <div className="grid grid-cols-3 gap-4 mb-6">
+                        {seats.map((seat) => (
+                            <Seat
+                                key={seat.id}
+                                id={seat.id}
+                                code={seat.code}
+                                isAvailable={seat.available}
+                                isSelected={selectedSeats.some(
+                                    (selectedSeat) =>
+                                        selectedSeat.id === seat.id
+                                )}
+                                onSelect={handleSeatSelect}
+                            />
                         ))}
                     </div>
+                    <p className="text-center font-medium">
+                        Regular Seat ${hall.seat_price.toFixed(2)}
+                    </p>
                 </CardContent>
-                <div className="w-full flex p-4">
-                    <Button className="w-32">Cancel</Button>
-                    <div className="flex ml-auto gap-x-5">
-                        <Select
-                            onValueChange={(value) =>
-                                setSelectedSchedule(value)
-                            }
-                        >
-                            <SelectTrigger className="w-[250px]">
-                                <SelectValue placeholder="Select Hall & Time" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>Halls & Times</SelectLabel>
-                                    {data.options.map((option, index) => (
-                                        <SelectItem
-                                            key={index}
-                                            value={option.value}
-                                        >
-                                            {option.label}
-                                        </SelectItem>
-                                    ))}
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
+            </Card>
+
+            <Card className="w-80">
+                <CardContent className="p-6 space-y-6">
+                    <div className="space-y-2">
+                        <div className="flex justify-between">
+                            <span>Movie:</span>
+                            <span>{movie.title}</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span>Hall:</span>
+                            <span>{hall.name}</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span>Time:</span>
+                            <span>{showTime}</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span>Date:</span>
+                            <span>{showDate}</span>
+                        </div>
+                        <h3 className="font-semibold pt-6">
+                            Selected Seats:{' '}
+                            {selectedSeats.length > 0
+                                ? selectedSeats.length + 'x'
+                                : 'None'}
+                        </h3>
+                        <div className="flex justify-between items-center">
+                            <span>
+                                {selectedSeats
+                                    .map((seat) => seat.code)
+                                    .join(', ')}
+                            </span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <div className="border-t pt-4">
+                        <div className="flex justify-between font-semibold">
+                            <span>Total</span>
+                            <span>${totalPrice.toFixed(2)}</span>
+                        </div>
+                    </div>
+                    <div className="flex gap-2">
                         <Button
-                            className="w-32"
-                            disabled={!selectedSchedule}
+                            variant="outline"
+                            className="flex-1"
                             onClick={() =>
-                                router.push(path + '/' + selectedSchedule!)
+                                router.push('/buy-ticket/' + movie.id)
                             }
                         >
-                            Select Seats
+                            Cancel
+                        </Button>
+                        <Button
+                            className="flex-1"
+                            onClick={() => setIsSelectingSeats(false)}
+                            disabled={selectedSeats.length === 0}
+                        >
+                            Pay
                         </Button>
                     </div>
-                </div>
+                </CardContent>
             </Card>
         </div>
+    ) : (
+        <PaymentCard
+            onSubmit={onSubmit}
+            totalAmount={totalPrice}
+            bookingDetails={{
+                seats: selectedSeats.map((seat) => seat.code),
+                hallName: hall.name,
+                movieTitle: movie.title,
+                showDate,
+                showTime,
+            }}
+            onBack={() => setIsSelectingSeats(true)}
+        />
     )
 }

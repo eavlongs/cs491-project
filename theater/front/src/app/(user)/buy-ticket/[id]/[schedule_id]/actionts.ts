@@ -1,4 +1,11 @@
-import { ApiResponse, Hall, Movie, Schedule, Seat } from '@/app/types'
+import {
+    ActionResponse,
+    ApiResponse,
+    Hall,
+    Movie,
+    Schedule,
+    Seat,
+} from '@/app/types'
 import { apiUrl } from '@/app/utils'
 
 export async function getMovieScheduleDetail(
@@ -23,4 +30,45 @@ export async function getMovieScheduleDetail(
     }
 
     return json.data
+}
+
+export async function buyTickets(
+    schedule_id: string,
+    seat_ids: string[],
+    cardNumber: string,
+    token: string
+): Promise<ActionResponse> {
+    const response = await fetch(
+        `${apiUrl}/movies/schedules/${schedule_id}/buy`,
+        {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                seats: seat_ids,
+                card_number: cardNumber,
+            }),
+        }
+    )
+
+    const json: ApiResponse<{
+        schedule: Schedule
+        seats: (Seat & { is_available: boolean })[]
+        movie: Movie
+        hall: Hall
+    }> = await response.json()
+
+    if (!response.ok || !json.success) {
+        return {
+            success: false,
+            message: json.message,
+        }
+    }
+
+    return {
+        success: true,
+        message: 'Tickets bought successfully',
+    }
 }

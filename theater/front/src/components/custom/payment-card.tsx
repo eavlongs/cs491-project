@@ -1,13 +1,12 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { CreditCard } from 'lucide-react'
+import { useRef } from 'react'
 
 interface PaymentCardProps {
     totalAmount: number
@@ -18,14 +17,75 @@ interface PaymentCardProps {
         showDate: string
         hallName: string
     }
+    onBack: () => void
+    onSubmit: (cardNumber: string) => void
 }
 
-export function PaymentCard({ totalAmount, bookingDetails }: PaymentCardProps) {
-    const router = useRouter()
-    const [cardNumber, setCardNumber] = useState('')
-    const [cvv, setCvv] = useState('')
-    const [expiryMonth, setExpiryMonth] = useState('')
-    const [expiryYear, setExpiryYear] = useState('')
+export function PaymentCard({
+    totalAmount,
+    bookingDetails,
+    onBack,
+    onSubmit,
+}: PaymentCardProps) {
+    const cardNumberRef = useRef<HTMLInputElement>(null)
+    const ccvRef = useRef<HTMLInputElement>(null)
+    const expiryMonthRef = useRef<HTMLInputElement>(null)
+    const expiryYearRef = useRef<HTMLInputElement>(null)
+
+    const handleSubmit = () => {
+        const allRefsWithName = [
+            { ref: cardNumberRef, name: 'Card Number', len: 16 },
+            { ref: ccvRef, name: 'CVV', len: 3 },
+            {
+                ref: expiryMonthRef,
+                name: 'Expiry Month',
+                len: 2,
+                min: 1,
+                max: 12,
+            },
+            {
+                ref: expiryYearRef,
+                name: 'Expiry Year',
+                len: 2,
+                min: 0,
+                max: 99,
+            },
+        ]
+
+        for (const { ref, name, len, min, max } of allRefsWithName) {
+            if (!ref.current || !ref.current.value) {
+                alert(`${name} is required`)
+                return
+            }
+
+            if (isNaN(parseInt(ref.current.value))) {
+                alert(`${name} must be a number`)
+                return
+            }
+
+            if (parseInt(ref.current.value) < 0) {
+                alert(`${name} must be a positive number`)
+                return
+            }
+
+            if (ref.current.value.length !== len) {
+                alert(`${name} must be ${len} digits`)
+                return
+            }
+
+            if (min && parseInt(ref.current.value) < min) {
+                alert(`${name} must be at least ${min}`)
+                return
+            }
+
+            if (max && parseInt(ref.current.value) > max) {
+                alert(`${name} must be at most ${max}`)
+                return
+            }
+        }
+
+        onSubmit(cardNumberRef.current!.value)
+    }
 
     return (
         <div className="flex gap-6">
@@ -52,9 +112,14 @@ export function PaymentCard({ totalAmount, bookingDetails }: PaymentCardProps) {
                             <Label htmlFor="cardNumber">Card Number</Label>
                             <Input
                                 id="cardNumber"
-                                value={cardNumber}
-                                onChange={(e) => setCardNumber(e.target.value)}
+                                ref={cardNumberRef}
                                 placeholder="1234 5678 9012 3456"
+                                maxLength={16}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        handleSubmit()
+                                    }
+                                }}
                             />
                         </div>
 
@@ -63,33 +128,41 @@ export function PaymentCard({ totalAmount, bookingDetails }: PaymentCardProps) {
                                 <Label htmlFor="cvv">CVV</Label>
                                 <Input
                                     id="cvv"
-                                    value={cvv}
-                                    onChange={(e) => setCvv(e.target.value)}
+                                    ref={ccvRef}
                                     maxLength={3}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            handleSubmit()
+                                        }
+                                    }}
                                 />
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="month">Month</Label>
                                 <Input
                                     id="month"
-                                    value={expiryMonth}
-                                    onChange={(e) =>
-                                        setExpiryMonth(e.target.value)
-                                    }
+                                    ref={expiryMonthRef}
                                     placeholder="MM"
                                     maxLength={2}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            handleSubmit()
+                                        }
+                                    }}
                                 />
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="year">Year</Label>
                                 <Input
                                     id="year"
-                                    value={expiryYear}
-                                    onChange={(e) =>
-                                        setExpiryYear(e.target.value)
-                                    }
+                                    ref={expiryYearRef}
                                     placeholder="YY"
                                     maxLength={2}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            handleSubmit()
+                                        }
+                                    }}
                                 />
                             </div>
                         </div>
@@ -132,15 +205,12 @@ export function PaymentCard({ totalAmount, bookingDetails }: PaymentCardProps) {
                         <Button
                             variant="outline"
                             className="flex-1"
-                            onClick={() => router.back()}
+                            onClick={onBack}
                         >
-                            Cancel
+                            Back
                         </Button>
-                        <Button
-                            className="flex-1"
-                            onClick={() => router.push('/confirmation')}
-                        >
-                            CHECK OUT
+                        <Button className="flex-1" onClick={handleSubmit}>
+                            Checkout
                         </Button>
                     </div>
                 </CardContent>

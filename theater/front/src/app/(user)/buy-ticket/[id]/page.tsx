@@ -1,4 +1,4 @@
-import { BuyTicket } from '@/components/custom/BuyTicket'
+import { SelectMovieScheduleToBuyTicket } from '@/components/custom/SelectMovieScheduleToBuyTicket'
 import { redirect } from 'next/navigation'
 import { getMovie, getMovieSchedules } from './actions'
 
@@ -49,7 +49,10 @@ export default async function Page({
 
     return (
         <div className="min-h-min w-2/3 rounded-xl flex justify-center">
-            <BuyTicket movie={movie} schedules={schedules} />
+            <SelectMovieScheduleToBuyTicket
+                movie={movie}
+                schedules={schedules}
+            />
         </div>
     )
 }

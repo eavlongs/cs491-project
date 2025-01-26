@@ -81,6 +81,14 @@ public class JWTHelper {
 		return authorizationHeader.substring(7);
 	}
 	
+	public User getUser(String authorizationHeader) throws Exception {
+		String token = getToken(authorizationHeader);
+		if (token == null) {
+			throw new Exception("Token not found");
+		}
+		return isUser(token);
+	}
+	
 	public User isUserMiddleware(String authorizationHeader) throws Exception {
 		String token = getToken(authorizationHeader);
 		if (token == null) {

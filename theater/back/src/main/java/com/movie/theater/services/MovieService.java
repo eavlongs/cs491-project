@@ -245,13 +245,14 @@ public class MovieService {
 		return true;
 	}
 	
-	public void buyTicket(Schedule schedule, List<Seat> seats, String cardNumber) throws Exception {
+	public void buyTicket(Schedule schedule, List<Seat> seats, String cardNumber, User user) throws Exception {
 		if (!areSeatsAvailable(schedule, seats)) throw new Exception("One or more of the seats are not available");
 		
 		Hall hall = hallRepository.findById(schedule.getHallId()).orElse(null);
 		// make payment
 		Payment payment = new Payment();
 		payment.setCardNumber(cardNumber);
+		payment.setUserId(user.getId());
 		assert hall != null;
 		payment.setAmount(seats.size() * hall.getSeatPrice());
 		payment.setCreatedAt(new Date());

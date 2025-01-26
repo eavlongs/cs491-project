@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api")
@@ -323,6 +320,25 @@ public class MovieController {
 			return ResponseHelper.buildBadRequestResponse(null, "Invalid date format");
 		}
 		
+		// today with no additional hours, minutes, seconds, and milliseconds, but in UTC+7 timezone
+		
+
+		Calendar today = Calendar.getInstance();
+		today.setTimeZone(TimeZone.getTimeZone("UTC+7"));
+		today.setTime(new Date());
+		today.set(Calendar.HOUR_OF_DAY, 0);
+		today.set(Calendar.MINUTE, 0);
+		today.set(Calendar.SECOND, 0);
+		today.set(Calendar.MILLISECOND, 0);
+		
+		if (startDate.before(today.getTime())) {
+			return ResponseHelper.buildBadRequestResponse(null, "Start date must be today or later");
+		}
+		
+		if (dateFormat.format(startDate).equals(dateFormat.format(today.getTime()))) {
+			startDate = new Date();
+		}
+		
 		List<Map<String, Object>> data = movieService.getSchedules(movieId, startDate, endDate);
 		return ResponseHelper.buildSuccessResponse(Map.of("schedules", data));
 	}
@@ -387,7 +403,7 @@ public class MovieController {
 		}
 		
 		try {
-			movieService.buyTicket(schedule, seats, cardNumber);
+			movieService.buyTicket(schedule, seats, cardNumber, jwtHelper.getUser(Authorization));
 		} catch (Exception e) {
 			return ResponseHelper.buildBadRequestResponse(null, e.getMessage());
 		}

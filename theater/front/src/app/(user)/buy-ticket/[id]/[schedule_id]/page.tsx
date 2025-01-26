@@ -1,7 +1,8 @@
-import { SeatSelectionCard } from '@/components/custom/seat-selection'
-import { getMovieScheduleDetail } from './actionts'
-import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/options'
+import { SelectMovieScheduleToBuyTicket } from '@/components/custom/SelectMovieScheduleToBuyTicket'
+import { getServerSession } from 'next-auth'
+import { getMovieScheduleDetail } from './actionts'
+import { BuyTicket } from '@/components/custom/BuyTicket'
 
 export default async function Page({
     params,
@@ -40,7 +41,7 @@ export default async function Page({
     return (
         <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
             <div className="container mx-auto py-10">
-                <SeatSelectionCard
+                <BuyTicket
                     movie={data.movie}
                     showTime={
                         data.schedule.start_time.toLocaleTimeString('en-US', {
@@ -62,9 +63,10 @@ export default async function Page({
                             day: 'numeric',
                         }
                     )}
-                    hallName={data.hall.name}
-                    seatPrice={data.hall.seat_price}
+                    hall={data.hall}
                     seats={seats}
+                    schedule={data.schedule}
+                    token={session!.token}
                 />
             </div>
         </div>
