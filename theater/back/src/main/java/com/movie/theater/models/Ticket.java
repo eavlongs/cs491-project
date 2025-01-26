@@ -1,5 +1,6 @@
 package com.movie.theater.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -7,9 +8,13 @@ import java.util.Date;
 @Document(collection = "tickets")
 public class Ticket {
 	private String id;
+	@JsonProperty("schedule_id")
 	private String scheduleId;
+	@JsonProperty("seat_id")
 	private String seatId;
+	@JsonProperty("payment_id")
 	private String paymentId;
+	@JsonProperty("created_at")
 	private Date createdAt;
 	private Double price;
 	

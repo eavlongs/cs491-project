@@ -13,5 +13,5 @@ public interface PaymentRepository extends MongoRepository<Payment, String> {
 			"{ $lookup: { from: 'tickets', localField: '_id', foreignField: 'paymentId', as: 'tickets' } }",
 			"{ $project: { _id: 1, cardNumber: 1, amount: 1, createdAt: 1, tickets: 1 } }"
 	})
-	List<Map<String, Object>> getPaymentsWithTicketsByUserId(String userId);
+	List<Payment> findByUserIdOrderByCreatedAtDesc(String userId);
 }

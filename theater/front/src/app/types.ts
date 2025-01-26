@@ -55,15 +55,36 @@ export type Hall = {
     seat_price: number
 }
 
-export type ActionResponse = {
-    success: boolean
-    message: string
-}
-
 export type Seat = {
     id: string
     row: number
     column: number
     hall_id: string
     code: string
+}
+
+export type Ticket = {
+    id: string
+    schedule_id: string
+    seat_id: string
+    payment_id: string
+    price: number
+    created_at: Date
+}
+
+export type Payment = {
+    id: string
+    user_id: string
+    card_number: string
+    amount: number
+    created_at: Date
+}
+
+export type ActionResponse = {
+    success: boolean
+    message: string
+}
+
+export type Prettify<T> = {
+    [K in keyof T]: T[K]
 }

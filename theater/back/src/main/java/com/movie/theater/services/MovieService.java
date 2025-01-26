@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieService {
@@ -276,7 +277,41 @@ public class MovieService {
 		return ticketsSole.isEmpty();
 	}
 	
-	public List<Map<String, Object>> getPaymentHistoryByUserId(String userId) {
-		return paymentRepository.getPaymentsWithTicketsByUserId(userId);
+	public List<Map<String, Object>> getOrderHistory(String userId) {
+		List<Payment> payments = paymentRepository.findByUserIdOrderByCreatedAtDesc(userId);
+		List<Map<String, Object>> result = new ArrayList<>();
+		List<Seat> seats = seatRepository.findAll();
+		
+		for (Payment payment : payments) {
+			Map<String, Object> paymentMap = new HashMap<>();
+			paymentMap.put("id", payment.getId());
+			paymentMap.put("price", payment.getAmount());
+			paymentMap.put("created_at", payment.getCreatedAt());
+			
+			List<Ticket> tickets = ticketRepository.findByPaymentId(payment.getId());
+			if (!tickets.isEmpty()) {
+				Schedule schedule = scheduleRepository.findById(tickets.get(0).getScheduleId()).orElse(null);
+				Hall hall = hallRepository.findById(schedule.getHallId()).orElse(null);
+				Movie movie = movieRepository.findById(schedule.getMovieId()).orElse(null);
+				
+				paymentMap.put("schedule", schedule);
+				paymentMap.put("hall", hall);
+				paymentMap.put("movie", movie);
+				
+				List<String> seatCodes = tickets.stream().map(ticket -> {
+					for (Seat seat : seats) {
+						if (seat.getId().equals(ticket.getSeatId())) {
+							return seat.getCode();
+						}
+					}
+					return "";
+				}).collect(Collectors.toList());
+				paymentMap.put("seats", seatCodes);
+			}
+			
+			result.add(paymentMap);
+		}
+		
+		return result;
 	}
 }

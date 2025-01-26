@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -411,18 +412,23 @@ public class MovieController {
 		return ResponseHelper.buildSuccessResponse();
 	}
 	
-	@GetMapping("/movies/payment-history/me")
-	public ResponseEntity<Map<String, Object>> getMyPaymentHistory(@RequestHeader String Authorization) {
-		User user;
-		
+	@GetMapping("/order-history")
+	public ResponseEntity<Map<String, Object>> getOrderHistory(@RequestHeader String Authorization) {
 		try {
-			user = jwtHelper.isUserMiddleware(Authorization);
+			jwtHelper.isUserMiddleware(Authorization);
 		} catch (Exception e) {
 			return ResponseHelper.buildUnauthorizedResponse();
 		}
 		
-		List<Map<String, Object>> payments = movieService.getPaymentHistoryByUserId(user.getId());
+		User user = null;
+		try {
+			user = jwtHelper.getUser(Authorization);
+		} catch (Exception e) {
+			return ResponseHelper.buildInternalServerErrorResponse();
+		}
 		
-		return ResponseHelper.buildSuccessResponse(Map.of("payments", payments));
+		List<Map<String, Object>> orderHistory = movieService.getOrderHistory(user.getId());
+		
+		return ResponseHelper.buildSuccessResponse(Map.of("payments", orderHistory));
 	}
  }

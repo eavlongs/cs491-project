@@ -8,5 +8,7 @@ import java.util.List;
 
 public interface TicketRepository extends MongoRepository<Ticket, String> {
 	@Query("{ 'scheduleId' : ?0, 'seatId' : { $in : ?1 } }")
-	public List<Ticket> getTicketByScheduleIdAndSeatIds(String scheduleId, List<String> seatIds);
+	List<Ticket> getTicketByScheduleIdAndSeatIds(String scheduleId, List<String> seatIds);
+	
+	List<Ticket> findByPaymentId(String paymentId);
 }

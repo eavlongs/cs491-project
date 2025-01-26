@@ -2,6 +2,7 @@ package com.movie.theater.models;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,9 +11,12 @@ public class Payment {
 	
 	@Id
 	private String id;
+	@JsonProperty("user_id")
 	private String userId;
+	@JsonProperty("card_number")
 	private String cardNumber;
 	private Double amount;
+	@JsonProperty("created_at")
 	private Date createdAt;
 	
 	public String getId() {
