@@ -267,6 +267,24 @@ public class MovieController {
 		return ResponseHelper.buildSuccessResponse(Map.of("schedules", data));
 	}
 	
+	@GetMapping("/movies/playing")
+	public ResponseEntity<Map<String, Object>> getPlayingMovies(@RequestParam(name="start_date") String startDateStr) {
+		Date startDate, endDate;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC+7"));
+		
+		try {
+			startDate = dateFormat.parse(startDateStr);
+			endDate = new Date(startDate.getTime() + 86400000); // 24 hours
+		} catch (ParseException e) {
+			return ResponseHelper.buildBadRequestResponse(null, "Invalid date format");
+		}
+		
+		List<Movie> movies = movieService.getPlayingMovies(startDate, endDate);
+		
+		return ResponseHelper.buildSuccessResponse(Map.of("movies", movies));
+	}
+	
 	@GetMapping("/movies/schedules/{hallId}")
 	public ResponseEntity<Map<String, Object>> checkHallAvailability(@PathVariable String hallId,
 	                                                                 @RequestParam(name="start_date") String startDateStr,
@@ -274,7 +292,6 @@ public class MovieController {
 		try {
 			jwtHelper.isAdminMiddleware(Authorization);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
 			return ResponseHelper.buildUnauthorizedResponse();
 		}
 		

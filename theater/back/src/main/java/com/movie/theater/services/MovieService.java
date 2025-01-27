@@ -108,6 +108,19 @@ public class MovieService {
 		scheduleRepository.save(schedule);
 	}
 	
+	public List<Movie> getPlayingMovies(Date startDate, Date endDate) {
+		List<Schedule> schedules = scheduleRepository.getSchedulesOfAllMovieWithinTimeframe(startDate, endDate);
+		
+		Set<String> movieIds = new HashSet<>();
+		for (Schedule schedule : schedules) {
+			movieIds.add(schedule.getMovieId());
+		}
+		
+		List<Movie> movies = movieRepository.findAllById(movieIds);
+		
+		return movies.stream().toList();
+	}
+	
 	public boolean isStartingTimeAvailable(Hall hall, Date startTime) {
 		Date endTime = new Date(startTime.getTime() + 1000 * 60 * 60);
 		

@@ -11,6 +11,7 @@ export default async function Page({
 }) {
     const { schedule_id } = await params
     const session = await getServerSession(authOptions)
+
     const data = await getMovieScheduleDetail(schedule_id, session!.token)
 
     if (!data) {
@@ -39,7 +40,7 @@ export default async function Page({
     }))
 
     return (
-        <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
+        <div className="min-h-[100vh] flex-1 rounded-xl md:min-h-min">
             <div className="container mx-auto py-10">
                 <BuyTicket
                     movie={data.movie}

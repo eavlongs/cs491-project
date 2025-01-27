@@ -1,6 +1,7 @@
 import { SelectMovieScheduleToBuyTicket } from '@/components/custom/SelectMovieScheduleToBuyTicket'
 import { redirect } from 'next/navigation'
 import { getMovie, getMovieSchedules } from './actions'
+import { DateSelector } from '@/components/custom/DateSelector'
 
 export default async function Page({
     params,
@@ -48,11 +49,14 @@ export default async function Page({
     const schedules = await getMovieSchedules(id, startDate)
 
     return (
-        <div className="min-h-min w-2/3 rounded-xl flex justify-center">
-            <SelectMovieScheduleToBuyTicket
-                movie={movie}
-                schedules={schedules}
-            />
-        </div>
+        <>
+            <DateSelector date={startDate} />
+            <div className="min-h-min w-2/3 rounded-xl flex justify-center">
+                <SelectMovieScheduleToBuyTicket
+                    movie={movie}
+                    schedules={schedules}
+                />
+            </div>
+        </>
     )
 }
