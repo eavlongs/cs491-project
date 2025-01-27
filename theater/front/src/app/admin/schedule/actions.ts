@@ -25,12 +25,6 @@ export async function getSchedulesFromAllHalls(startDate: Date) {
         }[]
     }> = await response.json()
 
-    console.log(
-        'getScheduleFromAllHalls',
-        `${apiUrl}/movies/schedules/all-halls?${urlSearchParams}`,
-        json.data?.schedules
-    )
-
     if (!response.ok || !json.success || !json.data) {
         return []
     }

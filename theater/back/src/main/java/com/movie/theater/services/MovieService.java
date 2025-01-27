@@ -135,10 +135,24 @@ public class MovieService {
 	}
 	
 	public List<Map<String, Object>> getAvailableSeats(Schedule schedule) {
-		List<Seat> availableSeats = seatRepository.getAvailableSeats(schedule.getHallId(), schedule.getId());
+		List<Ticket> tickets = ticketRepository.findByScheduleId(schedule.getId());
+		
+		List<String> unavailableSeatsIds = tickets.stream().map(Ticket::getSeatId).toList();
 		List<Seat> allSeats = seatRepository.findByHallId(schedule.getHallId());
+		List<Seat> availableSeats = allSeats.stream().filter(seat -> {
+			for (String unavailableSeatId : unavailableSeatsIds) {
+				if (seat.getId().equals(unavailableSeatId)) return false;
+			}
+			return true;
+		}).toList();
+		
+//		List<Seat> availableSeats = seatRepository.getAvailableSeats(schedule.getHallId(), schedule.getId());
 		
 		List<Map<String, Object>> result = new ArrayList<>(allSeats.size());
+		
+		for (Seat ignored : allSeats) {
+			result.add(null);
+		}
 		
 		for (Seat seat : allSeats) {
 			boolean isAvailable = false;
@@ -156,7 +170,7 @@ public class MovieService {
 			seatMap.put("code", seat.getCode());
 			seatMap.put("is_available", isAvailable);
 			
-			result.add(seatMap);
+			result.set((seat.getRowNumber() - 1) * 3 + (seat.getColNumber() - 1), seatMap);
 		}
 		
 		return result;

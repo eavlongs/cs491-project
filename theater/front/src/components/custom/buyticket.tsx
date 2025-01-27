@@ -5,7 +5,7 @@ import { Hall, Movie, Schedule } from '@/app/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { PaymentCard } from './payment-card'
 
@@ -60,7 +60,7 @@ export function BuyTicket({
     token,
 }: BuyTicketProps) {
     const [isSelectingSeats, setIsSelectingSeats] = useState(true)
-
+    const path = usePathname()
     const router = useRouter()
     const [selectedSeats, setSelectedSeats] = useState<
         {
@@ -99,7 +99,8 @@ export function BuyTicket({
             schedule.id,
             selectedSeats.map((seat) => seat.id),
             cardNumber,
-            token
+            token,
+            path
         )
 
         if (actionResponse.success) {

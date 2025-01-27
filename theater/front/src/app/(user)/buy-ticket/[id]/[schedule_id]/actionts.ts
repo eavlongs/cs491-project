@@ -1,3 +1,5 @@
+'use server'
+
 import {
     ActionResponse,
     ApiResponse,
@@ -7,6 +9,7 @@ import {
     Seat,
 } from '@/app/types'
 import { apiUrl } from '@/app/utils'
+import { revalidatePath } from 'next/cache'
 
 export async function getMovieScheduleDetail(
     schedule_id: string,
@@ -25,6 +28,7 @@ export async function getMovieScheduleDetail(
         hall: Hall
     }> = await response.json()
 
+    console.log(json.data?.seats)
     if (!response.ok || !json.success || !json.data) {
         return null
     }
@@ -36,7 +40,8 @@ export async function buyTickets(
     schedule_id: string,
     seat_ids: string[],
     cardNumber: string,
-    token: string
+    token: string,
+    pathToRevalidate: string
 ): Promise<ActionResponse> {
     const response = await fetch(
         `${apiUrl}/movies/schedules/${schedule_id}/buy`,
@@ -53,12 +58,7 @@ export async function buyTickets(
         }
     )
 
-    const json: ApiResponse<{
-        schedule: Schedule
-        seats: (Seat & { is_available: boolean })[]
-        movie: Movie
-        hall: Hall
-    }> = await response.json()
+    const json: ApiResponse = await response.json()
 
     if (!response.ok || !json.success) {
         return {
@@ -66,6 +66,8 @@ export async function buyTickets(
             message: json.message,
         }
     }
+
+    revalidatePath(pathToRevalidate)
 
     return {
         success: true,

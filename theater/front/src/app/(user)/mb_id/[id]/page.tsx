@@ -12,7 +12,8 @@ export default async function Page({
     const movie = await getMovieByMbId(id)
 
     if (movie) {
-        console.log('redirecting')
-        redirect('/buy-ticket')
+        redirect(`/buy-ticket/${movie.id}`)
+    } else {
+        redirect('/')
     }
 }

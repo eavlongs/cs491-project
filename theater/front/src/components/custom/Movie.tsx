@@ -14,14 +14,18 @@ import Link from 'next/link'
 export function Movie({
     movie,
     admin = false,
+    date,
 }: {
     movie: MovieType
     admin?: boolean
+    date: Date
 }) {
     return (
         <Link
             href={
-                admin ? `/admin/movie/${movie.id}` : `/buy-ticket/${movie.id}`
+                admin
+                    ? `/admin/movie/${movie.id}`
+                    : `/buy-ticket/${movie.id}/?start_date=${date.toLocaleDateString('en-CA')}`
             }
         >
             <Card className="w-[350px] hover:cursor-pointer">

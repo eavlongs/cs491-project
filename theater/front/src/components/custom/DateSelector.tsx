@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 interface DateButton {
@@ -14,7 +14,7 @@ interface DateButton {
 
 export function DateSelector({ date }: { date: Date }) {
     const [selectedDate, setSelectedDate] = useState<Date>(date)
-
+    const path = usePathname()
     const today = new Date()
 
     const dates: DateButton[] = Array.from({ length: 7 }, (_, i) => {
@@ -22,8 +22,14 @@ export function DateSelector({ date }: { date: Date }) {
         date.setDate(today.getDate() + i)
         return {
             date: date.getDate(),
-            day: date.toLocaleDateString('en-US', { weekday: 'short' }),
-            month: date.toLocaleDateString('en-US', { month: 'short' }),
+            day: date.toLocaleDateString('en-US', {
+                weekday: 'short',
+                timeZone: 'Asia/Phnom_Penh',
+            }),
+            month: date.toLocaleDateString('en-US', {
+                month: 'short',
+                timeZone: 'Asia/Phnom_Penh',
+            }),
             dateObj: date,
         }
     })
@@ -32,13 +38,11 @@ export function DateSelector({ date }: { date: Date }) {
 
     const handleDateClick = (date: Date) => {
         setSelectedDate(date)
-        router.replace(
-            `/admin/schedule?start_date=${date.toISOString().split('T')[0]}`
-        )
+        router.replace(`${path}?start_date=${date.toISOString().split('T')[0]}`)
     }
 
     return (
-        <div className="flex gap-2 overflow-x-auto pb-4 mb-6">
+        <div className="flex gap-2 overflow-x-auto pb-4 mb-6 justify-center">
             {dates.map((date) => (
                 <Button
                     key={date.date}
