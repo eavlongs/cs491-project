@@ -37,7 +37,7 @@ const prefix = process.env.API_ROUTE_PREFIX || '/'; // Middleware to parse JSON
 
 app.use(express.json());
 
-authRouter.post('/register', register);
+authRouter.post('/signup', register);
 authRouter.post('/login', login);
 
 movieRouter.post('/subscribe', isUser, subscribe);
