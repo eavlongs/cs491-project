@@ -4,10 +4,11 @@ import { rateMovieAction } from '@/app/(user)/movie/[id]/actions'
 import { Movie } from '@/app/types'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import { Star } from 'lucide-react'
+import { Link, Star } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useState } from 'react'
+import { Button } from '../ui/button'
 
 export function MovieDetail({
     movie,
@@ -156,27 +157,27 @@ export function MovieDetail({
                         ))}
                     </div>
                 </CardContent>
-                {/* <div className="w-full flex flex-wrap p-4 gap-6 items-center justify-center">
+                <div className="w-full flex flex-wrap p-4 gap-6 items-center justify-center">
                     <Link
-                        href={`${theaterBaseUrl}/movie/mb_id/${movie.id}`}
-                        target="_blank"
+                        // href={`${theaterBaseUrl}/movie/mb_id/${movie.id}`}
+                        // target="_blank"
                     >
-                        <Button className="w-32">Watch in Cinema</Button>
+                        <Button className="w-32">Buy: 20$</Button>
                     </Link>
 
                     <Link
-                        href={`${storeBaseUrl}/movie/mb_id/${movie.id}`}
-                        target="_blank"
+                        // href={`${storeBaseUrl}/movie/mb_id/${movie.id}`}
+                        // target="_blank"
                     >
-                        <Button className="w-32">Buy / Rent Movie</Button>
+                        <Button className="w-32">Rent: 3$`/week</Button>
                     </Link>
-                    <Link
+                    {/* <Link
                         href={`${subscriptionBaseUrl}/movie/mb_id/${movie.id}`}
                         target="_blank"
                     >
                         <Button className="w-32">Watch Online</Button>
-                    </Link>
-                </div> */}
+                    </Link> */}
+                </div>
             </Card>
         </div>
     )

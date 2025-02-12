@@ -38,8 +38,11 @@ export function EditMovieForm({
     const ageRestrictionRef = useRef<HTMLInputElement>(null)
     const trailerUrlRef = useRef<HTMLInputElement>(null)
     const descriptionRef = useRef<HTMLInputElement>(null)
-
     const posterUrlRef = useRef<HTMLInputElement>(null)
+    const movieLinkRef = useRef<HTMLInputElement>(null)
+    const videoLinkRef = useRef<HTMLInputElement>(null)
+    const buyingPriceRef = useRef<HTMLInputElement>(null)
+    const rentingPriceRef = useRef<HTMLInputElement>(null)
 
     const session = useSession()
     const router = useRouter()
@@ -93,6 +96,26 @@ export function EditMovieForm({
                 ref: descriptionRef,
                 defaultValue: movie.description,
             },
+            {
+                label: 'Movie Link',
+                ref: movieLinkRef,
+                defaultValue: movie.movie_link || '', // Use empty string as default if null
+            },
+            {
+                label: 'Video Link',
+                ref: videoLinkRef,
+                defaultValue: movie.video_link || '', // Use empty string as default if null
+            },
+            {
+                label: 'Buying Price',
+                ref: buyingPriceRef,
+                defaultValue: movie.buying_price?.toString() || '', // Use empty string as default if null
+            },
+            {
+                label: 'Renting Price (per week)',
+                ref: rentingPriceRef,
+                defaultValue: movie.renting_price_per_week?.toString() || '', // Use empty string as default if null
+            },
         ],
     }
 
@@ -107,11 +130,27 @@ export function EditMovieForm({
         const trailerUrl = trailerUrlRef.current?.value
         const description = descriptionRef.current?.value
         const posterUrl = posterUrlRef.current?.value
+        const movieLink = movieLinkRef.current?.value
+        const videoLink = videoLinkRef.current?.value
+        const buyingPrice = buyingPriceRef.current?.value
+        const rentingPrice = rentingPriceRef.current?.value
 
         const durationInt = parseInt(duration || '', 10)
+        const buyingPriceFloat = parseFloat(buyingPrice || '')
+        const rentingPriceFloat = parseFloat(rentingPrice || '')
 
         if (isNaN(durationInt)) {
             alert('Duration must be a number')
+            return
+        }
+
+        if (isNaN(buyingPriceFloat)) {
+            alert('Buying Price must be a number')
+            return
+        }
+
+        if (isNaN(rentingPriceFloat)) {
+            alert('Renting Price must be a number')
             return
         }
 
@@ -141,6 +180,10 @@ export function EditMovieForm({
                 trailer_url: trailerUrl,
                 description,
                 poster_url: posterUrl,
+                movie_link: movieLink,
+                video_link: videoLink,
+                buying_price: buyingPriceFloat,
+                renting_price_per_week: rentingPriceFloat,
             }),
         })
 
@@ -201,7 +244,7 @@ export function EditMovieForm({
                             <div className="flex flex-col gap-x-6 gap-y-2 mb-4">
                                 <div className="flex flex-col items-center text-center">
                                     <h1 className="text-2xl font-bold">
-                                        Add Movie
+                                        Edit Movie
                                     </h1>
                                 </div>
                                 {data.items.map((item, index) => (
