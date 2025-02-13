@@ -1,6 +1,8 @@
+import cors, { CorsOptions } from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import mariadb from 'mariadb';
+
 import { login, register } from './authController';
 import { isAdmin, isUser, isUserSubscriptionActive } from './middleware';
 import {
@@ -47,6 +49,14 @@ movieRouter.post('/movies', isAdmin, createMovie);
 movieRouter.patch('/movies/:id', isAdmin, editMovie);
 movieRouter.delete('/movies/:id', isAdmin, deleteMovie);
 
+var corsOptions: CorsOptions = {
+    origin: 'http://localhost:3001',
+    optionsSuccessStatus: 200,
+    allowedHeaders: '*',
+    methods: 'GET, POST, PATCH, DELETE',
+};
+
+app.use(cors(corsOptions));
 app.use(prefix + '/auth', authRouter);
 app.use(prefix, movieRouter);
 

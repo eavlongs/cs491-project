@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET, pool } from '.';
 import { respondWithBadRequestError, respondWithSuccess } from './response';
+import { User } from './models';
 
 export async function register(req: Request, res: Response) {
     const {
@@ -26,21 +27,29 @@ export async function register(req: Request, res: Response) {
         );
         conn.release();
 
+        const user: User[] = await pool.query(
+            `SELECT * FROM users WHERE id = ?`,
+            [result.insertId]
+        );
+
+        if (!user.length) {
+            throw new Error('Failed to create user.');
+        }
+
         const token = jwt.sign(
             {
-                id: parseInt(result.insertId.toString()),
-                first_name: firstName,
-                last_name: lastName,
-                email,
-                is_admin: false,
+                id: user[0].id,
+                first_name: user[0].firstName,
+                last_name: user[0].lastName,
+                email: user[0].email,
+                is_admin: user[0].isAdmin,
             },
             JWT_SECRET,
             { expiresIn: '24h' }
         );
 
-        respondWithSuccess(res, { token });
+        respondWithSuccess(res, { token, user: user[0] });
     } catch (err: any) {
-        console.error(err);
         respondWithBadRequestError(res, err.message);
     }
 }
@@ -79,7 +88,8 @@ export async function login(req: Request, res: Response) {
             { expiresIn: '24h' }
         );
 
-        respondWithSuccess(res, { token });
+        console.log({ token, user });
+        respondWithSuccess(res, { token, user });
     } catch (err: any) {
         console.error(err);
         respondWithBadRequestError(res, err.message);
