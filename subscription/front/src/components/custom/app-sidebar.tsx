@@ -26,10 +26,6 @@ const data = {
             title: 'Edit Movies',
             url: '/admin/movie/1',
         },
-        {
-            title: 'Manage Halls',
-            url: '/admin/hall',
-        },
     ],
 }
 
@@ -46,7 +42,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                 </div>
                                 <div className="flex flex-col gap-0.5 leading-none">
                                     <span className="font-semibold">
-                                        Movie Core
+                                        Movie Subscription
                                     </span>
                                 </div>
                             </a>

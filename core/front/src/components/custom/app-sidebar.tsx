@@ -26,10 +26,6 @@ const data = {
             title: 'Edit Movies',
             url: '/admin/movie/1',
         },
-        {
-            title: 'Manage Halls',
-            url: '/admin/hall',
-        },
     ],
 }
 
