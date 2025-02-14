@@ -1,10 +1,17 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Check } from 'lucide-react'
 
 export function SubscriptionCard() {
+    const router = useRouter()
+
+    const handleNext = () => {
+        router.push('/payment')
+    }
+
     return (
         <Card className="w-[400px]">
             <CardHeader>
@@ -43,7 +50,7 @@ export function SubscriptionCard() {
                     </div>
                 </div>
 
-                <Button className="w-full">NEXT</Button>
+                <Button className="w-full" onClick={handleNext}>NEXT</Button>
             </CardContent>
         </Card>
     )
