@@ -1,22 +1,84 @@
 'use client'
 
+import { subscribeMovieService } from '@/app/(user)/subscribe-movie/actions'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { CreditCard } from 'lucide-react'
-import { FormEvent, useRef } from 'react'
+import { useRouter } from 'next/navigation'
+import { useRef } from 'react'
 
-interface PaymentCardProps {
-    handleSubmit: (event?: FormEvent) => void // Or a more specific return type if needed
-}
+export default function PaymentCard({ token }: { token: string }) {
+    const cardNumberRef = useRef<HTMLInputElement>(null)
+    const ccvRef = useRef<HTMLInputElement>(null)
+    const expiryMonthRef = useRef<HTMLInputElement>(null)
+    const expiryYearRef = useRef<HTMLInputElement>(null)
+    const router = useRouter()
 
-export default function PaymentCard({ handleSubmit }: PaymentCardProps) {
-    const cardNumberRef = useRef(null)
-    const ccvRef = useRef(null)
-    const expiryMonthRef = useRef(null)
-    const expiryYearRef = useRef(null)
+    const handleSubmit = async () => {
+        const allRefsWithName = [
+            { ref: cardNumberRef, name: 'Card Number', len: 16 },
+            { ref: ccvRef, name: 'CVV', len: 3 },
+            {
+                ref: expiryMonthRef,
+                name: 'Expiry Month',
+                len: 2,
+                min: 1,
+                max: 12,
+            },
+            {
+                ref: expiryYearRef,
+                name: 'Expiry Year',
+                len: 2,
+                min: 0,
+                max: 99,
+            },
+        ]
+
+        for (const { ref, name, len, min, max } of allRefsWithName) {
+            if (!ref.current || !ref.current.value) {
+                alert(`${name} is required`)
+                return
+            }
+
+            if (isNaN(parseInt(ref.current.value))) {
+                alert(`${name} must be a number`)
+                return
+            }
+
+            if (parseInt(ref.current.value) < 0) {
+                alert(`${name} must be a positive number`)
+                return
+            }
+
+            if (ref.current.value.length !== len) {
+                alert(`${name} must be ${len} digits`)
+                return
+            }
+
+            if (min && parseInt(ref.current.value) < min) {
+                alert(`${name} must be at least ${min}`)
+                return
+            }
+
+            if (max && parseInt(ref.current.value) > max) {
+                alert(`${name} must be at most ${max}`)
+                return
+            }
+        }
+
+        const actionResponse = await subscribeMovieService(
+            token,
+            cardNumberRef.current!.value
+        )
+        if (actionResponse.success) {
+            router.push('/')
+        } else {
+            alert(actionResponse.message)
+        }
+    }
 
     return (
         <div className="flex gap-6">

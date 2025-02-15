@@ -1,14 +1,13 @@
 import { getMovie } from '@/app/admin/movie/[id]/actions'
-import { MovieDetail } from '@/components/custom/moviedetail'
-export default async function Page({
-    params,
-}: {
-    params: {
-        id: string
-    }
-}) {
+import { authOptions } from '@/app/api/auth/[...nextauth]/options'
+import { MovieDetails } from '@/components/custom/play-movie-detail'
+import { VideoPlayer } from '@/components/custom/video-player'
+import { getServerSession } from 'next-auth'
+
+export default async function Page({ params }: { params: { id: string } }) {
     const { id } = await params
-    const movie = await getMovie(id)
+    const session = await getServerSession(authOptions)
+    const movie = await getMovie(id, session!.token)
 
     if (!movie) {
         return (
@@ -27,8 +26,9 @@ export default async function Page({
     }
 
     return (
-        <div className="min-h-min w-full rounded-xl flex justify-center">
-            <MovieDetail movie={movie} />
+        <div className="min-h-screen bg-white space-y-8 py-8">
+            <VideoPlayer videoUrl={movie.video_url} />
+            <MovieDetails movie={movie} />
         </div>
     )
 }

@@ -4,21 +4,27 @@ import express from 'express';
 import mariadb from 'mariadb';
 
 import { login, register } from './authController';
-import { isAdmin, isUser, isUserSubscriptionActive } from './middleware';
+import {
+    checkIfUserHasActiveSubscription,
+    isAdmin,
+    isUser,
+    isUserSubscriptionActive,
+} from './middleware';
 import {
     createMovie,
     deleteMovie,
     editMovie,
     getMovie,
     getMovies,
-    subscribe,
 } from './movieController';
+import { checkIfSubscribed, subscribe } from './subscriptionController';
 
 dotenv.config();
 
 const app = express();
 const authRouter = express.Router();
 const movieRouter = express.Router();
+const subscriptionRouter = express.Router();
 const port = parseInt(process.env.API_PORT || '8081');
 export const subscriptionPrice = parseInt(
     process.env.SUBSCRIPTION_PRICE || '10'
@@ -42,12 +48,14 @@ app.use(express.json());
 authRouter.post('/signup', register);
 authRouter.post('/login', login);
 
-movieRouter.post('/subscribe', isUser, subscribe);
-movieRouter.get('/movies', isUser, isUserSubscriptionActive, getMovies);
-movieRouter.get('/movies/:id', isUser, isUserSubscriptionActive, getMovie);
-movieRouter.post('/movies/create', isAdmin, createMovie);
-movieRouter.patch('/movies/:id', isAdmin, editMovie);
-movieRouter.delete('/movies/:id', isAdmin, deleteMovie);
+movieRouter.get('/', isUser, isUserSubscriptionActive, getMovies);
+movieRouter.get('/:id', isUser, isUserSubscriptionActive, getMovie);
+movieRouter.post('/create', isAdmin, createMovie);
+movieRouter.patch('/:id', isAdmin, editMovie);
+movieRouter.delete('/:id', isAdmin, deleteMovie);
+
+subscriptionRouter.post('/subscribe', isUser, subscribe);
+subscriptionRouter.get('/subscription/check', isUser, checkIfSubscribed);
 
 var corsOptions: CorsOptions = {
     origin: 'http://localhost:3001',
@@ -58,7 +66,8 @@ var corsOptions: CorsOptions = {
 
 app.use(cors(corsOptions));
 app.use(prefix + '/auth', authRouter);
-app.use(prefix, movieRouter);
+app.use(prefix + '/movies', movieRouter);
+app.use(prefix, subscriptionRouter);
 
 // Start server
 app.listen(port, () => {

@@ -39,8 +39,11 @@ export type Movie = {
     trailer_url: string
     avg_rating?: number
     number_of_ratings?: number
-    mb_id: number | null // Optional and nullable
-    video_url?: string // Optional and nullable
-    buy_price?: number // Optional and nullable
-    rent_price?: number // Optional and nullable
+    mb_id: number | null
+    video_url: string
+}
+
+export type ActionResponse = {
+    success: boolean
+    message: string
 }

@@ -1,18 +1,20 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Check } from 'lucide-react'
+import { useState } from 'react'
+import PaymentCard from './payment-card'
 
-export function SubscriptionCard() {
-    const router = useRouter()
-
+export function SubscriptionCard({ token }: { token: string }) {
+    const [paymentVisible, setPaymentVisible] = useState(false)
     const handleNext = () => {
-        router.push('/payment')
+        setPaymentVisible(true)
     }
 
-    return (
+    return paymentVisible ? (
+        <PaymentCard token={token} />
+    ) : (
         <Card className="w-[400px]">
             <CardHeader>
                 <CardTitle className="text-center">
@@ -31,7 +33,7 @@ export function SubscriptionCard() {
                 <div className="space-y-4">
                     <div className="space-y-1">
                         <h4 className="font-medium">Monthly Price</h4>
-                        <p>99.00$</p>
+                        <p>15.00$</p>
                     </div>
 
                     <div className="space-y-1">
@@ -50,7 +52,9 @@ export function SubscriptionCard() {
                     </div>
                 </div>
 
-                <Button className="w-full" onClick={handleNext}>NEXT</Button>
+                <Button className="w-full" onClick={handleNext}>
+                    NEXT
+                </Button>
             </CardContent>
         </Card>
     )

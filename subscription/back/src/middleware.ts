@@ -75,19 +75,26 @@ export async function isUserSubscriptionActive(
         return;
     }
 
-    const conn = await pool.getConnection();
-
-    const [rows] = await conn.query(
-        `SELECT * FROM user_subscription WHERE user_id = ? AND ends_at > NOW();`,
-        [user.id]
-    );
-
-    conn.release();
-
-    if (rows && rows.length === 0) {
+    if (!(await checkIfUserHasActiveSubscription(user.id))) {
         respondWithBadRequestError(res, 'No active subscription');
         return;
     }
 
     next();
+}
+
+export async function checkIfUserHasActiveSubscription(id: number) {
+    const conn = await pool.getConnection();
+    const [rows] = await conn.query(
+        `SELECT * FROM user_subscription WHERE user_id = ? AND ends_at > NOW();`,
+        [id]
+    );
+
+    conn.release();
+
+    if (!rows) {
+        return false;
+    }
+
+    return true;
 }

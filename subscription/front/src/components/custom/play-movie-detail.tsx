@@ -1,32 +1,17 @@
 'use client'
 
-import Image from 'next/image'
+import { Movie } from '@/app/types'
 import { Star } from 'lucide-react'
+import Image from 'next/image'
 
-interface MovieDetailsProps {
-    movie: {
-        title: string
-        rating: number
-        reviews: number
-        duration: string
-        releaseDate: string
-        directors: string
-        cast: string
-        genre: string
-        ageRestriction: string
-        description: string
-        posterUrl: string
-    }
-}
-
-export function MovieDetails({ movie }: MovieDetailsProps) {
+export function MovieDetails({ movie }: { movie: Movie }) {
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="flex flex-col md:flex-row gap-8">
                 <div className="w-full md:w-1/3 lg:w-1/4">
                     <div className="aspect-[3/4] relative">
                         <Image
-                            src={movie.posterUrl || '/placeholder.svg'}
+                            src={movie.poster_url}
                             alt={movie.title}
                             fill
                             className="object-cover rounded-lg"
@@ -40,7 +25,7 @@ export function MovieDetails({ movie }: MovieDetailsProps) {
                             <h1 className="text-3xl font-bold">
                                 {movie.title}
                             </h1>
-                            <div className="flex items-center gap-2">
+                            {/* <div className="flex items-center gap-2">
                                 <span className="font-semibold">
                                     {movie.rating}
                                 </span>
@@ -48,7 +33,7 @@ export function MovieDetails({ movie }: MovieDetailsProps) {
                                 <span className="text-gray-600">
                                     ({movie.reviews} reviews)
                                 </span>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
 
@@ -62,13 +47,17 @@ export function MovieDetails({ movie }: MovieDetailsProps) {
                                 <span className="font-semibold">
                                     Duration:{' '}
                                 </span>
-                                <span>{movie.duration}</span>
+                                <span>{movie.movie_duration}</span>
                             </div>
                             <div>
                                 <span className="font-semibold">
                                     Release Date:{' '}
                                 </span>
-                                <span>{movie.releaseDate}</span>
+                                <span>
+                                    {new Date(
+                                        movie.release_date
+                                    ).toLocaleDateString()}
+                                </span>
                             </div>
                             <div>
                                 <span className="font-semibold">
@@ -85,13 +74,13 @@ export function MovieDetails({ movie }: MovieDetailsProps) {
                             </div>
                             <div>
                                 <span className="font-semibold">Genre: </span>
-                                <span>{movie.genre}</span>
+                                <span>{movie.genres}</span>
                             </div>
                             <div>
                                 <span className="font-semibold">
                                     Age Restriction:{' '}
                                 </span>
-                                <span>{movie.ageRestriction}</span>
+                                <span>{movie.age_restriction}</span>
                             </div>
                         </div>
                     </div>
