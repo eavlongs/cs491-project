@@ -45,7 +45,7 @@ authRouter.post('/login', login);
 movieRouter.post('/subscribe', isUser, subscribe);
 movieRouter.get('/movies', isUser, isUserSubscriptionActive, getMovies);
 movieRouter.get('/movies/:id', isUser, isUserSubscriptionActive, getMovie);
-movieRouter.post('/movies', isAdmin, createMovie);
+movieRouter.post('/movies/create', isAdmin, createMovie);
 movieRouter.patch('/movies/:id', isAdmin, editMovie);
 movieRouter.delete('/movies/:id', isAdmin, deleteMovie);
 

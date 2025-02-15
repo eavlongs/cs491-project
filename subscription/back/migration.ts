@@ -58,11 +58,11 @@ async function migrate() {
             description TEXT,
             poster_url TEXT,
             video_url TEXT,
-            director VARCHAR(255),
-            writers VARCHAR(255),
+            directors VARCHAR(255),
             cast VARCHAR(255),
             release_date DATE,
-            movie_duration INT
+            movie_duration INT,
+            trailer_url TEXT
     );`;
 
     let conn;

@@ -39,8 +39,8 @@ export type Movie = {
     trailer_url: string
     avg_rating?: number
     number_of_ratings?: number
-    movie_link?: string | null // Optional and nullable
-    video_link?: string | null // Optional and nullable
-    buying_price?: number | null // Optional and nullable
-    renting_price_per_week?: number | null // Optional and nullable
+    mb_id: number | null // Optional and nullable
+    video_url?: string // Optional and nullable
+    buy_price?: number // Optional and nullable
+    rent_price?: number // Optional and nullable
 }

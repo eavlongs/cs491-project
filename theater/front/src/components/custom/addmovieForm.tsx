@@ -159,7 +159,7 @@ export function AddMovieForm({
                                     }
                                 >
                                     <span className=" text-gray-500">
-                                        Image Placeholder
+                                        Image
                                     </span>
                                 </div>
                             )}

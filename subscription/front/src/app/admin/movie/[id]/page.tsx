@@ -1,9 +1,12 @@
 import { EditMovieForm } from '@/components/custom/EditMovieForm'
 import { getMovie } from './actions'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 
 export default async function Page({ params }: { params: { id: string } }) {
     const { id } = await params
-    const movie = await getMovie(id)
+    const session = await getServerSession(authOptions)
+    const movie = await getMovie(id, session!.token)
 
     if (!movie) {
         return (
@@ -26,7 +29,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             <div className="flex flex-col items-center justify-center px-0 md:px-6 lg:px-10">
                 <div className="w-full">
                     <div className="flex flex-col items-center justify-center">
-                        <EditMovieForm movie={movie} />
+                        <EditMovieForm movie={movie} token={session!.token} />
                     </div>
                 </div>
             </div>

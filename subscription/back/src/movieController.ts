@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { pool, subscriptionPrice } from '.';
+import { Movie } from './models';
 import {
     respondWithBadRequestError,
     respondWithNotFoundError,
@@ -44,11 +45,11 @@ export async function createMovie(req: Request, res: Response) {
         description,
         poster_url,
         video_url,
-        director,
-        writers,
+        directors,
         cast,
         release_date,
         movie_duration,
+        trailer_url,
     } = req.body;
 
     if (!mb_id) mb_id = null;
@@ -66,19 +67,33 @@ export async function createMovie(req: Request, res: Response) {
         !description ||
         !poster_url ||
         !video_url ||
-        !director ||
-        !writers ||
+        !directors ||
         !cast ||
-        !movie_duration
+        !movie_duration ||
+        !trailer_url
     ) {
         respondWithBadRequestError(res, 'All fields are required.');
         return;
     }
 
+    console.log([
+        mb_id,
+        genres,
+        age_restriction,
+        title,
+        description,
+        poster_url,
+        video_url,
+        directors,
+        cast,
+        formattedReleaseDate,
+        movie_duration,
+        trailer_url,
+    ]);
     try {
         const conn = await pool.getConnection();
         await conn.query(
-            `INSERT INTO movie (mb_id, genres, age_restriction, title, description, poster_url, video_url, director, writers, cast, release_date, movie_duration) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+            `INSERT INTO movie (mb_id, genres, age_restriction, title, description, poster_url, video_url, directors, cast, release_date, movie_duration, trailer_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
             [
                 mb_id,
                 genres,
@@ -87,11 +102,11 @@ export async function createMovie(req: Request, res: Response) {
                 description,
                 poster_url,
                 video_url,
-                director,
-                writers,
+                directors,
                 cast,
                 formattedReleaseDate,
                 movie_duration,
+                trailer_url,
             ]
         );
         conn.release();
@@ -113,11 +128,11 @@ export async function editMovie(req: Request, res: Response) {
         description,
         poster_url,
         video_url,
-        director,
-        writers,
+        directors,
         cast,
         release_date,
         movie_duration,
+        trailer_url,
     } = req.body;
 
     if (!mb_id) mb_id = null;
@@ -135,11 +150,10 @@ export async function editMovie(req: Request, res: Response) {
         !description ||
         !poster_url ||
         !video_url ||
-        !director ||
-        !writers ||
+        !directors ||
         !cast ||
-        !release_date ||
-        !movie_duration
+        !movie_duration ||
+        !trailer_url
     ) {
         respondWithBadRequestError(res, 'All fields are required.');
         return;
@@ -148,7 +162,7 @@ export async function editMovie(req: Request, res: Response) {
     try {
         const conn = await pool.getConnection();
         await conn.query(
-            `UPDATE movie SET mb_id = ?, genres = ?, age_restriction = ?, title = ?, description = ?, poster_url = ?, video_url = ?, director = ?, writers = ?, cast = ?, release_date = ?, movie_duration = ? WHERE id = ?;`,
+            `UPDATE movie SET mb_id = ?, genres = ?, age_restriction = ?, title = ?, description = ?, poster_url = ?, video_url = ?, directors = ?, cast = ?, release_date = ?, movie_duration = ?, trailer_url = ? WHERE id = ?;`,
             [
                 mb_id,
                 genres,
@@ -157,11 +171,11 @@ export async function editMovie(req: Request, res: Response) {
                 description,
                 poster_url,
                 video_url,
-                director,
-                writers,
+                directors,
                 cast,
                 formattedReleaseDate,
                 movie_duration,
+                trailer_url,
                 id,
             ]
         );
@@ -193,12 +207,21 @@ export async function getMovies(req: Request, res: Response) {
     try {
         const conn = await pool.getConnection();
         const [rows] = await conn.query(
-            `SELECT id, mb_id, genres, age_restriction, title, description, poster_url, director, writers, cast, release_date, movie_duration FROM movie;`
+            `SELECT id, mb_id, genres, age_restriction, title, description, poster_url, directors, cast, release_date, movie_duration FROM movie;`
         );
         conn.release();
 
+        let movies: Movie[];
+        if (!rows) {
+            movies = [];
+        } else if (Array.isArray(rows)) {
+            movies = rows;
+        } else {
+            movies = [rows];
+        }
+
         respondWithSuccess(res, {
-            movies: rows,
+            movies,
         });
     } catch (err: any) {
         console.error(err);
@@ -216,12 +239,12 @@ export async function getMovie(req: Request, res: Response) {
         ]);
         conn.release();
 
-        if (!rows || rows.length === 0) {
+        if (!rows) {
             respondWithNotFoundError(res);
             return;
         }
 
-        respondWithSuccess(res, { movie: rows[0] });
+        respondWithSuccess(res, { movie: rows });
     } catch (err: any) {
         console.error(err);
         respondWithBadRequestError(res, err.message);

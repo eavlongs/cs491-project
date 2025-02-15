@@ -10,8 +10,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
-import { Link } from 'lucide-react'
 import { signIn } from 'next-auth/react'
+import Link from 'next/link'
 import { useRef } from 'react'
 export function LoginForm({
     className,

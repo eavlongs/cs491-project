@@ -2,8 +2,8 @@ import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET, pool } from '.';
-import { respondWithBadRequestError, respondWithSuccess } from './response';
 import { User } from './models';
+import { respondWithBadRequestError, respondWithSuccess } from './response';
 
 export async function register(req: Request, res: Response) {
     const {
@@ -88,7 +88,6 @@ export async function login(req: Request, res: Response) {
             { expiresIn: '24h' }
         );
 
-        console.log({ token, user });
         respondWithSuccess(res, { token, user });
     } catch (err: any) {
         console.error(err);

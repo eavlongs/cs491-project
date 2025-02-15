@@ -1,15 +1,6 @@
 'use client'
 import { ApiResponse, Movie } from '@/app/types'
 import { apiUrl } from '@/app/utils'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { cn } from '@/lib/utils'
-import { useSession } from 'next-auth/react'
-import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import { useRef, useState } from 'react'
 import {
     AlertDialog,
     AlertDialogAction,
@@ -20,13 +11,24 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { cn } from '@/lib/utils'
+import { useSession } from 'next-auth/react'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { useRef, useState } from 'react'
 
 export function EditMovieForm({
     movie,
     className,
+    token,
     ...props
 }: React.ComponentProps<'div'> & {
     movie: Movie
+    token: string
 }) {
     const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false)
     const titleRef = useRef<HTMLInputElement>(null)
@@ -39,10 +41,9 @@ export function EditMovieForm({
     const trailerUrlRef = useRef<HTMLInputElement>(null)
     const descriptionRef = useRef<HTMLInputElement>(null)
     const posterUrlRef = useRef<HTMLInputElement>(null)
-    const movieLinkRef = useRef<HTMLInputElement>(null)
-    const videoLinkRef = useRef<HTMLInputElement>(null)
-    const buyingPriceRef = useRef<HTMLInputElement>(null)
-    const rentingPriceRef = useRef<HTMLInputElement>(null)
+    const mbIdRef = useRef<HTMLInputElement>(null)
+    const videoUrlRef = useRef<HTMLInputElement>(null)
+    const [posterUrl, setPosterUrl] = useState(movie.poster_url)
 
     const session = useSession()
     const router = useRouter()
@@ -87,34 +88,19 @@ export function EditMovieForm({
                 defaultValue: movie.age_restriction.toString(),
             },
             {
-                label: 'Trailer URL',
-                ref: trailerUrlRef,
-                defaultValue: movie.trailer_url,
-            },
-            {
                 label: 'Description',
                 ref: descriptionRef,
                 defaultValue: movie.description,
             },
             {
-                label: 'Movie Link',
-                ref: movieLinkRef,
-                defaultValue: movie.movie_link || '', // Use empty string as default if null
+                label: 'Link Movie',
+                ref: mbIdRef,
+                defaultValue: movie.mb_id || '', // Use empty string as default if null
             },
             {
-                label: 'Video Link',
-                ref: videoLinkRef,
-                defaultValue: movie.video_link || '', // Use empty string as default if null
-            },
-            {
-                label: 'Buying Price',
-                ref: buyingPriceRef,
-                defaultValue: movie.buying_price?.toString() || '', // Use empty string as default if null
-            },
-            {
-                label: 'Renting Price (per week)',
-                ref: rentingPriceRef,
-                defaultValue: movie.renting_price_per_week?.toString() || '', // Use empty string as default if null
+                label: 'Video URL',
+                ref: videoUrlRef,
+                defaultValue: movie.video_url || '', // Use empty string as default if null
             },
         ],
     }
@@ -130,27 +116,12 @@ export function EditMovieForm({
         const trailerUrl = trailerUrlRef.current?.value
         const description = descriptionRef.current?.value
         const posterUrl = posterUrlRef.current?.value
-        const movieLink = movieLinkRef.current?.value
-        const videoLink = videoLinkRef.current?.value
-        const buyingPrice = buyingPriceRef.current?.value
-        const rentingPrice = rentingPriceRef.current?.value
-
+        const mbId = mbIdRef.current?.value
+        const videoUrl = videoUrlRef.current?.value
         const durationInt = parseInt(duration || '', 10)
-        const buyingPriceFloat = parseFloat(buyingPrice || '')
-        const rentingPriceFloat = parseFloat(rentingPrice || '')
 
         if (isNaN(durationInt)) {
             alert('Duration must be a number')
-            return
-        }
-
-        if (isNaN(buyingPriceFloat)) {
-            alert('Buying Price must be a number')
-            return
-        }
-
-        if (isNaN(rentingPriceFloat)) {
-            alert('Renting Price must be a number')
             return
         }
 
@@ -167,6 +138,7 @@ export function EditMovieForm({
         const response = await fetch(`${apiUrl}/movies/${movie.id}`, {
             headers: {
                 Authorization: `Bearer ${session.data?.token}`,
+                'Content-Type': 'application/json',
             },
             method: 'PATCH',
             body: JSON.stringify({
@@ -180,10 +152,8 @@ export function EditMovieForm({
                 trailer_url: trailerUrl,
                 description,
                 poster_url: posterUrl,
-                movie_link: movieLink,
-                video_link: videoLink,
-                buying_price: buyingPriceFloat,
-                renting_price_per_week: rentingPriceFloat,
+                mb_id: mbId,
+                video_url: videoUrl,
             }),
         })
 
@@ -192,7 +162,7 @@ export function EditMovieForm({
         if (!response.ok) {
             alert(json.message)
         } else {
-            router.push('/admin/dashboard')
+            router.push('/admin')
         }
     }
 
@@ -211,7 +181,7 @@ export function EditMovieForm({
             return
         }
 
-        router.push('/admin/dashboard')
+        router.push('/admin')
     }
 
     return (
@@ -221,20 +191,32 @@ export function EditMovieForm({
                     <CardContent className="grid p-0 md:grid-cols-2">
                         <div className="p-4 flex flex-col items-center justify-center gap-4">
                             <div className="relative aspect-[2/3] min-h-[25rem] h-full">
-                                {posterUrlRef.current && (
+                                {posterUrl !== '' ? (
                                     <Image
-                                        src={posterUrlRef.current.value}
+                                        src={posterUrl}
                                         alt="Image"
                                         className="rounded-md object-cover"
                                         fill
                                         unoptimized
                                     />
+                                ) : (
+                                    <div
+                                        className="w-full h-full bg-gray-300 rounded-md flex items-center justify-center cursor-pointer"
+                                        onClick={() =>
+                                            posterUrlRef.current?.focus()
+                                        }
+                                    >
+                                        <span className=" text-gray-500">
+                                            Image
+                                        </span>
+                                    </div>
                                 )}
                             </div>
 
                             <Input
                                 id="poster_url"
                                 ref={posterUrlRef}
+                                onChange={(e) => setPosterUrl(e.target.value)}
                                 required
                                 placeholder="Poster URL"
                                 defaultValue={movie.poster_url}

@@ -13,7 +13,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
-import { Link } from 'lucide-react'
+import Link from 'next/link'
 import { signIn } from 'next-auth/react'
 import { useRef } from 'react'
 
@@ -72,7 +72,7 @@ export function SignUpForm({
             throw new Error('Sign up failed')
         } catch (err: any) {
             alert(err.message)
-    }
+        }
     }
     return (
         <div className={cn('flex flex-col gap-6', className)} {...props}>

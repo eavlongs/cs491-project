@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 
 export function AddMovieForm({
     className,
@@ -25,8 +25,9 @@ export function AddMovieForm({
     const trailerUrlRef = useRef<HTMLInputElement>(null)
     const descriptionRef = useRef<HTMLInputElement>(null)
     const posterUrlRef = useRef<HTMLInputElement>(null)
-    const movieLinkRef = useRef<HTMLInputElement>(null) // Added movie link ref
-    const videoLinkRef = useRef<HTMLInputElement>(null) // Added video link ref
+    const mbIdRef = useRef<HTMLInputElement>(null) // Added movie link ref
+    const videoUrlRef = useRef<HTMLInputElement>(null) // Added video link ref
+    const [posterUrl, setPosterUrl] = useState('')
 
     const session = useSession()
     const router = useRouter()
@@ -70,12 +71,12 @@ export function AddMovieForm({
                 ref: descriptionRef,
             },
             {
-                label: 'Movie Link', // Added movie link item
-                ref: movieLinkRef,
+                label: 'Link Movie',
+                ref: mbIdRef,
             },
             {
-                label: 'Video Link', // Added video link item
-                ref: videoLinkRef,
+                label: 'Video URL', // Added video link item
+                ref: videoUrlRef,
             },
         ],
     }
@@ -91,8 +92,8 @@ export function AddMovieForm({
         const trailerUrl = trailerUrlRef.current?.value
         const description = descriptionRef.current?.value
         const posterUrl = posterUrlRef.current?.value
-        const movieLink = movieLinkRef.current?.value // Get movie link value
-        const videoLink = videoLinkRef.current?.value // Get video link value
+        const mbId = mbIdRef.current?.value // Get movie link value
+        const videoUrl = videoUrlRef.current?.value // Get video link value
 
         const durationInt = parseInt(duration || '', 10)
 
@@ -114,6 +115,7 @@ export function AddMovieForm({
         const response = await fetch(`${apiUrl}/movies/create`, {
             headers: {
                 Authorization: `Bearer ${session.data?.token}`,
+                'Content-Type': 'application/json',
             },
             method: 'POST',
             body: JSON.stringify({
@@ -127,8 +129,8 @@ export function AddMovieForm({
                 trailer_url: trailerUrl,
                 description,
                 poster_url: posterUrl,
-                movie_link: movieLink, // Added movie link to request body
-                video_link: videoLink, // Added video link to request body
+                mb_id: mbId,
+                video_url: videoUrl,
             }),
         })
 
@@ -137,7 +139,7 @@ export function AddMovieForm({
         if (!response.ok) {
             alert(json.message)
         } else {
-            router.push('/admin/dashboard')
+            router.push('/admin')
         }
     }
 
@@ -147,10 +149,9 @@ export function AddMovieForm({
                 <CardContent className="grid p-0 md:grid-cols-2">
                     <div className="p-4 flex flex-col items-center justify-center gap-4">
                         <div className="relative aspect-[2/3] min-h-[25rem] h-full ">
-                            {posterUrlRef.current &&
-                            posterUrlRef.current.value !== '' ? (
+                            {posterUrl !== '' ? (
                                 <Image
-                                    src={posterUrlRef.current.value}
+                                    src={posterUrl}
                                     alt="Image"
                                     className="rounded-md object-cover"
                                     fill
@@ -164,7 +165,7 @@ export function AddMovieForm({
                                     }
                                 >
                                     <span className=" text-gray-500">
-                                        Image Placeholder
+                                        Image
                                     </span>
                                 </div>
                             )}
@@ -173,6 +174,7 @@ export function AddMovieForm({
                         <Input
                             id="poster_url"
                             ref={posterUrlRef}
+                            onChange={(e) => setPosterUrl(e.target.value)}
                             required
                             placeholder="Poster URL"
                         />

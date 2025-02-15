@@ -10,21 +10,14 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar'
+import Link from 'next/link'
 
 // This is sample data.
 const data = {
     navMain: [
         {
-            title: 'Display Movies',
-            url: '/admin/dashboard',
-        },
-        {
             title: 'Add Movies',
             url: '/admin/movie/new',
-        },
-        {
-            title: 'Edit Movies',
-            url: '/admin/movie/1',
         },
     ],
 }
@@ -36,7 +29,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <a href="dashboard">
+                            <Link href="/admin">
                                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                                     <GalleryVerticalEnd className="size-4" />
                                 </div>
@@ -45,7 +38,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                                         Movie Core
                                     </span>
                                 </div>
-                            </a>
+                            </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>

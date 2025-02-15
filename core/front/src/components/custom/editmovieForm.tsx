@@ -149,7 +149,7 @@ export function EditMovieForm({
         if (!response.ok) {
             alert(json.message)
         } else {
-            router.push('/admin/dashboard')
+            router.push('/admin')
         }
     }
 
@@ -168,7 +168,7 @@ export function EditMovieForm({
             return
         }
 
-        router.push('/admin/dashboard')
+        router.push('/admin')
     }
 
     return (

@@ -124,7 +124,7 @@ export function AddMovieForm({
         if (!response.ok) {
             alert(json.message)
         } else {
-            router.push('/admin/dashboard')
+            router.push('/admin')
         }
     }
 
@@ -151,7 +151,7 @@ export function AddMovieForm({
                                     }
                                 >
                                     <span className=" text-gray-500">
-                                        Image Placeholder
+                                        Image
                                     </span>
                                 </div>
                             )}
