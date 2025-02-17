@@ -20,7 +20,6 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '../ui/alert-dialog'
-import { set } from 'react-hook-form'
 
 export function EditMovieForm({
     movie,
@@ -39,8 +38,10 @@ export function EditMovieForm({
     const ageRestrictionRef = useRef<HTMLInputElement>(null)
     const trailerUrlRef = useRef<HTMLInputElement>(null)
     const descriptionRef = useRef<HTMLInputElement>(null)
-
     const posterUrlRef = useRef<HTMLInputElement>(null)
+    const buyingPriceRef = useRef<HTMLInputElement>(null);
+    const rentingPriceRef = useRef<HTMLInputElement>(null);
+
 
     const session = useSession()
     const router = useRouter()
@@ -94,6 +95,16 @@ export function EditMovieForm({
                 ref: descriptionRef,
                 defaultValue: movie.description,
             },
+            {
+                label: 'Buying Price',
+                ref: buyingPriceRef,
+                defaultValue: movie.buying_price?.toString() || '', // Handle potential null/undefined value
+            },
+            {
+                label: 'Renting Price (per week)',
+                ref: rentingPriceRef,
+                defaultValue: movie.renting_price_per_week?.toString() || '', // Handle potential null/undefined value
+            },
         ],
     }
 
@@ -108,8 +119,14 @@ export function EditMovieForm({
         const trailerUrl = trailerUrlRef.current?.value
         const description = descriptionRef.current?.value
         const posterUrl = posterUrlRef.current?.value
+        const buyingPrice = buyingPriceRef.current?.value;
+        const rentingPrice = rentingPriceRef.current?.value;
+
 
         const durationInt = parseInt(duration || '', 10)
+        const buyingPriceFloat = parseFloat(buyingPrice || '');
+        const rentingPriceFloat = parseFloat(rentingPrice || '');
+
 
         if (isNaN(durationInt)) {
             alert('Duration must be a number')
@@ -121,28 +138,49 @@ export function EditMovieForm({
             return
         }
 
+        if (buyingPrice && isNaN(buyingPriceFloat)) {
+          alert('Buying Price must be a number');
+          return;
+        }
+        if (rentingPrice && isNaN(rentingPriceFloat)) {
+          alert('Renting Price must be a number');
+          return;
+        }
+
         // standard format: YYYY-MM-DD
         const releasedDateStandardFormat = new Date(releaseDate!)
             .toISOString()
             .split('T')[0]
 
+        const payload: any = {  // Use 'any' to avoid strict type checking due to optional values
+            title,
+            movie_duration: durationInt,
+            release_date: releasedDateStandardFormat,
+            directors,
+            cast,
+            genres,
+            age_restriction: ageRestriction,
+            trailer_url: trailerUrl,
+            description,
+            poster_url: posterUrl,
+        };
+
+        if (buyingPrice !== '') {
+            payload.buying_price = buyingPriceFloat;
+        }
+
+        if (rentingPrice !== '') {
+            payload.renting_price_per_week = rentingPriceFloat;
+        }
+
+
         const response = await fetch(`${apiUrl}/movies/${movie.id}`, {
             headers: {
                 Authorization: `Bearer ${session.data?.token}`,
+                'Content-Type': 'application/json'  // Important: Specify content type
             },
             method: 'PATCH',
-            body: JSON.stringify({
-                title,
-                movie_duration: durationInt,
-                release_date: releasedDateStandardFormat,
-                directors,
-                cast,
-                genres,
-                age_restriction: ageRestriction,
-                trailer_url: trailerUrl,
-                description,
-                poster_url: posterUrl,
-            }),
+            body: JSON.stringify(payload),
         })
 
         const json: ApiResponse = await response.json()
@@ -202,7 +240,7 @@ export function EditMovieForm({
                             <div className="flex flex-col gap-x-6 gap-y-2 mb-4">
                                 <div className="flex flex-col items-center text-center">
                                     <h1 className="text-2xl font-bold">
-                                        Add Movie
+                                        Edit Movie
                                     </h1>
                                 </div>
                                 {data.items.map((item, index) => (
@@ -225,7 +263,7 @@ export function EditMovieForm({
                                                 .toLowerCase()}
                                             type="text"
                                             ref={item.ref}
-                                            required
+                                            required={item.label !== 'Buying Price' && item.label !== 'Renting Price (per week)'} // Make buying/renting price optional
                                             defaultValue={item.defaultValue}
                                             onKeyDown={(e) => {
                                                 if (e.key === 'Enter') {
@@ -244,6 +282,7 @@ export function EditMovieForm({
                             variant="outline"
                             type="button"
                             className="w-16"
+                            onClick={() => router.push('/admin')} // corrected this line
                         >
                             Cancel
                         </Button>

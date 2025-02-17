@@ -107,8 +107,8 @@ export function AddMovieForm({
         const rentingPrice = rentingPriceRef.current?.value;
 
         const durationInt = parseInt(duration || "", 10);
-        const buyingPriceFloat = parseFloat(buyingPrice || "", 10);
-        const rentingPriceFloat = parseFloat(rentingPrice || "", 10);
+        const buyingPriceFloat = parseFloat(buyingPrice || "");
+        const rentingPriceFloat = parseFloat(rentingPrice || "");
 
         if (isNaN(durationInt)) {
             alert("Duration must be a number");
