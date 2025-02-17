@@ -261,7 +261,7 @@ export function EditMovieForm({
                             <div className="flex flex-col gap-x-6 gap-y-2 mb-4">
                                 <div className="flex flex-col items-center text-center">
                                     <h1 className="text-2xl font-bold">
-                                        Edit Movie
+                                        Edit Movie Edit Movie
                                     </h1>
                                 </div>
                                 {data.items.map((item, index) => (
@@ -303,6 +303,7 @@ export function EditMovieForm({
                             variant="outline"
                             type="button"
                             className="w-16"
+                            onClick={() => router.push('/admin')} // corrected this line
                         >
                             Cancel
                         </Button>
