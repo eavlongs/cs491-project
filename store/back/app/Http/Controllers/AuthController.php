@@ -33,7 +33,7 @@ class AuthController extends Controller
 
         $token = JWTAuth::fromUser($user);
 
-        return ResponseHelper::buildSuccessResponse(["token" => $token]);
+        return ResponseHelper::buildSuccessResponse(["token" => $token, "user" => $user]);
     }
 
     public function login(Request $request)
@@ -55,7 +55,7 @@ class AuthController extends Controller
 
         $token = JWTAuth::fromUser($user);
 
-        return ResponseHelper::buildSuccessResponse(["token" => $token]);
+        return ResponseHelper::buildSuccessResponse(["token" => $token, "user" => $user]);
     }
 
     public function me()

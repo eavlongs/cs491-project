@@ -10,7 +10,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
-import { Link } from 'lucide-react'
+import Link from 'next/link'
 import { signIn } from 'next-auth/react'
 import { useRef } from 'react'
 export function LoginForm({
@@ -31,6 +31,9 @@ export function LoginForm({
                 redirect: false,
             })
 
+            console.log('here')
+            console.log(login?.error)
+
             if (!login) {
                 throw new Error('Log in failed')
             }
@@ -41,8 +44,8 @@ export function LoginForm({
             }
 
             throw new Error('Log in failed')
-        } catch (err: unknown) {
-            alert(err)
+        } catch (err: any) {
+            alert(err.message)
         }
     }
     return (

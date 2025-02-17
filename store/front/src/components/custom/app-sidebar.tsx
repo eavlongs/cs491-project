@@ -1,6 +1,6 @@
-import { GalleryVerticalEnd } from "lucide-react";
-import Link from "next/link";
-import * as React from "react";
+import { GalleryVerticalEnd } from 'lucide-react'
+import Link from 'next/link'
+import * as React from 'react'
 
 import {
     Sidebar,
@@ -10,32 +10,32 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from "@/components/ui/sidebar";
+} from '@/components/ui/sidebar'
 
 // This is sample data.
 const data = {
     navMain: [
         {
-            title: "Add Movies",
-            url: "/admin/movie/new",
+            title: 'Add Movies',
+            url: '/admin/movie/new',
         },
     ],
-};
+}
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return (
-        <Sidebar variant='floating' {...props}>
+        <Sidebar variant="floating" {...props}>
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton size='lg' asChild>
-                            <Link href='/admin'>
-                                <div className='flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground'>
-                                    <GalleryVerticalEnd className='size-4' />
+                        <SidebarMenuButton size="lg" asChild>
+                            <Link href="/admin">
+                                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                                    <GalleryVerticalEnd className="size-4" />
                                 </div>
-                                <div className='flex flex-col gap-0.5 leading-none'>
-                                    <span className='font-semibold'>
-                                        Movie Core
+                                <div className="flex flex-col gap-0.5 leading-none">
+                                    <span className="font-semibold">
+                                        Movie Store
                                     </span>
                                 </div>
                             </Link>
@@ -45,11 +45,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarMenu className='gap-2'>
+                    <SidebarMenu className="gap-2">
                         {data.navMain.map((item) => (
                             <SidebarMenuItem key={item.title}>
                                 <SidebarMenuButton asChild>
-                                    <a href={item.url} className='font-medium'>
+                                    <a href={item.url} className="font-medium">
                                         {item.title}
                                     </a>
                                 </SidebarMenuButton>
@@ -59,5 +59,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </SidebarGroup>
             </SidebarContent>
         </Sidebar>
-    );
+    )
 }

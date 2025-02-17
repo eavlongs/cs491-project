@@ -162,7 +162,7 @@ export function SignUpForm({
                                 </div>
                                 <Input
                                     id="confirmPassword"
-                                    type="confirmPassword"
+                                    type="password"
                                     ref={confirmPasswordRef}
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter') {

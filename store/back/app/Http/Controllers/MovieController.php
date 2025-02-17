@@ -30,7 +30,7 @@ class MovieController extends Controller
         if ($type === TypeEnum::RENT) {
             $amount = $movie->rent_price;
         } else {
-            $amount = $movie->sale_price;
+            $amount = $movie->buy_price;
         }
 
         Payment::create([
@@ -38,12 +38,16 @@ class MovieController extends Controller
             'movie_id' => $movie_id,
             'type' => $type,
             'card_number' => $card_number,
-            'amount' => $amount
+            'amount' => $amount,
+            'created_at' => Carbon::now()
         ]);
     }
 
-    public function rent(Request $request)
+    public function rent(Request $request, string $id)
     {
+        if (!$request->_auth_user) {
+            return ResponseHelper::buildUnauthorizedResponse();
+        }
         $validator = Validator::make($request->all(), [
             'card_number' => 'required|string|max:50',
         ]);
@@ -53,17 +57,16 @@ class MovieController extends Controller
         }
 
         $user = auth()->user();
-        $movie_id = $request->input('movie_id');
 
         try {
-            $this->makePayment($user->id, $movie_id, TypeEnum::RENT, $request->input('card_number'));
+            $this->makePayment($user->id, $id, TypeEnum::RENT, $request->input('card_number'));
         } catch (\Exception $e) {
             return ResponseHelper::buildNotFoundResponse($e->getMessage());
         }
 
         MovieRenting::create([
             'user_id' => $user->id,
-            'movie_id' => $movie_id,
+            'movie_id' => $id,
             'starts_at' => Carbon::now(),
             'ends_at' => Carbon::now()->addDays(7)
         ]);
@@ -71,8 +74,11 @@ class MovieController extends Controller
         return ResponseHelper::buildSuccessResponse();
     }
 
-    public function buy(Request $request)
+    public function buy(Request $request, string $id)
     {
+        if (!$request->_auth_user) {
+            return ResponseHelper::buildUnauthorizedResponse();
+        }
         $validator = Validator::make($request->all(), [
             'card_number' => 'required|string|max:50',
         ]);
@@ -82,17 +88,16 @@ class MovieController extends Controller
         }
 
         $user = auth()->user();
-        $movie_id = $request->input('movie_id');
 
         try {
-            $this->makePayment($user->id, $movie_id, TypeEnum::RENT, $request->input('card_number'));
+            $this->makePayment($user->id, $id, TypeEnum::BUY, $request->input('card_number'));
         } catch (\Exception $e) {
             return ResponseHelper::buildNotFoundResponse($e->getMessage());
         }
 
         MoviePossession::create([
             'user_id' => $user->id,
-            'movie_id' => $movie_id,
+            'movie_id' => $id
         ]);
 
         return ResponseHelper::buildSuccessResponse();
@@ -100,6 +105,9 @@ class MovieController extends Controller
 
     public function createMovie(Request $request)
     {
+        if (!$request->_auth_user || !$request->_auth_user->is_admin) {
+            return ResponseHelper::buildUnauthorizedResponse();
+        }
         $validator = Validator::make($request->all(), [
             'mb_id' => 'integer',
             'genres' => 'string',
@@ -108,23 +116,31 @@ class MovieController extends Controller
             'description' => 'string',
             'poster_url' => 'required|string',
             'video_url' => 'required|string',
-            'director' => 'required|string',
-            'writers' => 'required|string',
+            'directors' => 'required|string',
             'cast' => 'required|string',
             'release_date' => 'required|date',
             'movie_duration' => 'required|integer',
             'trailer_url' => 'required|string',
             'rent_price' => 'required|numeric',
-            'sale_price' => 'required|numeric',
+            'buy_price' => 'required|numeric',
         ]);
 
         if ($validator->fails()) {
             return ResponseHelper::buildValidationErrorResponse($validator->errors());
         }
 
+        // return ResponseHelper::buildErrorResponse($request->input("directors"));
+
         $mb_id = $request->input('mb_id');
 
-        if (!$mb_id) $mb_id = null;
+        if ($mb_id) {
+            // check if mb_id is unique
+            $movie = Movie::where("mb_id", $mb_id)->first();
+
+            if ($movie !== null) {
+                return ResponseHelper::buildErrorResponse("Movie with this mb_id already exists");
+            }
+        }
 
         $movie = Movie::create([
             'mb_id' => $mb_id,
@@ -134,22 +150,23 @@ class MovieController extends Controller
             'description' => $request->input('description'),
             'poster_url' => $request->input('poster_url'),
             'video_url' => $request->input('video_url'),
-            'director' => $request->input('director'),
-            'writers' => $request->input('writers'),
+            'directors' => $request->input('directors'),
             'cast' => $request->input('cast'),
             'release_date' => $request->input('release_date'),
             'movie_duration' => $request->input('movie_duration'),
             'trailer_url' => $request->input('trailer_url'),
             'rent_price' => $request->input('rent_price'),
-            'sale_price' => $request->input('sale_price'),
+            'buy_price' => $request->input('buy_price'),
         ]);
 
         return ResponseHelper::buildSuccessResponse($movie);
     }
 
-    public function editMovie(Request $request)
+    public function editMovie(Request $request, string $id)
     {
-        $id = $request->input('id');
+        if (!$request->_auth_user || !$request->_auth_user->is_admin) {
+            return ResponseHelper::buildUnauthorizedResponse();
+        }
 
         $movie = Movie::find($id);
 
@@ -165,14 +182,13 @@ class MovieController extends Controller
             'description' => 'string',
             'poster_url' => 'required|string',
             'video_url' => 'required|string',
-            'director' => 'required|string',
-            'writers' => 'required|string',
+            'directors' => 'required|string',
             'cast' => 'required|string',
             'release_date' => 'required|date',
             'movie_duration' => 'required|integer',
             'trailer_url' => 'required|string',
             'rent_price' => 'required|numeric',
-            'sale_price' => 'required|numeric',
+            'buy_price' => 'required|numeric',
         ]);
 
         if ($validator->fails()) {
@@ -181,9 +197,16 @@ class MovieController extends Controller
 
         $mb_id = $request->input('mb_id');
 
-        if (!$mb_id) $mb_id = null;
+        if ($mb_id) {
+            // check if mb_id is unique
+            $movie = Movie::where("mb_id", $mb_id)->where("id", "!=", $id)->first();
 
-        $movie->save([
+            if ($movie !== null) {
+                return ResponseHelper::buildErrorResponse("Movie with this mb_id already exists");
+            }
+        }
+
+        $movie->update([
             'mb_id' => $mb_id,
             'genres' => $request->input('genres'),
             'age_restriction' => $request->input('age_restriction'),
@@ -191,23 +214,23 @@ class MovieController extends Controller
             'description' => $request->input('description'),
             'poster_url' => $request->input('poster_url'),
             'video_url' => $request->input('video_url'),
-            'director' => $request->input('director'),
-            'writers' => $request->input('writers'),
+            'directors' => $request->input('directors'),
             'cast' => $request->input('cast'),
             'release_date' => $request->input('release_date'),
             'movie_duration' => $request->input('movie_duration'),
             'trailer_url' => $request->input('trailer_url'),
             'rent_price' => $request->input('rent_price'),
-            'sale_price' => $request->input('sale_price'),
+            'buy_price' => $request->input('buy_price'),
         ]);
 
         return ResponseHelper::buildSuccessResponse($movie);
     }
 
-    public function deleteMovie(Request $request)
+    public function deleteMovie(Request $request, string $id)
     {
-        $id = $request->input('id');
-
+        if (!$request->_auth_user || !$request->_auth_user->is_admin) {
+            return ResponseHelper::buildUnauthorizedResponse();
+        }
         $movie = Movie::find($id);
 
         if ($movie === null) {
@@ -226,10 +249,8 @@ class MovieController extends Controller
         return ResponseHelper::buildSuccessResponse(['movies' => $movies]);
     }
 
-    public function getMovie(Request $request)
+    public function getMovie(Request $request, string $id)
     {
-        $id = $request->input('id');
-
         $movie = Movie::find($id);
 
         if ($movie === null) {
@@ -238,19 +259,26 @@ class MovieController extends Controller
 
         $allowedToWatchMovie = false;
 
-        $moviePossession = MoviePossession::where('movie_id', $id)
-            ->where('user_id', auth()->user()->id)
-            ->first();
+        if (!$request->_auth_user) {
+            $allowedToWatchMovie = false;
+        } else {
+            if ($request->_auth_user->is_admin) $allowedToWatchMovie = true;
+            else {
+                $moviePossession = MoviePossession::where('movie_id', $id)
+                    ->where('user_id', auth()->user()->id)
+                    ->first();
 
-        if ($moviePossession !== null) $allowedToWatchMovie = true;
+                if (!$allowedToWatchMovie && $moviePossession !== null) $allowedToWatchMovie = true;
 
-        if (!$allowedToWatchMovie) {
-            $movieRenting = MovieRenting::where('movie_id', $id)
-                ->where('user_id', auth()->user()->id)
-                ->where('ends_at', '>', Carbon::now())
-                ->first();
+                if (!$allowedToWatchMovie) {
+                    $movieRenting = MovieRenting::where('movie_id', $id)
+                        ->where('user_id', auth()->user()->id)
+                        ->whereDate('ends_at', '>', Carbon::now())
+                        ->first();
 
-            if ($movieRenting !== null) $allowedToWatchMovie = true;
+                    if ($movieRenting !== null) $allowedToWatchMovie = true;
+                }
+            }
         }
 
         $movie->makeVisibleIf($allowedToWatchMovie, ['video_url']);

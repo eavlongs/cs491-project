@@ -16,4 +16,6 @@ class Payment extends Model
         'amount',
         'created_at'
     ];
+
+    public $timestamps = false;
 }

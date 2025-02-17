@@ -16,14 +16,13 @@ class Movie extends Model
         'description',
         'poster_url',
         'video_url',
-        'director',
-        'writers',
+        'directors',
         'cast',
         'release_date',
         'movie_duration',
         'trailer_url',
         'rent_price',
-        'sale_price',
+        'buy_price',
     ];
 
     protected $hidden = [

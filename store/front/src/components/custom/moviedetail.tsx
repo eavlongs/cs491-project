@@ -1,16 +1,12 @@
 'use client'
 
-import { rateMovieAction } from '@/app/(user)/movie/[id]/actions'
 import { Movie } from '@/app/types'
-import { storeBaseUrl, subscriptionBaseUrl, theaterBaseUrl } from '@/app/utils'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import { Star } from 'lucide-react'
-import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState } from 'react'
+import { Button } from '../ui/button'
+import { VideoPlayer } from './video-player'
 
 export function MovieDetail({
     movie,
@@ -19,12 +15,12 @@ export function MovieDetail({
 }: React.ComponentProps<'div'> & {
     movie: Movie
 }) {
-    const rating = movie.avg_rating || 0
-    const [hoverRating, setHoverRating] = useState(0)
-    const [userRated, setUserRated] = useState(false)
-    const totalReviews = movie.number_of_ratings || 0
-    const session = useSession()
-    const stars = 5
+    // const rating = movie.avg_rating || 0
+    // const [hoverRating, setHoverRating] = useState(0)
+    // const [userRated] = useState(false)
+    // const totalReviews = movie.number_of_ratings || 0
+    // const session = useSession()
+    // const stars = 5
 
     const data = {
         items: [
@@ -61,39 +57,11 @@ export function MovieDetail({
         ],
     }
 
-    const handleRating = async (value: number) => {
-        if (!session.data) {
-            alert('Please login to rate this movie')
-            return
-        }
-
-        const success = await rateMovieAction(
-            movie.id.toString(),
-            value,
-            session.data.token
-        )
-
-        if (!success) {
-            alert('Failed to rate this movie')
-            return
-        }
-    }
-
-    const handleMouseEnter = (value: number) => {
-        if (!userRated) {
-            setHoverRating(value)
-        }
-    }
-
-    const handleMouseLeave = () => {
-        if (!userRated) {
-            setHoverRating(0)
-        }
-    }
-
     return (
         <div className={cn('', className)} {...props}>
-            <Card className="w-full">
+            <p className="text-xl font-bold text-center mb-2">Trailer</p>
+            <VideoPlayer videoUrl={movie.trailer_url} />
+            <Card className="w-full mt-4">
                 <CardContent className="flex flex-col lg:flex-row mx-4 mt-8 gap-x-20 justify-between">
                     <div className="flex items-center justify-center">
                         <div className="relative h-[400px] aspect-[2/3]">
@@ -112,41 +80,6 @@ export function MovieDetail({
                             <h1 className="text-2xl font-bold mb-2">
                                 {movie.title}
                             </h1>
-                            <div className="flex items-center gap-2">
-                                <div className="flex">
-                                    {[...Array(stars)].map((_, index) => {
-                                        const starValue = index + 1
-                                        return (
-                                            <button
-                                                key={index}
-                                                type="button"
-                                                className="p-0 hover:scale-110 transition-transform"
-                                                onClick={() =>
-                                                    handleRating(starValue)
-                                                }
-                                                onMouseEnter={() =>
-                                                    handleMouseEnter(starValue)
-                                                }
-                                                onMouseLeave={handleMouseLeave}
-                                            >
-                                                <Star
-                                                    className={cn(
-                                                        'w-5 h-5 transition-colors',
-                                                        (hoverRating ||
-                                                            rating) >= starValue
-                                                            ? 'fill-yellow-400 stroke-yellow-400'
-                                                            : 'stroke-gray-200 fill-gray-200'
-                                                    )}
-                                                />
-                                            </button>
-                                        )
-                                    })}
-                                </div>
-                                <span className="text-sm text-gray-600">
-                                    {rating}/5 ({totalReviews.toLocaleString()}{' '}
-                                    reviews)
-                                </span>
-                            </div>
                         </div>
                         {data.items.map((item, index) => (
                             <div
@@ -160,24 +93,16 @@ export function MovieDetail({
                     </div>
                 </CardContent>
                 <div className="w-full flex flex-wrap p-4 gap-6 items-center justify-center">
-                    <Link
-                        href={`${theaterBaseUrl}/movie/mb_id/${movie.id}`}
-                        target="_blank"
-                    >
-                        <Button className="w-32">Watch in Cinema</Button>
+                    <Link href={`/movie/${movie.id}/buy`}>
+                        <Button className="w-32">
+                            Buy: {movie.buy_price}$
+                        </Button>
                     </Link>
 
-                    <Link
-                        href={`${storeBaseUrl}/movie/mb_id/${movie.id}`}
-                        target="_blank"
-                    >
-                        <Button className="w-32">Buy / Rent Movie</Button>
-                    </Link>
-                    <Link
-                        href={`${subscriptionBaseUrl}/movie/mb_id/${movie.id}`}
-                        target="_blank"
-                    >
-                        <Button className="w-32">Watch Online</Button>
+                    <Link href={`/movie/${movie.id}/rent`}>
+                        <Button className="w-32">
+                            Rent: {movie.rent_price}$/week
+                        </Button>
                     </Link>
                 </div>
             </Card>

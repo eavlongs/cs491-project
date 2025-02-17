@@ -1,5 +1,5 @@
 import { Movie } from '@/components/custom/Movie'
-import { getMovies } from '../../(user)/actions'
+import { getMovies } from '../(user)/actions'
 
 export default async function Page() {
     const movies = await getMovies()
