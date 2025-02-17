@@ -19,6 +19,14 @@ const data = {
             title: 'Add Movies',
             url: '/admin/movie/new',
         },
+        {
+            title: 'Manage Hall',
+            url: '/admin/hall',
+        },
+        {
+            title: 'Analysis',
+            url: '/admin/analysis ',
+        },
     ],
 }
 
