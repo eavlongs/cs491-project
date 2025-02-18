@@ -286,6 +286,19 @@ class MovieController extends Controller
         return ResponseHelper::buildSuccessResponse(["movie" => $movie]);
     }
 
+    public function getMovieByMbId(string $mb_id)
+    {
+        $movie = Movie::where("mb_id", $mb_id)->first();
+
+        if ($movie === null) {
+            return ResponseHelper::buildNotFoundResponse();
+        }
+
+        $movie->makeHidden("video_url");
+
+        return ResponseHelper::buildSuccessResponse(["movie" => $movie]);
+    }
+
     public function getMovieSales(Request $request)
     {
         $payments = Payment::where("type", TypeEnum::BUY)->orderBy("created_at", "desc")->get();

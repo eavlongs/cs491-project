@@ -1,6 +1,6 @@
 'use client'
 
-import { buyOrRentMovie } from '@/app/(user)/movie/[id]/actionts'
+import { buyOrRentMovie } from '@/app/(user)/movie/[id]/actions'
 import { Movie } from '@/app/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'

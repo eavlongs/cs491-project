@@ -4,17 +4,13 @@ import express from 'express';
 import mariadb from 'mariadb';
 
 import { login, register } from './authController';
-import {
-    checkIfUserHasActiveSubscription,
-    isAdmin,
-    isUser,
-    isUserSubscriptionActive,
-} from './middleware';
+import { isAdmin, isUser, isUserSubscriptionActive } from './middleware';
 import {
     createMovie,
     deleteMovie,
     editMovie,
     getMovie,
+    getMovieByMbId,
     getMovies,
 } from './movieController';
 import {
@@ -54,6 +50,12 @@ authRouter.post('/login', login);
 
 movieRouter.get('/', isUser, isUserSubscriptionActive, getMovies);
 movieRouter.get('/:id', isUser, isUserSubscriptionActive, getMovie);
+movieRouter.get(
+    '/mb_id/:mb_id',
+    isUser,
+    isUserSubscriptionActive,
+    getMovieByMbId
+);
 movieRouter.post('/create', isAdmin, createMovie);
 movieRouter.patch('/:id', isAdmin, editMovie);
 movieRouter.delete('/:id', isAdmin, deleteMovie);

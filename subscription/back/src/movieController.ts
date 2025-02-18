@@ -225,3 +225,30 @@ export async function getMovie(req: Request, res: Response) {
         respondWithBadRequestError(res, err.message);
     }
 }
+
+export async function getMovieByMbId(req: Request, res: Response) {
+    const mb_id = req.params.mb_id;
+
+    try {
+        const conn = await pool.getConnection();
+        const [rows] = await conn.query(`SELECT * FROM movie WHERE mb_id= ?;`, [
+            mb_id,
+        ]);
+        conn.release();
+
+        if (!rows) {
+            respondWithNotFoundError(res);
+            return;
+        }
+
+        const result = {
+            ...rows,
+            video_url: undefined,
+        };
+
+        respondWithSuccess(res, { movie: result });
+    } catch (err: any) {
+        console.error(err);
+        respondWithBadRequestError(res, err.message);
+    }
+}

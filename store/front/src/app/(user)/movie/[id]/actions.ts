@@ -1,29 +1,34 @@
-'use server'
-
-import { ApiResponse } from '@/app/types'
+import { ActionResponse, ApiResponse } from '@/app/types'
 import { apiUrl } from '@/app/utils'
-import { revalidatePath } from 'next/cache'
 
-export async function rateMovieAction(
+export async function buyOrRentMovie(
     id: string,
-    rating: number,
-    token: string
-) {
-    const response = await fetch(`${apiUrl}/movies/${id}/rate`, {
+    cardNumber: string,
+    token: string,
+    type: 'buy' | 'rent'
+): Promise<ActionResponse> {
+    const response = await fetch(`${apiUrl}/movies/${id}/${type}`, {
         method: 'POST',
         headers: {
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ rating }),
+        body: JSON.stringify({
+            card_number: cardNumber,
+        }),
     })
 
     const json: ApiResponse = await response.json()
 
-    if (!response.ok) {
-        return false
+    if (!response.ok || !json.success) {
+        return {
+            success: false,
+            message: json.message ?? 'Failed to ' + type + ' movie',
+        }
     }
 
-    revalidatePath(`/movie/${id}`)
-
-    return json.success
+    return {
+        success: true,
+        message: json.message,
+    }
 }
