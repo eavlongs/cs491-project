@@ -5,12 +5,15 @@ import * as React from 'react'
 import {
     Sidebar,
     SidebarContent,
+    SidebarFooter,
     SidebarGroup,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar'
+import { Button } from '../ui/button'
+import { LogOut } from './LogOut'
 
 // This is sample data.
 const data = {
@@ -58,6 +61,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     </SidebarMenu>
                 </SidebarGroup>
             </SidebarContent>
+            <SidebarFooter>
+                <div className="mx-auto">
+                    <Link href="/">
+                        <Button>Home Page</Button>
+                    </Link>
+                </div>
+                <div className="mx-auto">
+                    <LogOut />
+                </div>
+            </SidebarFooter>
         </Sidebar>
     )
 }

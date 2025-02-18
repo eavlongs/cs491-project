@@ -4,6 +4,7 @@ import * as React from 'react'
 import {
     Sidebar,
     SidebarContent,
+    SidebarFooter,
     SidebarGroup,
     SidebarHeader,
     SidebarMenu,
@@ -11,6 +12,8 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar'
 import Link from 'next/link'
+import { LogOut } from './LogOut'
+import { Button } from '../ui/button'
 
 // This is sample data.
 const data = {
@@ -58,6 +61,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     </SidebarMenu>
                 </SidebarGroup>
             </SidebarContent>
+            <SidebarFooter>
+                <div className="mx-auto">
+                    <Link href="/">
+                        <Button>Home Page</Button>
+                    </Link>
+                </div>
+                <div className="mx-auto">
+                    <LogOut />
+                </div>
+            </SidebarFooter>
         </Sidebar>
     )
 }

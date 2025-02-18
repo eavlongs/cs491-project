@@ -14,7 +14,7 @@ export default function Layout({ children }: LayoutProps) {
         <>
             <header className="flex h-16 shrink-0 items-center gap-2 px-4">
                 <Separator orientation="vertical" className="mr-2 h-4" />
-                <Link href="/">Logo</Link>
+                <Link href="/">Movie Theater System</Link>
                 <div className="ml-auto">
                     <LoggedInOnly otherwise={<LogInButton />}>
                         <LogOut />
