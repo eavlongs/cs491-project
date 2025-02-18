@@ -17,7 +17,11 @@ import {
     getMovie,
     getMovies,
 } from './movieController';
-import { checkIfSubscribed, subscribe } from './subscriptionController';
+import {
+    checkIfSubscribed,
+    getSubscriptions,
+    subscribe,
+} from './subscriptionController';
 
 dotenv.config();
 
@@ -45,7 +49,7 @@ const prefix = process.env.API_ROUTE_PREFIX || '/'; // Middleware to parse JSON
 
 app.use(express.json());
 
-authRouter.post('/signup', register);
+authRouter.post('/register', register);
 authRouter.post('/login', login);
 
 movieRouter.get('/', isUser, isUserSubscriptionActive, getMovies);
@@ -56,9 +60,10 @@ movieRouter.delete('/:id', isAdmin, deleteMovie);
 
 subscriptionRouter.post('/subscribe', isUser, subscribe);
 subscriptionRouter.get('/subscription/check', isUser, checkIfSubscribed);
+subscriptionRouter.get('/subscriptions', getSubscriptions);
 
 var corsOptions: CorsOptions = {
-    origin: 'http://localhost:3001',
+    origin: '*',
     optionsSuccessStatus: 200,
     allowedHeaders: '*',
     methods: 'GET, POST, PATCH, DELETE',

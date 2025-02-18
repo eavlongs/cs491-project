@@ -18,4 +18,18 @@ class Payment extends Model
     ];
 
     public $timestamps = false;
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function movie()
+    {
+        return $this->belongsTo(Movie::class, 'movie_id');
+    }
+
+    protected $casts = [
+        'amount' => 'float',
+    ];
 }

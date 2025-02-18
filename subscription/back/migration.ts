@@ -17,9 +17,9 @@ async function migrate() {
             id INT AUTO_INCREMENT PRIMARY KEY,
             email VARCHAR(100) NOT NULL UNIQUE,
             password VARCHAR(100) NOT NULL,
-            first_name VARCHAR(100),
-            last_name VARCHAR(100),
-            is_admin BOOLEAN DEFAULT FALSE
+            first_name VARCHAR(100) NOT NULL,
+            last_name VARCHAR(100) NOT NULL,
+            is_admin BOOLEAN NOT NULL DEFAULT FALSE
         );
     `;
 

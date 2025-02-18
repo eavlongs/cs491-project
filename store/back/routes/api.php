@@ -30,6 +30,8 @@ Route::prefix("/auth")->group(function () {
 
 Route::prefix("/movies")->group(function () {
     Route::get('/', [MovieController::class, 'getMovies']);
+    Route::get('/sales', [MovieController::class, 'getMovieSales']);
+    Route::get('/rentings', [MovieController::class, 'getMovieRenting']);
     Route::get('/{id}', [MovieController::class, 'getMovie'])->middleware(JWTMiddleware::class);
     Route::post('/create', [MovieController::class, 'createMovie'])->middleware(JWTMiddleware::class);
     Route::patch('/{id}', [MovieController::class, 'editMovie'])->middleware(JWTMiddleware::class);

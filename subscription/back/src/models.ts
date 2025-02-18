@@ -1,38 +1,38 @@
 export type User = {
     id: number;
-    firstName: string;
-    lastName: string;
+    first_name: string;
+    last_name: string;
     email: string;
-    isAdmin: boolean;
+    is_admin: boolean;
 };
 
 export type UserSubscription = {
     id: number;
-    userId: number;
-    startsAt: Date;
-    endsAt: Date;
+    user_id: number;
+    starts_at: Date;
+    ends_at: Date;
 };
 
 export type Payment = {
     id: number;
-    userId: number;
-    cardNumber: string;
+    user_id: number;
+    card_number: string;
     amount: number;
-    createdAt: Date;
+    created_at: Date;
 };
 
 export type Movie = {
     id: number;
     mb_id: string;
     genres: string;
-    ageRestriction: string;
+    age_restriction: string;
     title: string;
     description: string;
-    posterUrl: string;
-    videoUrl: string;
+    poster_url: string;
+    video_url: string;
     director: string;
     writers: string;
     cast: string;
-    releaseDate: Date;
-    movieDuration: number;
+    release_date: Date;
+    movie_duration: number;
 };

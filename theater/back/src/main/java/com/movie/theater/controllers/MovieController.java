@@ -448,4 +448,17 @@ public class MovieController {
 		
 		return ResponseHelper.buildSuccessResponse(Map.of("payments", orderHistory));
 	}
+	
+	@GetMapping("/ticket-sales")
+	public ResponseEntity<Map<String, Object>> getTicketSales() {
+//		try {
+//			jwtHelper.isAdminMiddleware(Authorization);
+//		} catch (Exception e) {
+//			return ResponseHelper.buildUnauthorizedResponse();
+//		}
+		
+		List<Map<String, Object>> ticketSales = movieService.getTicketSales();
+		
+		return ResponseHelper.buildSuccessResponse(Map.of("ticket_sales", ticketSales));
+	}
  }

@@ -22,6 +22,8 @@ public class MovieService {
 	private TicketRepository ticketRepository;
 	@Autowired
 	private PaymentRepository paymentRepository;
+	@Autowired
+	private UserRepository userRepository;
 	
 	public List<Hall> getHalls() {
 		return hallRepository.findAll();
@@ -324,6 +326,48 @@ public class MovieService {
 				paymentMap.put("schedule", schedule);
 				paymentMap.put("hall", hall);
 				paymentMap.put("movie", movie);
+				
+				List<String> seatCodes = tickets.stream().map(ticket -> {
+					for (Seat seat : seats) {
+						if (seat.getId().equals(ticket.getSeatId())) {
+							return seat.getCode();
+						}
+					}
+					return "";
+				}).collect(Collectors.toList());
+				paymentMap.put("seats", seatCodes);
+			}
+			
+			result.add(paymentMap);
+		}
+		
+		return result;
+	}
+	
+	public List<Map<String, Object>> getTicketSales() {
+		List<Payment> payments = paymentRepository.findAllByOrderByCreatedAtDesc();
+		List<Map<String, Object>> result = new ArrayList<>();
+		List<Seat> seats = seatRepository.findAll();
+		
+		for (Payment payment : payments) {
+			Map<String, Object> paymentMap = new HashMap<>();
+			paymentMap.put("id", payment.getId());
+			paymentMap.put("price", payment.getAmount());
+			paymentMap.put("created_at", payment.getCreatedAt());
+			
+			List<Ticket> tickets = ticketRepository.findByPaymentId(payment.getId());
+			if (!tickets.isEmpty()) {
+				Schedule schedule = scheduleRepository.findById(tickets.get(0).getScheduleId()).orElse(null);
+				Hall hall = hallRepository.findById(schedule.getHallId()).orElse(null);
+				Movie movie = movieRepository.findById(schedule.getMovieId()).orElse(null);
+				User user = userRepository.findById(payment.getUserId()).orElse(null);
+				
+				paymentMap.put("title", movie.getTitle());
+				paymentMap.put("showtime", schedule.getStartTime());
+				paymentMap.put("hall", hall.getName());
+				paymentMap.put("user_name", user.getFirstName() + " " + user.getLastName());
+				paymentMap.put("user_email", user.getEmail());
+				
 				
 				List<String> seatCodes = tickets.stream().map(ticket -> {
 					for (Seat seat : seats) {

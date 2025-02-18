@@ -285,4 +285,40 @@ class MovieController extends Controller
 
         return ResponseHelper::buildSuccessResponse(["movie" => $movie]);
     }
+
+    public function getMovieSales(Request $request)
+    {
+        $payments = Payment::where("type", TypeEnum::BUY)->orderBy("created_at", "desc")->get();
+
+        foreach ($payments as $payment) {
+            $user = $payment->user;
+            // dd($user);
+            $payment->user_name = $user->first_name . " " . $user->last_name;
+            $payment->user_email = $user->email;
+            $payment->title = $payment->movie->title;
+
+            $payment->makeHidden("user");
+            $payment->makeHidden("movie");
+        }
+
+        return ResponseHelper::buildSuccessResponse(["sales" => $payments]);
+    }
+
+    public function getMovieRenting(Request $request)
+    {
+        $payments = Payment::where("type", TypeEnum::RENT)->orderBy("created_at", "desc")->get();
+
+        foreach ($payments as $payment) {
+            $user = $payment->user;
+            // dd($user);
+            $payment->user_name = $user->first_name . " " . $user->last_name;
+            $payment->user_email = $user->email;
+            $payment->title = $payment->movie->title;
+
+            $payment->makeHidden("user");
+            $payment->makeHidden("movie");
+        }
+
+        return ResponseHelper::buildSuccessResponse(["rentings" => $payments]);
+    }
 }

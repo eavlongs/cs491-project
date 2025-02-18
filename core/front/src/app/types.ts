@@ -41,3 +41,47 @@ export type Movie = {
     avg_rating?: number
     number_of_ratings?: number
 }
+
+export type TicketSale = {
+    user_email: string
+    price: number
+    showtime: Date
+    user_name: string
+    created_at: Date
+    hall: string
+    id: string
+    title: string
+    seats: string[]
+}
+
+export type MovieSale = {
+    id: number
+    title: string
+    user_id: number
+    movie_id: number
+    user_name: string
+    user_email: string
+    amount: number
+    created_at: string
+}
+
+export type MovieRenting = {
+    id: number
+    title: string
+    user_id: number
+    movie_id: number
+    user_name: string
+    user_email: string
+    amount: number
+    created_at: string
+}
+
+export type MovieSubscription = {
+    id: number
+    user_id: number
+    card_number: string
+    amount: number
+    user_name: string
+    user_email: string
+    created_at: Date
+}

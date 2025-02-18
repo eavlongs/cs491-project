@@ -20,12 +20,20 @@ const data = {
             url: '/admin/movie/new',
         },
         {
-            title: 'Manage Hall',
-            url: '/admin/hall',
+            title: 'Movie Sales',
+            url: '/admin/analysis/sales',
         },
         {
-            title: 'Analysis',
-            url: '/admin/analysis ',
+            title: 'Movie Renting',
+            url: '/admin/analysis/rentings',
+        },
+        {
+            title: 'Movie Subscriptions',
+            url: '/admin/analysis/subscriptions',
+        },
+        {
+            title: 'Movie Ticket Sales',
+            url: '/admin/analysis/ticket-sales',
         },
     ],
 }

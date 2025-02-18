@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { pool, subscriptionPrice } from '.';
+import { pool } from '.';
 import { Movie } from './models';
 import {
     respondWithBadRequestError,
@@ -163,22 +163,13 @@ export async function deleteMovie(req: Request, res: Response) {
 export async function getMovies(req: Request, res: Response) {
     try {
         const conn = await pool.getConnection();
-        const [rows] = await conn.query(
+        const rows = await conn.query(
             `SELECT id, mb_id, genres, age_restriction, title, description, poster_url, directors, cast, release_date, movie_duration FROM movie;`
         );
         conn.release();
 
-        let movies: Movie[];
-        if (!rows) {
-            movies = [];
-        } else if (Array.isArray(rows)) {
-            movies = rows;
-        } else {
-            movies = [rows];
-        }
-
         respondWithSuccess(res, {
-            movies,
+            movies: rows,
         });
     } catch (err: any) {
         console.error(err);
