@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { pool } from '.';
-import { Movie } from './models';
 import {
     respondWithBadRequestError,
     respondWithNotFoundError,
@@ -32,6 +31,7 @@ export async function createMovie(req: Request, res: Response) {
     }
 
     if (
+        !mb_id ||
         !genres ||
         !age_restriction ||
         !title ||
@@ -49,6 +49,19 @@ export async function createMovie(req: Request, res: Response) {
 
     try {
         const conn = await pool.getConnection();
+
+        const movie = await conn.query(`SELECT * FROM movie WHERE mb_id = ?`, [
+            mb_id,
+        ]);
+
+        if (movie.length > 0) {
+            respondWithBadRequestError(
+                res,
+                'Movie with this mb_id already exists.'
+            );
+            return;
+        }
+
         await conn.query(
             `INSERT INTO movie (mb_id, genres, age_restriction, title, description, poster_url, video_url, directors, cast, release_date, movie_duration, trailer_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
             [
@@ -101,6 +114,7 @@ export async function editMovie(req: Request, res: Response) {
     }
 
     if (
+        !mb_id ||
         !genres ||
         !age_restriction ||
         !title ||
@@ -118,6 +132,19 @@ export async function editMovie(req: Request, res: Response) {
 
     try {
         const conn = await pool.getConnection();
+        const movie = await conn.query(
+            `SELECT * FROM movie WHERE mb_id = ? and id = ?`,
+            [mb_id, id]
+        );
+
+        if (movie.length > 0) {
+            respondWithBadRequestError(
+                res,
+                'Movie with this mb_id already exists.'
+            );
+            return;
+        }
+
         await conn.query(
             `UPDATE movie SET mb_id = ?, genres = ?, age_restriction = ?, title = ?, description = ?, poster_url = ?, video_url = ?, directors = ?, cast = ?, release_date = ?, movie_duration = ?, trailer_url = ? WHERE id = ?;`,
             [

@@ -107,6 +107,11 @@ public class MovieController {
 			return ResponseHelper.buildUnauthorizedResponse();
 		}
 		
+		Movie existingMovie = movieService.findMovieByMbId(body.getMbId());
+		if (existingMovie != null) {
+			return ResponseHelper.buildBadRequestResponse(null, "Movie with this mb_id already exists");
+		}
+		
 		Movie movie = new Movie();
 		movie.setmbId(body.getMbId());
 		movie.setGenres(body.getGenres());
@@ -138,6 +143,12 @@ public class MovieController {
 		
 		if (movie == null) {
 			return ResponseHelper.buildNotFoundResponse();
+		}
+		
+		Movie existingMovie = movieService.findMovieByMbId(body.getMbId());
+		
+		if (existingMovie != null && !existingMovie.getId().equals(movieId)) {
+			return ResponseHelper.buildBadRequestResponse(null, "Movie with this mb_id already exists");
 		}
 		
 		movie.setmbId(body.getMbId());

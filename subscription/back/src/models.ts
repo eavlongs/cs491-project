@@ -23,7 +23,7 @@ export type Payment = {
 
 export type Movie = {
     id: number;
-    mb_id: string;
+    mb_id: number;
     genres: string;
     age_restriction: string;
     title: string;

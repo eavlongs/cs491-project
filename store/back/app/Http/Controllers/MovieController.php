@@ -109,7 +109,7 @@ class MovieController extends Controller
             return ResponseHelper::buildUnauthorizedResponse();
         }
         $validator = Validator::make($request->all(), [
-            'mb_id' => 'integer',
+            'mb_id' => 'required|integer',
             'genres' => 'string',
             'age_restriction' => 'required|string|max:50',
             'title' => 'required|string|max:255',

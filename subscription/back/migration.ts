@@ -51,18 +51,18 @@ async function migrate() {
     const createMovieTableQuery = `
         CREATE TABLE IF NOT EXISTS movie (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            mb_id INT,
-            genres VARCHAR(255),
-            age_restriction VARCHAR(50),
+            mb_id INT NOT NULL UNIQUE,
+            genres VARCHAR(255) NOT NULL,
+            age_restriction VARCHAR(50) NOT NULL,
             title VARCHAR(255) NOT NULL,
             description TEXT,
-            poster_url TEXT,
-            video_url TEXT,
-            directors VARCHAR(255),
-            cast VARCHAR(255),
-            release_date DATE,
-            movie_duration INT,
-            trailer_url TEXT
+            poster_url TEXT NOT NULL,
+            video_url TEXT NOT NULL,
+            directors VARCHAR(255) NOT NULL,
+            cast VARCHAR(255) NOT NULL,
+            release_date DATE NOT NULL,
+            movie_duration INT NOT NULL,
+            trailer_url TEXT NOT NULL,
     );`;
 
     let conn;
