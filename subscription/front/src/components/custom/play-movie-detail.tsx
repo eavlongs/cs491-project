@@ -1,7 +1,6 @@
 'use client'
 
 import { Movie } from '@/app/types'
-import { Star } from 'lucide-react'
 import Image from 'next/image'
 
 export function MovieDetails({ movie }: { movie: Movie }) {
@@ -9,12 +8,16 @@ export function MovieDetails({ movie }: { movie: Movie }) {
         <div className="container mx-auto px-4 py-8">
             <div className="flex flex-col md:flex-row gap-8">
                 <div className="w-full md:w-1/3 lg:w-1/4">
-                    <div className="aspect-[3/4] relative">
+                    <div className="relative" style={{ paddingBottom: '150%' }}>
                         <Image
-                            src={movie.poster_url}
-                            alt={movie.title}
+                            src={
+                                movie.poster_url ||
+                                '/placeholder.svg?height=600&width=400'
+                            }
+                            alt={movie.title || 'Movie poster'}
                             fill
                             className="object-cover rounded-lg"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 25vw"
                         />
                     </div>
                 </div>
@@ -25,15 +28,6 @@ export function MovieDetails({ movie }: { movie: Movie }) {
                             <h1 className="text-3xl font-bold">
                                 {movie.title}
                             </h1>
-                            {/* <div className="flex items-center gap-2">
-                                <span className="font-semibold">
-                                    {movie.rating}
-                                </span>
-                                <Star className="w-5 h-5 fill-yellow-400 stroke-yellow-400" />
-                                <span className="text-gray-600">
-                                    ({movie.reviews} reviews)
-                                </span>
-                            </div> */}
                         </div>
                     </div>
 
