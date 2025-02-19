@@ -8,6 +8,11 @@ import { redirect } from 'next/navigation'
 export default async function Page({ params }: { params: { id: string } }) {
     const { id } = await params
     const session = await getServerSession(authOptions)
+
+    if (!session) {
+        redirect('/')
+    }
+
     const movie = await getMovie(id, session!.token)
 
     if (!movie?.video_url) {
@@ -31,7 +36,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     }
 
     return (
-        <div className="min-h-screen bg-white space-y-8 py-8">
+        <div className="min-h-screen bg-white space-y-8 py-8 w-full">
             <VideoPlayer videoUrl={movie.video_url} />
             <MovieDetails movie={movie} />
         </div>

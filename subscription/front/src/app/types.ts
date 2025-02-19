@@ -1,10 +1,10 @@
 export enum JwtTokenOptions {
     // for cookie of next auth
-    AccessTokenExpireTimeInMs = 1 * 60 * 60 * 1000, // 1 day
+    AccessTokenExpireTimeInSeconds = 60 * 60 * 24, // 1 day
 
     // TODO: remove if u want this is for test purpose
     // RefreshTokenExpireTimeInMs = 5 * 60 * 1000,
-    // AccessTokenExpireTimeInMs = 30 * 1000,
+    // AccessTokenExpireTimeInSeconds = 30 * 1000,
 }
 
 export type JwtToken = {

@@ -42,6 +42,8 @@ export function EditMovieForm({
     const posterUrlRef = useRef<HTMLInputElement>(null)
     const mbIdRef = useRef<HTMLInputElement>(null)
 
+    const [posterUrl, setPosterUrl] = useState(movie.poster_url)
+
     const session = useSession()
     const router = useRouter()
 
@@ -135,6 +137,7 @@ export function EditMovieForm({
         const response = await fetch(`${apiUrl}/movies/${movie.id}`, {
             headers: {
                 Authorization: `Bearer ${session.data?.token}`,
+                'Content-Type': 'application/json',
             },
             method: 'PATCH',
             body: JSON.stringify({
@@ -157,7 +160,7 @@ export function EditMovieForm({
         if (!response.ok) {
             alert(json.message)
         } else {
-            router.push('/admin/movie')
+            router.push('/admin')
         }
     }
 
@@ -176,7 +179,7 @@ export function EditMovieForm({
             return
         }
 
-        router.push('/admin/movie')
+        router.push('/admin')
     }
 
     return (
@@ -186,20 +189,32 @@ export function EditMovieForm({
                     <CardContent className="grid p-0 md:grid-cols-2">
                         <div className="p-4 flex flex-col items-center justify-center gap-4">
                             <div className="relative aspect-[2/3] min-h-[25rem] h-full">
-                                {posterUrlRef.current && (
+                                {posterUrl !== '' ? (
                                     <Image
-                                        src={posterUrlRef.current.value}
+                                        src={posterUrl}
                                         alt="Image"
                                         className="rounded-md object-cover"
                                         fill
                                         unoptimized
                                     />
+                                ) : (
+                                    <div
+                                        className="w-full h-full bg-gray-300 rounded-md flex items-center justify-center cursor-pointer"
+                                        onClick={() =>
+                                            posterUrlRef.current?.focus()
+                                        }
+                                    >
+                                        <span className=" text-gray-500">
+                                            Image
+                                        </span>
+                                    </div>
                                 )}
                             </div>
 
                             <Input
                                 id="poster_url"
                                 ref={posterUrlRef}
+                                onChange={(e) => setPosterUrl(e.target.value)}
                                 required
                                 placeholder="Poster URL"
                                 defaultValue={movie.poster_url}

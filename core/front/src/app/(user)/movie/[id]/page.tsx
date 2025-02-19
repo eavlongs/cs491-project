@@ -1,5 +1,6 @@
 import { getMovie } from '@/app/admin/movie/[id]/actions'
 import { MovieDetail } from '@/components/custom/moviedetail'
+import { VideoPlayer } from '@/components/custom/video-player'
 export default async function Page({
     params,
 }: {
@@ -27,8 +28,16 @@ export default async function Page({
     }
 
     return (
-        <div className="min-h-min w-full rounded-xl flex justify-center">
-            <MovieDetail movie={movie} />
-        </div>
+        <>
+            <div className="min-h-min w-full rounded-xl flex justify-center">
+                <MovieDetail movie={movie} />
+            </div>
+            <div className="w-full">
+                <h2 className="text-2xl font-bold text-gray-800 text-center mb-2">
+                    Trailer
+                </h2>
+                <VideoPlayer videoUrl={movie.trailer_url} />
+            </div>
+        </>
     )
 }

@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 
 export function AddMovieForm({
     className,
@@ -26,6 +26,7 @@ export function AddMovieForm({
     const descriptionRef = useRef<HTMLInputElement>(null)
 
     const posterUrlRef = useRef<HTMLInputElement>(null)
+    const [posterUrl, setPosterUrl] = useState('')
 
     const session = useSession()
     const router = useRouter()
@@ -134,10 +135,9 @@ export function AddMovieForm({
                 <CardContent className="grid p-0 md:grid-cols-2">
                     <div className="p-4 flex flex-col items-center justify-center gap-4">
                         <div className="relative aspect-[2/3] min-h-[25rem] h-full ">
-                            {posterUrlRef.current &&
-                            posterUrlRef.current.value !== '' ? (
+                            {posterUrl !== '' ? (
                                 <Image
-                                    src={posterUrlRef.current.value}
+                                    src={posterUrl}
                                     alt="Image"
                                     className="rounded-md object-cover"
                                     fill

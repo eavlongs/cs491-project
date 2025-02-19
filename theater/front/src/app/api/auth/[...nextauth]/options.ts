@@ -1,6 +1,5 @@
 import { JwtTokenOptions } from '@/app/types'
 import { apiUrl } from '@/app/utils'
-import jwt from 'jsonwebtoken'
 import { AuthOptions, User } from 'next-auth'
 import { JWT } from 'next-auth/jwt'
 import CredentialsProvider from 'next-auth/providers/credentials'
@@ -23,10 +22,9 @@ async function login(
         }),
     })
 
-    console.log(res)
     const response = await res.json()
 
-    if (res.status == 200) {
+    if (res.ok) {
         return {
             user: response.data.user,
             token: response.data.token,
@@ -170,14 +168,14 @@ export const authOptions: AuthOptions = {
                 token = token.token as unknown as JWT
             }
 
-            try {
-                jwt.verify(
-                    token as unknown as string,
-                    process.env.NEXTAUTH_SECRET as string
-                )
-            } catch (err: any) {
-                throw new Error(err.message)
-            }
+            // try {
+            //     jwt.verify(
+            //         token as unknown as string,
+            //         process.env.NEXTAUTH_SECRET as string
+            //     )
+            // } catch (err: any) {
+            //     throw new Error(err.message)
+            // }
 
             return {
                 token,
@@ -194,11 +192,21 @@ export const authOptions: AuthOptions = {
     },
     session: {
         strategy: 'jwt',
-        maxAge: JwtTokenOptions.AccessTokenExpireTimeInMs,
+        maxAge: JwtTokenOptions.AccessTokenExpireTimeInSeconds,
     },
     secret: process.env.NEXTAUTH_SECRET,
     pages: {
         signIn: '/login',
         error: '/login?error=something-went-wrong',
+    },
+    cookies: {
+        sessionToken: {
+            name: 'next-auth.session-token-theater',
+            options: {
+                httpOnly: true,
+                sameSite: 'lax',
+                path: '/',
+            },
+        },
     },
 }

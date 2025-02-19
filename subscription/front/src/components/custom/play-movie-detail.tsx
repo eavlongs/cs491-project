@@ -5,24 +5,20 @@ import Image from 'next/image'
 
 export function MovieDetails({ movie }: { movie: Movie }) {
     return (
-        <div className="container mx-auto px-4 py-8">
-            <div className="flex flex-col md:flex-row gap-8">
-                <div className="w-full md:w-1/3 lg:w-1/4">
-                    <div className="relative" style={{ paddingBottom: '150%' }}>
+        <div className="max-w-2xl px-4 py-8 mx-auto">
+            <div className="flex flex-col items-center md:flex-row gap-8">
+                <div className="w-[20rem]">
+                    <div className="aspect-[3/4] relative">
                         <Image
-                            src={
-                                movie.poster_url ||
-                                '/placeholder.svg?height=600&width=400'
-                            }
-                            alt={movie.title || 'Movie poster'}
+                            src={movie.poster_url}
+                            alt={movie.title}
                             fill
                             className="object-cover rounded-lg"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 25vw"
                         />
                     </div>
                 </div>
 
-                <div className="flex-1 space-y-6">
+                <div className="space-y-6">
                     <div className="space-y-2">
                         <div className="flex items-center gap-4">
                             <h1 className="text-3xl font-bold">

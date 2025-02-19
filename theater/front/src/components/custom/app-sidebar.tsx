@@ -19,16 +19,8 @@ import { LogOut } from './LogOut'
 const data = {
     navMain: [
         {
-            title: 'Display Movie',
-            url: 'display-movie',
-        },
-        {
             title: 'Add Movie',
             url: '/admin/movie/new',
-        },
-        {
-            title: 'Edit Movie',
-            url: '/admin/movie/edit',
         },
         {
             title: 'Manage Hall',

@@ -50,12 +50,7 @@ authRouter.post('/login', login);
 
 movieRouter.get('/', isUser, isUserSubscriptionActive, getMovies);
 movieRouter.get('/:id', isUser, isUserSubscriptionActive, getMovie);
-movieRouter.get(
-    '/mb_id/:mb_id',
-    isUser,
-    isUserSubscriptionActive,
-    getMovieByMbId
-);
+movieRouter.get('/mb_id/:mb_id', getMovieByMbId);
 movieRouter.post('/create', isAdmin, createMovie);
 movieRouter.patch('/:id', isAdmin, editMovie);
 movieRouter.delete('/:id', isAdmin, deleteMovie);

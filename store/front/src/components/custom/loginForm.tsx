@@ -10,19 +10,24 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
-import Link from 'next/link'
 import { signIn } from 'next-auth/react'
+import Link from 'next/link'
 import { useRef } from 'react'
 export function LoginForm({
     className,
+    callbackUrl,
     ...props
-}: React.ComponentPropsWithoutRef<'div'>) {
+}: React.ComponentPropsWithoutRef<'div'> & {
+    callbackUrl: string
+}) {
     const emailRef = useRef<HTMLInputElement>(null)
     const passwordRef = useRef<HTMLInputElement>(null)
 
     async function loginHandler() {
         const email = emailRef.current?.value
         const password = passwordRef.current?.value
+
+        console.log({ email, password })
 
         try {
             const login = await signIn('credentials', {
@@ -36,7 +41,7 @@ export function LoginForm({
             }
 
             if (login.ok) {
-                window.location.href = '/'
+                window.location.href = callbackUrl
                 return
             }
 

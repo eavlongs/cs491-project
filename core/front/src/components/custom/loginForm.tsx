@@ -15,8 +15,11 @@ import Link from 'next/link'
 import { useRef } from 'react'
 export function LoginForm({
     className,
+    callbackUrl,
     ...props
-}: React.ComponentPropsWithoutRef<'div'>) {
+}: React.ComponentPropsWithoutRef<'div'> & {
+    callbackUrl: string
+}) {
     const emailRef = useRef<HTMLInputElement>(null)
     const passwordRef = useRef<HTMLInputElement>(null)
 
@@ -36,7 +39,7 @@ export function LoginForm({
             }
 
             if (login.ok) {
-                window.location.href = '/'
+                window.location.href = callbackUrl
                 return
             }
 

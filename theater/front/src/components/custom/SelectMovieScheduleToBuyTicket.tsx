@@ -114,7 +114,6 @@ export function SelectMovieScheduleToBuyTicket({
                     </div>
                 </CardContent>
                 <div className="w-full flex p-4">
-                    <Button className="w-32">Cancel</Button>
                     <div className="flex ml-auto gap-x-5">
                         <Select
                             onValueChange={(value) =>

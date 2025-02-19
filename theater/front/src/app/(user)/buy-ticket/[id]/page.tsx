@@ -1,7 +1,8 @@
+import { DateSelector } from '@/components/custom/DateSelector'
 import { SelectMovieScheduleToBuyTicket } from '@/components/custom/SelectMovieScheduleToBuyTicket'
+import { VideoPlayer } from '@/components/custom/video-player'
 import { redirect } from 'next/navigation'
 import { getMovie, getMovieSchedules } from './actions'
-import { DateSelector } from '@/components/custom/DateSelector'
 
 export default async function Page({
     params,
@@ -56,6 +57,10 @@ export default async function Page({
                     movie={movie}
                     schedules={schedules}
                 />
+            </div>
+            <div className="w-full">
+                <p className="font-bold text-center text-2xl mb-2">Trailer</p>
+                <VideoPlayer videoUrl={movie.trailer_url} />
             </div>
         </>
     )

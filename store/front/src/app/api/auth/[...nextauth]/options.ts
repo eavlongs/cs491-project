@@ -1,6 +1,5 @@
 import { JwtToken, JwtTokenOptions } from '@/app/types'
 import { apiUrl } from '@/app/utils'
-import jwt from 'jsonwebtoken'
 import { AuthOptions, User } from 'next-auth'
 import { JWT } from 'next-auth/jwt'
 import CredentialsProvider from 'next-auth/providers/credentials'
@@ -13,19 +12,19 @@ async function login(
     token: JwtToken
 } | null> {
     const res = await fetch(`${apiUrl}/auth/login`, {
-        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
+        method: 'POST',
         body: JSON.stringify({
-            email: email,
-            password: password,
+            email,
+            password,
         }),
     })
 
     const response = await res.json()
 
-    if (res.ok && response.data.user) {
+    if (res.ok) {
         return {
             user: response.data.user,
             token: response.data.token,
@@ -37,7 +36,7 @@ async function login(
      * it will then pass to sign in action in src\app\user\sign-in\action\signIn.ts and show in the
      * ui as an error message
      */
-    throw new Error(response.error[0].message || 'Failed to login')
+    throw new Error(response.error[0] || 'Failed to login')
 }
 
 export const authOptions: AuthOptions = {
@@ -169,14 +168,14 @@ export const authOptions: AuthOptions = {
                 token = token.token as unknown as JWT
             }
 
-            try {
-                jwt.verify(
-                    token as unknown as string,
-                    process.env.NEXTAUTH_SECRET as string
-                )
-            } catch (err: any) {
-                throw new Error(err.message)
-            }
+            // try {
+            //     jwt.verify(
+            //         token as unknown as string,
+            //         process.env.NEXTAUTH_SECRET as string
+            //     )
+            // } catch (err: any) {
+            //     throw new Error(err.message)
+            // }
 
             return {
                 token,
@@ -193,11 +192,21 @@ export const authOptions: AuthOptions = {
     },
     session: {
         strategy: 'jwt',
-        maxAge: JwtTokenOptions.AccessTokenExpireTimeInMs,
+        maxAge: JwtTokenOptions.AccessTokenExpireTimeInSeconds,
     },
     secret: process.env.NEXTAUTH_SECRET,
     pages: {
         signIn: '/login',
         error: '/login?error=something-went-wrong',
+    },
+    cookies: {
+        sessionToken: {
+            name: 'next-auth.session-token-store',
+            options: {
+                httpOnly: true,
+                sameSite: 'lax',
+                path: '/',
+            },
+        },
     },
 }

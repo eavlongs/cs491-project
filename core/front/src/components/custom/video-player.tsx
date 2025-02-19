@@ -24,6 +24,8 @@ export function VideoPlayer({ videoUrl }: VideoPlayerProps) {
 
     const videoId = getVideoId(videoUrl)
 
+    console.log(videoId)
+
     if (!videoId) {
         return (
             <div className="max-w-2xl mx-auto">

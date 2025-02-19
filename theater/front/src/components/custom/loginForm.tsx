@@ -15,8 +15,11 @@ import { signIn } from 'next-auth/react'
 import { useRef } from 'react'
 export function LoginForm({
     className,
+    callbackUrl,
     ...props
-}: React.ComponentPropsWithoutRef<'div'>) {
+}: React.ComponentPropsWithoutRef<'div'> & {
+    callbackUrl: string
+}) {
     const emailRef = useRef<HTMLInputElement>(null)
     const passwordRef = useRef<HTMLInputElement>(null)
 
@@ -31,15 +34,12 @@ export function LoginForm({
                 redirect: false,
             })
 
-            console.log('here')
-            console.log(login?.error)
-
             if (!login) {
                 throw new Error('Log in failed')
             }
 
             if (login.ok) {
-                window.location.href = '/'
+                window.location.href = callbackUrl
                 return
             }
 
