@@ -37,7 +37,18 @@ services:
         volumes:
             - mariadb_data:/var/lib/mysql
 
+    mongodb:
+      image: mongodb/mongodb-community-server:6.0-ubi8
+      environment:
+        - MONGODB_INITDB_ROOT_USERNAME=eavlongs
+        - MONGODB_INITDB_ROOT_PASSWORD=ErtrwdxAnfU3KHLQ
+      ports:
+        - "27017:27017"
+      volumes:
+        - mongodb_data:/var/lib/mongodb/data
+
 volumes:
     postgres_data:
     mysql_data:
     mariadb_data:
+    mongodb_data:

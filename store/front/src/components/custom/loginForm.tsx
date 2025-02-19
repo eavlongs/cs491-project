@@ -31,9 +31,6 @@ export function LoginForm({
                 redirect: false,
             })
 
-            console.log('here')
-            console.log(login?.error)
-
             if (!login) {
                 throw new Error('Log in failed')
             }

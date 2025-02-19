@@ -1,3 +1,4 @@
+import { GoToAdminDashboardButton } from '@/components/custom/GoToAdminDashboardButton'
 import LoggedInOnly from '@/components/custom/LoggedInOnly'
 import LogInButton from '@/components/custom/LogInButton'
 import { LogOut } from '@/components/custom/LogOut'
@@ -16,9 +17,14 @@ export default function Layout({ children }: LayoutProps) {
                 <Separator orientation="vertical" className="mr-2 h-4" />
                 <Link href="/">Movie Theater System</Link>
                 <div className="ml-auto">
-                    <LoggedInOnly otherwise={<LogInButton />}>
-                        <LogOut />
-                    </LoggedInOnly>
+                    <div className="flex gap-x-2">
+                        <LoggedInOnly admin={true}>
+                            <GoToAdminDashboardButton />
+                        </LoggedInOnly>
+                        <LoggedInOnly otherwise={<LogInButton />}>
+                            <LogOut />
+                        </LoggedInOnly>
+                    </div>
                 </div>
             </header>
             <div className="flex flex-1 flex-col gap-4 py-6 px-10 items-center">

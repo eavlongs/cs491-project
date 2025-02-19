@@ -82,7 +82,7 @@ if /i "%mode%"=="back" (
     ) else if /i "%directory%"=="theater" (
         echo Running theater backend...
         REM Replace this with the actual theater backend command
-        ./mvnw spring-boot:run
+        mvnw spring-boot:run
     ) else (
         echo Error: Unknown backend directory "%directory%".
         exit /b 1

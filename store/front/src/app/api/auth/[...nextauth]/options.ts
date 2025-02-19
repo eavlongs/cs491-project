@@ -25,7 +25,7 @@ async function login(
 
     const response = await res.json()
 
-    if (res.status == 200) {
+    if (res.ok && response.data.user) {
         return {
             user: response.data.user,
             token: response.data.token,

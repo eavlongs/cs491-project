@@ -1,7 +1,6 @@
 'use client'
 
 import { Movie } from '@/app/types'
-import { Star } from 'lucide-react'
 import Image from 'next/image'
 
 export function MovieDetails({ movie }: { movie: Movie }) {
