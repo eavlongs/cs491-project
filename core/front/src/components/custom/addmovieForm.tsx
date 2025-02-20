@@ -160,6 +160,7 @@ export function AddMovieForm({
                         <Input
                             id="poster_url"
                             ref={posterUrlRef}
+                            onChange={(e) => setPosterUrl(e.target.value)}
                             required
                             placeholder="Poster URL"
                         />

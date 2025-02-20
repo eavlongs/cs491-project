@@ -5,10 +5,7 @@ import { apiUrl } from './app/utils'
 
 export default withAuth(
     async function middleware(request) {
-        console.log(request.url)
         const pathname = request.nextUrl.pathname
-        console.log(pathname)
-        console.log(request.nextauth.token)
         if (
             (pathname === '/' ||
                 pathname.startsWith('/movie') ||
@@ -65,5 +62,11 @@ export default withAuth(
 )
 
 export const config = {
-    matcher: [`/admin/:path*`, `/movie/:id`, `/payment`, `/subscribe-movie`],
+    matcher: [
+        '/',
+        `/admin/:path*`,
+        `/movie/:id`,
+        `/payment`,
+        `/subscribe-movie`,
+    ],
 }

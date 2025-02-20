@@ -1,9 +1,13 @@
-import { EditMovieForm } from '@/components/custom/EditMovieForm'
-import { getMovie } from './actions'
-import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/options'
+import { EditMovieForm } from '@/components/custom/EditMovieForm'
+import { getServerSession } from 'next-auth'
+import { getMovie } from './actions'
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({
+    params,
+}: {
+    params: Promise<{ id: string }>
+}) {
     const { id } = await params
     const session = await getServerSession(authOptions)
     const movie = await getMovie(id, session!.token)

@@ -49,7 +49,7 @@ export async function isAdmin(req: Request, res: Response, next: NextFunction) {
 
     try {
         const payload = jwt.verify(token, JWT_SECRET) as User;
-        if (!payload.isAdmin) {
+        if (!payload.is_admin) {
             return respondWithBadRequestError(
                 res,
                 'Unauthorized: Not an admin'

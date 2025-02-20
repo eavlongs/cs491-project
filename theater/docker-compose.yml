@@ -1,0 +1,32 @@
+version: '3'
+services:
+  theater:
+    image: test-spring
+    ports:
+      - 8082:8082
+    networks:
+      - app
+    depends_on:
+      - db
+
+  db:
+      image: mongodb/mongodb-community-server:6.0-ubi8
+      environment:
+        - MONGODB_INITDB_ROOT_USERNAME=eavlongs
+        - MONGODB_INITDB_ROOT_PASSWORD=ErtrwdxAnfU3KHLQ
+      ports:
+        - "27017:27017"
+      volumes:
+        - mongodb_data:/var/lib/mongodb/data
+      networks:
+        - app
+
+volumes:
+    mongodb_data:
+
+networks:
+  app:
+    driver: bridge
+    name: app
+    # driver_opts:
+    #   com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"

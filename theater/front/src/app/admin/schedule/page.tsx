@@ -1,17 +1,17 @@
+import { getMovies } from '@/app/(user)/actions'
+import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 import { Hall, Movie, Schedule } from '@/app/types'
 import ManageSchedule from '@/components/custom/ManageSchedule'
+import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import { getAllHalls, getSchedulesFromAllHalls } from './actions'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/app/api/auth/[...nextauth]/options'
-import { getMovies } from '@/app/(user)/actions'
 
 export default async function Page({
     searchParams,
 }: {
-    searchParams: {
+    searchParams: Promise<{
         start_date: string
-    }
+    }>
 }) {
     let { start_date: startDateString } = await searchParams
     const session = await getServerSession(authOptions)

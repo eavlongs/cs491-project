@@ -6,9 +6,9 @@ import { redirect } from 'next/navigation'
 export default async function Page({
     searchParams,
 }: {
-    searchParams: {
+    searchParams: Promise<{
         start_date: string
-    }
+    }>
 }) {
     let { start_date: startDateString } = await searchParams
 

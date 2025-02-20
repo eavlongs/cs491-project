@@ -1,0 +1,39 @@
+version: '3'
+services:
+  front:
+    image: esok/cs491-core-front
+    ports:
+      - 80:3000
+    networks:
+      - app
+    depends_on:
+      - back
+
+  back:
+    image: esok/cs491-core-back
+    ports:
+      - 8080:8080
+    networks:
+      - app
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    container_name: postgres_15
+    environment:
+        POSTGRES_USER: postgres_user
+        POSTGRES_PASSWORD: postgres_password
+        POSTGRES_DB: postgres_db
+    ports:
+        - "5433:5432"
+    volumes:
+        - postgres_data:/var/lib/postgresql/data
+
+volumes:
+    postgres_data:
+
+networks:
+  app:
+    driver: bridge
+    name: app

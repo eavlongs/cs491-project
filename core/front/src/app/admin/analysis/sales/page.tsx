@@ -5,3 +5,5 @@ export default async function Page() {
     const sales = await getMovieSales()
     return <MovieSales sales={sales} />
 }
+
+export const dynamic = 'force-dynamic'

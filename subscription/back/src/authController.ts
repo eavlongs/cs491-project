@@ -36,13 +36,14 @@ export async function register(req: Request, res: Response) {
             throw new Error('Failed to create user.');
         }
 
+        console.log({ user: user[0] });
         const token = jwt.sign(
             {
                 id: user[0].id,
-                first_name: user[0].firstName,
-                last_name: user[0].lastName,
+                first_name: user[0].first_name,
+                last_name: user[0].last_name,
                 email: user[0].email,
-                is_admin: user[0].isAdmin,
+                is_admin: user[0].is_admin,
             },
             JWT_SECRET,
             { expiresIn: '24h' }

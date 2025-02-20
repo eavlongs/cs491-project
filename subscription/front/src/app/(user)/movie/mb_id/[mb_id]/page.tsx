@@ -3,9 +3,9 @@ import { getMovieByMbId } from './actions'
 export default async function Page({
     params,
 }: {
-    params: {
+    params: Promise<{
         mb_id: string
-    }
+    }>
 }) {
     const { mb_id } = await params
     const movie = await getMovieByMbId(mb_id)

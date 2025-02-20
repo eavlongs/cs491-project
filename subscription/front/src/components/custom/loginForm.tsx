@@ -39,7 +39,6 @@ export function LoginForm({
             }
 
             if (login.ok) {
-                alert("You're logged in")
                 window.location.href = callbackUrl
                 return
             }

@@ -14,11 +14,8 @@ export default withAuth(
             pathname.startsWith('/admin') &&
             !request.nextauth.token?.user.is_admin
         ) {
-            console.log('here')
             return NextResponse.rewrite(new URL('/not-found', request.url))
         }
-
-        console.log('here 2')
         return NextResponse.next()
     },
     {

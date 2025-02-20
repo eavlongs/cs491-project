@@ -4,7 +4,11 @@ import { MovieDetails } from '@/components/custom/play-movie-detail'
 import { VideoPlayer } from '@/components/custom/video-player'
 import { getServerSession } from 'next-auth'
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({
+    params,
+}: {
+    params: Promise<{ id: string }>
+}) {
     const { id } = await params
     const session = await getServerSession(authOptions)
     const movie = await getMovie(id, session!.token)

@@ -3,7 +3,11 @@ import { getMovie } from './actions'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({
+    params,
+}: {
+    params: Promise<{ id: string }>
+}) {
     const { id } = await params
     const session = await getServerSession(authOptions)
     const movie = await getMovie(id, session!.token)

@@ -8,8 +8,8 @@ export default async function Page({
     params,
     searchParams,
 }: {
-    params: { id: string }
-    searchParams: { start_date: string }
+    params: Promise<{ id: string }>
+    searchParams: Promise<{ start_date: string }>
 }) {
     const { id } = await params
     const movie = await getMovie(id)

@@ -2,7 +2,7 @@ import { LoginForm } from '@/components/custom/LoginForm'
 export default async function Page({
     searchParams,
 }: {
-    searchParams: { callbackUrl: string }
+    searchParams: Promise<{ callbackUrl: string }>
 }) {
     let { callbackUrl } = await searchParams
     if (!callbackUrl) {

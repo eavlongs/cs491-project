@@ -7,7 +7,7 @@ import { BuyTicket } from '@/components/custom/BuyTicket'
 export default async function Page({
     params,
 }: {
-    params: { schedule_id: string }
+    params: Promise<{ schedule_id: string }>
 }) {
     const { schedule_id } = await params
     const session = await getServerSession(authOptions)

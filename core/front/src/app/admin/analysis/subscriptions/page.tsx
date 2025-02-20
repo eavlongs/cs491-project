@@ -6,3 +6,5 @@ export default async function Page() {
 
     return <MovieSubscriptions subscriptions={subscriptions} />
 }
+
+export const dynamic = 'force-dynamic'

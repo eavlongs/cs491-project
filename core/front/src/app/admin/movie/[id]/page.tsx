@@ -1,7 +1,11 @@
 import { EditMovieForm } from '@/components/custom/EditMovieForm'
 import { getMovie } from './actions'
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({
+    params,
+}: {
+    params: Promise<{ id: string }>
+}) {
     const { id } = await params
     const movie = await getMovie(id)
 
